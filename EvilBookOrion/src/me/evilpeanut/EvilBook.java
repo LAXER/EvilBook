@@ -2674,7 +2674,7 @@ public class EvilBook extends JavaPlugin {
 		// Vanish Command
 		//
 		if (command.getName().equalsIgnoreCase("vanish") || command.getName().equalsIgnoreCase("hide")) {
-			if (isInSurvival((Player)sender)) {
+			if (isInSurvival((Player)sender) && getProfile(sender).rank != Rank.ServerOwner) {
 				sender.sendMessage("§7Vanish can't be used in survival");
 				return true;
 			}
