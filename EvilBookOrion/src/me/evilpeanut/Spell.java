@@ -9,7 +9,8 @@ import org.bukkit.util.Vector;
 public enum Spell {
 	LightningStrikeI("Lightning Strike I"),
 	InstantGrow("Instant Grow"),
-	ShockWaveI("Shock Wave I");
+	ShockWaveI("Shock Wave I"),
+	ShockWaveII("Shock Wave II");
 	
 	String name;
 	
@@ -72,6 +73,16 @@ public enum Spell {
 		//
 		if (name == "Shock Wave I") {
 			for (Entity e : event.getPlayer().getNearbyEntities(3, 3, 3)) {
+				e.setVelocity(new Vector(e.getLocation().getX() >= event.getPlayer().getLocation().getX() ? 2 : -2, 
+						e.getLocation().getY() >= event.getPlayer().getLocation().getY() ? 2 : -2, 
+								e.getLocation().getZ() >= event.getPlayer().getLocation().getZ() ? 2 : -2));
+			}
+		}
+		//
+		// Shockwave II
+		//
+		if (name == "Shock Wave II") {
+			for (Entity e : event.getPlayer().getNearbyEntities(6, 6, 6)) {
 				e.setVelocity(new Vector(e.getLocation().getX() >= event.getPlayer().getLocation().getX() ? 2 : -2, 
 						e.getLocation().getY() >= event.getPlayer().getLocation().getY() ? 2 : -2, 
 								e.getLocation().getZ() >= event.getPlayer().getLocation().getZ() ? 2 : -2));

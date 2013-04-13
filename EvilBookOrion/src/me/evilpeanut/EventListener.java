@@ -403,6 +403,7 @@ public class EventListener implements Listener {
 			
 			plugin.getProfile(event.getPlayer()).addSpell(Spell.LightningStrikeI);
 			plugin.getProfile(event.getPlayer()).addSpell(Spell.ShockWaveI);
+			plugin.getProfile(event.getPlayer()).addSpell(Spell.ShockWaveII);
 			plugin.getProfile(event.getPlayer()).addSpell(Spell.InstantGrow);
 		}
 		if (plugin.isInSurvival(event.getPlayer()) && event.getPlayer().getItemInHand().getTypeId() == 280 && event.getPlayer().getItemInHand().getItemMeta() != null && event.getPlayer().getItemInHand().getItemMeta().getLore().get(0).equals("Preforms ancient magical arts")) {
