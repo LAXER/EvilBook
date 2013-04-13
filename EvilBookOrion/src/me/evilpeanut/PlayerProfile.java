@@ -20,7 +20,7 @@ public class PlayerProfile {
 	public List<EvilEditBlock> EvilEditCopy = new ArrayList<EvilEditBlock>();
 	public Boolean isLogging = false;
 	public long lastMessageTime;
-	public int money = 0, runAmplifier = 4, survivalXP = 0;
+	public int money = 0, runAmplifier = 4, survivalXP = 0, strengthLevel = 0, miningLevel = 0, fishingLevel = 0;
 	public double jumpAmplifier = 0;
 	public Rank rank = Rank.Visitor;
 	public Spell selectedSpell;

@@ -86,10 +86,9 @@ public class EvilBook extends JavaPlugin {
 	//
 	// Scoreboard stuff
 	//
-	//TODO: Update variable names
-	public ScoreboardManager manager;
-	public Scoreboard board;
-	public Team team;
+	public ScoreboardManager scoreboardManager;
+	public Scoreboard survivalStatsScoreboard;
+	public Team survivalTeam;
 	
 	public void onEnable() {
 		//
@@ -125,29 +124,20 @@ public class EvilBook extends JavaPlugin {
 		//
 		// Scoreboard stuff
 		//
-		manager = Bukkit.getScoreboardManager();
-		board = manager.getNewScoreboard();
-		team = board.registerNewTeam("teamname");
-		team.setPrefix("prefix");
-		team.setSuffix("suffix");
-		team.setDisplayName("display name");
-		team.setCanSeeFriendlyInvisibles(true);
-		team.setAllowFriendlyFire(true);
-		Objective objective = board.registerNewObjective("test", "dummy");
+		scoreboardManager = Bukkit.getScoreboardManager();
+		survivalStatsScoreboard = scoreboardManager.getNewScoreboard();
+		survivalTeam = survivalStatsScoreboard.registerNewTeam("Survival");
+		survivalTeam.setCanSeeFriendlyInvisibles(true);
+		survivalTeam.setAllowFriendlyFire(true);
+		Objective objective = survivalStatsScoreboard.registerNewObjective("Levels", "Skills");
 		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 		objective.setDisplayName("Skills");
 		Score strengthScore = objective.getScore(Bukkit.getOfflinePlayer("§aStrength"));
 		strengthScore.setScore(1);
-		Score archeryScore = objective.getScore(Bukkit.getOfflinePlayer("§aArchery"));
-		archeryScore.setScore(1);
-		Score alchemyScore = objective.getScore(Bukkit.getOfflinePlayer("§aAlchemy"));
-		alchemyScore.setScore(1);
 		Score miningScore = objective.getScore(Bukkit.getOfflinePlayer("§aMining"));
 		miningScore.setScore(1);
 		Score fishingScore = objective.getScore(Bukkit.getOfflinePlayer("§aFishing"));
 		fishingScore.setScore(1);
-		Score agilityScore = objective.getScore(Bukkit.getOfflinePlayer("§aAgility"));
-		agilityScore.setScore(1);
 		//
 		// Delete old log files
 		//

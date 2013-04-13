@@ -1,6 +1,6 @@
 name: EvilBookOrion
 main: me.evilpeanut.EvilBook
-version: 1.5
+version: 1.6
 commands:
   hsphere:
     description: Generate a hollow sphere

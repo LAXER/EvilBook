@@ -336,7 +336,7 @@ public class EventListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		if (plugin.isInSurvival(event.getPlayer())) event.getPlayer().setScoreboard(plugin.board);
+		if (plugin.isInSurvival(event.getPlayer())) event.getPlayer().setScoreboard(plugin.survivalStatsScoreboard);
 		plugin.playerProfiles.put(event.getPlayer().getName().toLowerCase(), new PlayerProfile(plugin, event.getPlayer()));
 		event.setJoinMessage(null);
 	}
@@ -522,7 +522,7 @@ public class EventListener implements Listener {
 			event.getPlayer().setGameMode(GameMode.SURVIVAL);
 			plugin.setCreativeInventory(event.getPlayer());
 			plugin.getSurvivalInventory(event.getPlayer());
-			event.getPlayer().setScoreboard(plugin.board);
+			event.getPlayer().setScoreboard(plugin.survivalStatsScoreboard);
 			ExperienceManager exp = new ExperienceManager(event.getPlayer());
 			exp.setExp(plugin.getProfile(event.getPlayer()).survivalXP);
 		}
@@ -532,7 +532,7 @@ public class EventListener implements Listener {
 			event.getPlayer().getInventory().clear();
 			if (plugin.isInSurvival(event.getFrom().getName())) {
 				plugin.setSurvivalInventory(event.getPlayer());
-				event.getPlayer().setScoreboard(plugin.manager.getNewScoreboard());
+				event.getPlayer().setScoreboard(plugin.scoreboardManager.getNewScoreboard());
 				plugin.getProfile(event.getPlayer()).survivalXP = exp.getCurrentExp();
 			}
 			exp.setExp(0);
@@ -541,7 +541,7 @@ public class EventListener implements Listener {
 			plugin.setSurvivalInventory(event.getPlayer());
 			plugin.getCreativeInventory(event.getPlayer());
 			event.getPlayer().setGameMode(GameMode.CREATIVE);
-			event.getPlayer().setScoreboard(plugin.manager.getNewScoreboard());
+			event.getPlayer().setScoreboard(plugin.scoreboardManager.getNewScoreboard());
 			ExperienceManager exp = new ExperienceManager(event.getPlayer());
 			plugin.getProfile(event.getPlayer()).survivalXP = exp.getCurrentExp();
 			exp.setExp(0);
