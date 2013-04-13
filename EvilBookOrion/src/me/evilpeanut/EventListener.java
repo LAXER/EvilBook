@@ -47,7 +47,6 @@ import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
@@ -551,15 +550,6 @@ public class EventListener implements Listener {
 	//
 	// Block Events
 	//
-	@EventHandler(priority = EventPriority.HIGH)
-	public void onBlockRedstone(BlockRedstoneEvent event) {
-		if (!plugin.isRedstoneEnabled) {
-			event.setNewCurrent(event.getOldCurrent());
-			return;
-		}
-		if (plugin.isCheckingRedstoneSpam) plugin.redstoneProtection.put(event.getBlock().getLocation(), plugin.redstoneProtection.containsKey(event.getBlock().getLocation()) ? plugin.redstoneProtection.get(event.getBlock().getLocation()) + 1 : 1);
-	}
-	
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onBlockDispense(BlockDispenseEvent event) {
 		if (event.getItem().getTypeId() == 326 || event.getItem().getTypeId() == 327) event.setCancelled(true);

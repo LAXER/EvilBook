@@ -73,7 +73,6 @@ import org.bukkit.util.Vector;
 
 public class EvilBook extends JavaPlugin {
 	public Map<String, PlayerProfile> playerProfiles = new HashMap<String, PlayerProfile>();
-	public Map<Location, Integer> redstoneProtection = new HashMap<Location, Integer>();
 	public Map<Short, List<String>> blockList = new HashMap<Short, List<String>>();
 	public List<DynamicSign> dynamicSignList = new ArrayList<DynamicSign>();
 	public Map<String, Location> warpList = new HashMap<String, Location>();
@@ -81,7 +80,6 @@ public class EvilBook extends JavaPlugin {
 	public List<EvilEditBlock> EvilEdit = new ArrayList<EvilEditBlock>();
 	public Map<String, Byte> fishList = new HashMap<String, Byte>();
 	public List<Region> regionList = new ArrayList<Region>();
-	public Boolean isCheckingRedstoneSpam = false, isRedstoneEnabled = true;
 	
 	//
 	// Scoreboard stuff
@@ -559,7 +557,6 @@ public class EvilBook extends JavaPlugin {
 		scheduler.Tips();
 		scheduler.RewardAutoSave();
 		scheduler.EvilEdit();
-		scheduler.RedStoneProtection();
 		scheduler.UpdateSigns();
 	}
 
@@ -581,22 +578,6 @@ public class EvilBook extends JavaPlugin {
 		// TODO: Add more sign commands
 		// TODO: Add projectile protection
 		// TODO: Improve speed of region checking (Per world region hashmaps?)	
-		//
-		// Check Spam Command
-		//
-		if (command.getName().equalsIgnoreCase("spam")) {
-			isCheckingRedstoneSpam = isCheckingRedstoneSpam ? false : true;
-			sender.sendMessage("Checking redstone spam is " + isCheckingRedstoneSpam);
-			return true;
-		}
-		//
-		// Toggle Redstone Command
-		//
-		if (command.getName().equalsIgnoreCase("toggleredstone")) {
-			isRedstoneEnabled = isRedstoneEnabled ? false : true;
-			sender.sendMessage("Redstone enabled is " + isRedstoneEnabled);
-			return true;
-		}
 		//
 		// Slap Command
 		//

@@ -123,21 +123,4 @@ public class Scheduler {
 			}
 		}, 0L, 1L);
 	}
-	
-	public void RedStoneProtection() {
-		plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
-			public void run() {
-				if (!plugin.isCheckingRedstoneSpam) return;
-				for (int i = 0; i < plugin.redstoneProtection.size(); i++) {
-					if ((int)plugin.redstoneProtection.values().toArray()[i] > 2) {
-						plugin.alertOwner("Possible redstone lag machine at " + ((Location)plugin.redstoneProtection.keySet().toArray()[i]).getWorld().getName() + " " + 
-								((Location)plugin.redstoneProtection.keySet().toArray()[i]).getBlockX() + ", " +
-								((Location)plugin.redstoneProtection.keySet().toArray()[i]).getBlockY() + ", " +
-								((Location)plugin.redstoneProtection.keySet().toArray()[i]).getBlockZ());
-					}
-					plugin.redstoneProtection.remove(plugin.redstoneProtection.keySet().toArray()[i]);
-				}
-			}
-		}, 0L, 20L);
-	}
 }
