@@ -1,0 +1,340 @@
+name: EvilBookOrion
+main: me.evilpeanut.EvilBook
+version: 1.5
+commands:
+  sphere:
+    description: Generate a sphere
+    usage: /<command>
+  creative:
+    description: Teleport to the main creative world
+    usage: /<command>
+  survival:
+    description: Teleport to the survival world
+    usage: /<command>
+  toggleredstone:
+    description: Toggle redstone
+    usage: /<command>
+  spam:
+    description: Detect redstone spam
+    usage: /<command>
+  jump:
+    description: Set the player jump height
+    usage: /<command> [height]
+  drain:
+    description: Drain an area of blocks
+    usage: /<command>
+  regen:
+    description: Regenerate an area of blocks
+    usage: /<command>
+  hollow:
+    description: Hollow an area of blocks
+    usage: /<command>
+  outline:
+    description: Outline an area of blocks
+    usage: /<command>
+  walls:
+    description: Wall an area of blocks
+    usage: /<command>
+  overlay:
+    description: Overlay an area of blocks
+    usage: /<command>
+  paste:
+    description: Paste an area of blocks
+    usage: /<command>
+  copy:
+    description: Copy an area of blocks
+    usage: /<command>
+  replace:
+    description: Replace an area of blocks with another block
+    usage: /<command> [blockID] [blockID]
+  run:
+    description: Set the player run speed
+    usage: /<command> [speed]
+  accept:
+    description: Accept a teleport request
+    usage: /<command>
+  disguise:
+    description: Disguise the player as another entity
+    usage: /<command>
+  name:
+    description: Rename the held item
+    usage: /<command> [name]
+  library:
+    description: Preform library operation
+    usage: /<command>
+  advertise:
+    description: Broadcast an advertisement
+    usage: /<command> [message]
+  advert:
+    description: Broadcast an advertisement
+    usage: /<command> [message]
+  rollback:
+    description: Rollbacks a players edits
+    usage: /<command> [player]
+  log:
+    description: Enables the players logging mode
+    usage: /<command>
+  adventure:
+    description: Teleports the player to the adventure world
+    usage: /<command>
+  helmet:
+    description: Sets the players helmet to the block they're holding
+    usage: /<command>
+  butter:
+    description: Gives a player butter
+    usage: /<command>
+  region:
+    description: Preform region operation
+    usage: /<command>
+  req:
+    description: Request admin assistance
+    usage: /<command> [message]
+  stop:
+    description: Stop the server
+    usage: /<command> [message]
+  givemoney:
+    description: Change a players gamemode
+    usage: /<command> [player] [amount]
+  pay:
+    description: Change a players gamemode
+    usage: /<command> [player] [amount]
+  gamemode:
+    description: Change a players gamemode
+    usage: /<command> [mode] <player>
+  fill:
+    description: Fill an area with a block
+    usage: /<command> [block]
+  undo:
+    description: Undo last eviledit event
+    usage: /<command>
+  rocket:
+    description: Rocket a player
+    usage: /<command> [player]
+  slap:
+    description: Slap a player
+    usage: /<command> [player]
+  shock:
+    description: Shock a player
+    usage: /<command> [player]
+  tp:
+    description: Teleport to a player
+    usage: /<command> [player]
+  teleport:
+    description: Teleport to a player
+    usage: /<command> [player]
+  tphere:
+    description: Teleport a player
+    usage: /<command> [player]
+  teleporthere:
+    description: Teleport a player
+    usage: /<command> [player]
+  rename:
+    description: Rename the player
+    usage: /<command> [name]
+  mute:
+    description: Mute the player
+    usage: /<command> [player]
+  unmute:
+    description: Unmute the player
+    usage: /<command> [player]
+  vanish:
+    description: Hide the player
+    usage: /<command>
+  hide:
+    description: Hide the player
+    usage: /<command>
+  unvanish:
+    description: Show the player
+    usage: /<command>
+  show:
+    description: Show the player
+    usage: /<command>
+  clear:
+    description: Clear the player inventory
+    usage: /<command>
+  dawn:
+    description: Change the world time to dawn
+    usage: /<command>
+  day:
+    description: Change the world time to day
+    usage: /<command>
+  dusk:
+    description: Change the world time to dusk
+    usage: /<command>
+  night:
+    description: Change the world time to night
+    usage: /<command>
+  clean:
+    description: Clean the server of entities
+    usage: /<command>
+  kickall:
+    description: Kick all the online players
+    usage: /<command> [message]
+  kick:
+    description: Kick an online player
+    usage: /<command> [player] [message]
+  hug:
+    description: Hug a player
+    usage: /<command> [player]
+  tree:
+    description: Spawn a tree
+    usage: /<command> [type]
+  colors:
+    description: View the list of colors
+    usage: /<command>
+  colours:
+    description: View the list of colors
+    usage: /<command>
+  ranks:
+    description: View the list of ranks
+    usage: /<command>
+  rules:
+    description: View the list of rules
+    usage: /<command>
+  butcher:
+    description: Kill all alive animals in the players world
+    usage: /<command>
+  me:
+    description: Display an emotion or action
+    usage: /<command> [message]
+  setspawn:
+    description: Set the map spawn point
+    usage: /<command>
+  spawn:
+    description: Teleport to the spawn
+    usage: /<command>
+  broadcast:
+    description: Broadcast a server message
+    usage: /<command> [message]
+  say:
+    description: Broadcast a server message
+    usage: /<command> [message]
+  msg:
+    description: Send a private message to a player
+    usage: /<command> [player] [message]
+  time:
+    description: Change the world time
+    usage: /<command> [time]
+  afk:
+    description: Set the player status to AFK
+    usage: /<command>
+  sun:
+    description: Change the world weather to sunny
+    usage: /<command>
+  rain:
+    description: Change the world weather to rainy
+    usage: /<command>
+  storm:
+    description: Change the world weather to stormy
+    usage: /<command>
+  promote:
+    description: Promote a player
+    usage: /<command> [player]
+  demote:
+    description: Demote a player
+    usage: /<command> [player]
+  memstat:
+    description: View the server memory statistics
+    usage: /<command>
+  back:
+    description: Teleport back to your death position
+    usage: /<command>
+  list:
+    description: List the online players
+    usage: /<command>
+  help:
+    description: View the server help
+    usage: /<command>
+  donate:
+    description: View the donation instructions
+    usage: /<command>
+  admin:
+    description: View the donation instructions
+    usage: /<command>
+  makeadmin:
+    description: Make a player admin
+    usage: /<command> [player]
+  kill:
+    description: Kill a player
+    usage: /<command> [player]
+  enchant:
+    description: Enchant an item
+    usage: /<command> [enchantmentID] [enchantmentLevel]
+  setwarp:
+    description: Set a warp
+    usage: /<command> [warpName]
+  createwarp:
+    description: Set a warp
+    usage: /<command> [warpName]
+  warp:
+    description: Teleport to a warp
+    usage: /<command> [warpName]
+  cspawn:
+    description: Spawn creatures
+    usage: /<command> [creature] [amount]
+  spawncreature:
+    description: Spawn creatures
+    usage: /<command> [creature] [amount]
+  rewardall:
+    description: Reward all online players with money
+    usage: /<command> [amount]
+  reward:
+    description: Reward a player money
+    usage: /<command> [player] [amount]
+  charge:
+    description: Charge a player money
+    usage: /<command> [player] [amount]
+  money:
+    description: View a players account balance
+    usage: /<command> <player>
+  balance:
+    description: View a players account balance
+    usage: /<command> <player>
+  bal:
+    description: View a players account balance
+    usage: /<command> <player>
+  flatland:
+    description: Teleport to flatland
+    usage: /<command>
+  space:
+    description: Teleport to spaceland
+    usage: /<command>
+  spaceland:
+    description: Teleport to spaceland
+    usage: /<command>
+  skyland:
+    description: Teleport to skyland
+    usage: /<command>
+  sky:
+    description: Teleport to skyland
+    usage: /<command>
+  sethome:
+    description: Set your home location
+    usage: /<command>
+  home:
+    description: Teleport to your home location
+    usage: /<command>
+  debug:
+    description: Debug command
+    usage: /<command>
+  shop:
+    description: View the shop catalogue
+    usage: /<command> [page]
+  catalogue:
+    description: View the shop catalogue
+    usage: /<command> [page]
+  buy:
+    description: Purchase an item from the shop catalogue
+    usage: /<command> [item]
+  give:
+    description: Give an item to a player
+    usage: /<command> [item] <amount> <data>
+  item:
+    description: Give an item to a player
+    usage: /<command> [item] <amount> <data>
+  del:
+    description: Delete a given area
+    usage: /<command>
+  delete:
+    description: Delete a given area
+    usage: /<command>
