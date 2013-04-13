@@ -554,10 +554,8 @@ public class EvilBook extends JavaPlugin {
 		// Scheduler
 		//
 		Scheduler scheduler = new Scheduler(this);
-		scheduler.Tips();
-		scheduler.RewardAutoSave();
-		scheduler.EvilEdit();
-		scheduler.UpdateSigns();
+		scheduler.TipsAutosave();
+		scheduler.EvilEditSigns();
 	}
 
 	@SuppressWarnings("unchecked")
