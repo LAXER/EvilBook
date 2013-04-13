@@ -141,6 +141,7 @@ public class EvilBook extends JavaPlugin {
 		//
 		// Delete old log files
 		//
+		//TODO: Add configuerable deletion paramters
 		String[] logFiles = new File("plugins/EvilBook/Protection").list();
 		long nowTime = new Date().getTime();
 		for (int logNo = 0; logNo < logFiles.length; logNo++) {
@@ -351,34 +352,6 @@ public class EvilBook extends JavaPlugin {
 					playerProp.store(outputStream, null);
 					outputStream.close();
 					logInfo("Repaired player profile: " + playerFiles[playerNo]);
-					continue;
-				}
-				if (playerProp.getProperty("Rank").equals("Assassin")) {
-					playerProp.setProperty("Rank", "Police");
-					FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/Players/" + playerFiles[playerNo]);
-					playerProp.store(outputStream, null);
-					outputStream.close();
-					continue;
-				}
-				if (playerProp.getProperty("Rank").equals("HeadAssassin")) {
-					playerProp.setProperty("Rank", "SpecialAdmin");
-					FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/Players/" + playerFiles[playerNo]);
-					playerProp.store(outputStream, null);
-					outputStream.close();
-					continue;
-				}
-				if (playerProp.getProperty("Rank").equals("HeadCounciller")) {
-					playerProp.setProperty("Rank", "Counciller");
-					FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/Players/" + playerFiles[playerNo]);
-					playerProp.store(outputStream, null);
-					outputStream.close();
-					continue;
-				}
-				if (playerProp.getProperty("Rank").equals("Counciller")) {
-					playerProp.setProperty("Rank", "Councillor");
-					FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/Players/" + playerFiles[playerNo]);
-					playerProp.store(outputStream, null);
-					outputStream.close();
 					continue;
 				}
 			} catch (Exception e) {
