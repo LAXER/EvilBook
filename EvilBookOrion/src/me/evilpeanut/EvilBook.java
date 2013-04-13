@@ -1853,32 +1853,43 @@ public class EvilBook extends JavaPlugin {
 			return true;
 		}
 		//
-		// Generate Sphere Command
+		// Generate Filled Sphere Command
 		//
 		if (command.getName().equalsIgnoreCase("sphere")) {		
-			if (args.length != 3) {
+			if (args.length != 2 && args.length != 3 && args.length != 5) {
 				sender.sendMessage("§5Incorrect command usage");
-				sender.sendMessage("§d/replace [radius] [blockID] [blockData]");
+				sender.sendMessage("§d/sphere [blockID] [radius]");
+				sender.sendMessage("§d/sphere [blockID] [blockData] [radius]");
+				sender.sendMessage("§d/sphere [blockID] [blockData] [radiusX] [radiusY] [radiusZ]");
 				return true;
-			}
-			if (!isInteger(args[0]) || !isInteger(args[1]) || !isInteger(args[2]) || Integer.valueOf(args[1]) >= blockList.size()) {
+			}	
+			
+			if (args.length == 2 && (!isInteger(args[0]) || !isInteger(args[1]) || Integer.valueOf(args[0]) >= blockList.size())) {
+				sender.sendMessage("§7Please enter valid radius, block ID's and block data values");
+				return true;
+			} else if (args.length == 3 && (!isInteger(args[0]) || !isByte(args[1]) || !isInteger(args[2]) || Integer.valueOf(args[0]) >= blockList.size())) {
+				sender.sendMessage("§7Please enter valid radius, block ID's and block data values");
+				return true;
+			} else if (args.length == 5 && (!isInteger(args[0]) || !isByte(args[1]) || !isInteger(args[2]) || !isInteger(args[3]) || !isInteger(args[4]) || Integer.valueOf(args[0]) >= blockList.size())) {
 				sender.sendMessage("§7Please enter valid radius, block ID's and block data values");
 				return true;
 			}
-			if (Integer.valueOf(args[0]) > 25 && getProfile(sender).rank != Rank.ServerOwner) {
+			
+			double radiusX = args.length == 2 ? Integer.valueOf(args[1]) + 0.5 : args.length == 3 ? Integer.valueOf(args[2]) + 0.5 : Integer.valueOf(args[2]) + 0.5;
+			double radiusY = args.length == 2 ? Integer.valueOf(args[1]) + 0.5 : args.length == 3 ? Integer.valueOf(args[2]) + 0.5 : Integer.valueOf(args[3]) + 0.5;
+			double radiusZ = args.length == 2 ? Integer.valueOf(args[1]) + 0.5 : args.length == 3 ? Integer.valueOf(args[2]) + 0.5 : Integer.valueOf(args[4]) + 0.5;
+			
+			if ((radiusX > 25 || radiusY > 25 || radiusZ > 25) && getProfile(sender).rank != Rank.ServerOwner) {
 				sender.sendMessage("§7The maximum radius limit is 25");
 				return true;
 			}
 			
-	        alertOwner(sender.getName() + " created a sphere of " + args[1]);
-	        getProfile(sender).EvilEditUndo = new ArrayList<EvilEditBlock>();
+	        alertOwner(sender.getName() + " created a sphere of " + args[0]);
 	        
-			int blockID = Integer.valueOf(args[1]);
-			byte blockData = Byte.valueOf(args[2]);
+	        getProfile(sender).EvilEditUndo = new ArrayList<EvilEditBlock>();
 			
-			double radiusX = Integer.valueOf(args[0]) + 0.5;
-			double radiusY = Integer.valueOf(args[0]) + 0.5;
-			double radiusZ = Integer.valueOf(args[0]) + 0.5;
+			int blockID = Integer.valueOf(args[0]);
+			byte blockData = args.length == 2 ? 0 : Byte.valueOf(args[2]);
 
 			final double invRadiusX = 1 / radiusX;
 			final double invRadiusY = 1 / radiusY;
@@ -1912,37 +1923,132 @@ public class EvilBook extends JavaPlugin {
 							break forZ;
 						}
 
-						//TODO: Seperate commands for filled and not filled
-						Boolean filled = false;
-						if (!filled) {
-							if (lengthSq(nextXn, yn, zn) <= 1 && lengthSq(xn, nextYn, zn) <= 1 && lengthSq(xn, yn, nextZn) <= 1) {
-								continue;
+						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(x, y, z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(x, y, z)).getData(), ((Player)sender).getLocation().add(x, y, z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, y, z)));
+
+						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(-x, y, z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(-x, y, z)).getData(), ((Player)sender).getLocation().add(-x, y, z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, y, z)));
+
+						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(x, -y, z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(x, -y, z)).getData(), ((Player)sender).getLocation().add(x, -y, z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, -y, z)));
+
+						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(x, y, -z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(x, y, -z)).getData(), ((Player)sender).getLocation().add(x, y, -z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, y, -z)));
+
+						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(-x, -y, z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(-x, -y, z)).getData(), ((Player)sender).getLocation().add(-x, -y, z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, -y, z)));
+
+						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(x, -y, -z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(x, -y, -z)).getData(), ((Player)sender).getLocation().add(x, -y, -z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, -y, -z)));
+
+						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(-x, y, -z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(-x, y, -z)).getData(), ((Player)sender).getLocation().add(-x, y, -z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, y, -z)));
+
+						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(-x, -y, -z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(-x, -y, -z)).getData(), ((Player)sender).getLocation().add(-x, -y, -z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, -y, -z)));
+					}
+				}
+			}
+			return true;
+		}
+		//
+		// Generate Hollow Sphere Command
+		//
+		if (command.getName().equalsIgnoreCase("hsphere")) {		
+			if (args.length != 2 && args.length != 3 && args.length != 5) {
+				sender.sendMessage("§5Incorrect command usage");
+				sender.sendMessage("§d/hsphere [blockID] [radius]");
+				sender.sendMessage("§d/hsphere [blockID] [blockData] [radius]");
+				sender.sendMessage("§d/hsphere [blockID] [blockData] [radiusX] [radiusY] [radiusZ]");
+				return true;
+			}	
+			
+			if (args.length == 2 && (!isInteger(args[0]) || !isInteger(args[1]) || Integer.valueOf(args[0]) >= blockList.size())) {
+				sender.sendMessage("§7Please enter valid radius, block ID's and block data values");
+				return true;
+			} else if (args.length == 3 && (!isInteger(args[0]) || !isByte(args[1]) || !isInteger(args[2]) || Integer.valueOf(args[0]) >= blockList.size())) {
+				sender.sendMessage("§7Please enter valid radius, block ID's and block data values");
+				return true;
+			} else if (args.length == 5 && (!isInteger(args[0]) || !isByte(args[1]) || !isInteger(args[2]) || !isInteger(args[3]) || !isInteger(args[4]) || Integer.valueOf(args[0]) >= blockList.size())) {
+				sender.sendMessage("§7Please enter valid radius, block ID's and block data values");
+				return true;
+			}
+			
+			double radiusX = args.length == 2 ? Integer.valueOf(args[1]) + 0.5 : args.length == 3 ? Integer.valueOf(args[2]) + 0.5 : Integer.valueOf(args[2]) + 0.5;
+			double radiusY = args.length == 2 ? Integer.valueOf(args[1]) + 0.5 : args.length == 3 ? Integer.valueOf(args[2]) + 0.5 : Integer.valueOf(args[3]) + 0.5;
+			double radiusZ = args.length == 2 ? Integer.valueOf(args[1]) + 0.5 : args.length == 3 ? Integer.valueOf(args[2]) + 0.5 : Integer.valueOf(args[4]) + 0.5;
+			
+			if ((radiusX > 25 || radiusY > 25 || radiusZ > 25) && getProfile(sender).rank != Rank.ServerOwner) {
+				sender.sendMessage("§7The maximum radius limit is 25");
+				return true;
+			}
+			
+	        alertOwner(sender.getName() + " created a hollow sphere of " + args[0]);
+	        
+	        getProfile(sender).EvilEditUndo = new ArrayList<EvilEditBlock>();
+			
+			int blockID = Integer.valueOf(args[0]);
+			byte blockData = args.length == 2 ? 0 : Byte.valueOf(args[2]);
+
+			final double invRadiusX = 1 / radiusX;
+			final double invRadiusY = 1 / radiusY;
+			final double invRadiusZ = 1 / radiusZ;
+
+			final int ceilRadiusX = (int) Math.ceil(radiusX);
+			final int ceilRadiusY = (int) Math.ceil(radiusY);
+			final int ceilRadiusZ = (int) Math.ceil(radiusZ);
+
+			double nextXn = 0;
+			forX: for (int x = 0; x <= ceilRadiusX; ++x) {
+				final double xn = nextXn;
+				nextXn = (x + 1) * invRadiusX;
+				double nextYn = 0;
+				forY: for (int y = 0; y <= ceilRadiusY; ++y) {
+					final double yn = nextYn;
+					nextYn = (y + 1) * invRadiusY;
+					double nextZn = 0;
+					forZ: for (int z = 0; z <= ceilRadiusZ; ++z) {
+						final double zn = nextZn;
+						nextZn = (z + 1) * invRadiusZ;
+
+						double distanceSq = lengthSq(xn, yn, zn);
+						if (distanceSq > 1) {
+							if (z == 0) {
+								if (y == 0) {
+									break forX;
+								}
+								break forY;
 							}
+							break forZ;
+						}
+
+						if (lengthSq(nextXn, yn, zn) <= 1 && lengthSq(xn, nextYn, zn) <= 1 && lengthSq(xn, yn, nextZn) <= 1) {
+							continue;
 						}
 
 						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(x, y, z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(x, y, z)).getData(), ((Player)sender).getLocation().add(x, y, z)));
-                		EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, y, z)));
-						
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, y, z)));
+
 						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(-x, y, z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(-x, y, z)).getData(), ((Player)sender).getLocation().add(-x, y, z)));
-                		EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, y, z)));
-                		
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, y, z)));
+
 						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(x, -y, z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(x, -y, z)).getData(), ((Player)sender).getLocation().add(x, -y, z)));
-                		EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, -y, z)));
-	
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, -y, z)));
+
 						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(x, y, -z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(x, y, -z)).getData(), ((Player)sender).getLocation().add(x, y, -z)));
-                		EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, y, -z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, y, -z)));
 
 						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(-x, -y, z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(-x, -y, z)).getData(), ((Player)sender).getLocation().add(-x, -y, z)));
-                		EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, -y, z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, -y, z)));
 
 						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(x, -y, -z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(x, -y, -z)).getData(), ((Player)sender).getLocation().add(x, -y, -z)));
-                		EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, -y, -z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, -y, -z)));
 
 						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(-x, y, -z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(-x, y, -z)).getData(), ((Player)sender).getLocation().add(-x, y, -z)));
-                		EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, y, -z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, y, -z)));
 
 						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(-x, -y, -z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(-x, -y, -z)).getData(), ((Player)sender).getLocation().add(-x, -y, -z)));
-                		EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, -y, -z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, -y, -z)));
 					}
 				}
 			}
@@ -1955,10 +2061,10 @@ public class EvilBook extends JavaPlugin {
 			if (args.length != 2 && args.length != 4) {
 				sender.sendMessage("§5Incorrect command usage");
 				sender.sendMessage("§d/replace [blockID] [blockID]");
-				sender.sendMessage("§d/replace [blockID] <blockData> [blockID] <blockData>");
+				sender.sendMessage("§d/replace [blockID] [blockData] [blockID] [blockData]");
 				return true;
 			}
-			if ((args.length == 2 && (!isInteger(args[0]) || !isInteger(args[1]))) || (args.length == 4 && (!isInteger(args[0]) || !isInteger(args[1]) || !isInteger(args[2]) || !isInteger(args[3])))) {
+			if ((args.length == 2 && (!isInteger(args[0]) || !isInteger(args[1]))) || (args.length == 4 && (!isInteger(args[0]) || !isByte(args[1]) || !isInteger(args[2]) || !isByte(args[3])))) {
 				sender.sendMessage("§7Please enter valid block ID's and block data values");
 				return true;
 			}
@@ -2017,14 +2123,14 @@ public class EvilBook extends JavaPlugin {
 			if (args.length != 1 && args.length != 2) {
 				sender.sendMessage("§5Incorrect command usage");
 				sender.sendMessage("§d/fill [blockID]");
-				sender.sendMessage("§d/fill [blockID] <blockData>");
+				sender.sendMessage("§d/fill [blockID] [blockData]");
 				return true;
 			}
 			if (!isInteger(args[0])) {
 				sender.sendMessage("§7Please enter a valid block ID");
 				return true;
 			}
-			if (args.length == 2 && !isInteger(args[1])) {
+			if (args.length == 2 && !isByte(args[1])) {
 				sender.sendMessage("§7Please enter a valid block data");
 				return true;
 			}
@@ -2080,15 +2186,15 @@ public class EvilBook extends JavaPlugin {
 			if (args.length > 2) {
 				sender.sendMessage("§5Incorrect command usage");
 				sender.sendMessage("§d/del");
-				sender.sendMessage("§d/del <blockID>");
-				sender.sendMessage("§d/del <blockID> <blockData>");
+				sender.sendMessage("§d/del [blockID]");
+				sender.sendMessage("§d/del [blockID] [blockData]");
 				return true;
 			}
 			if (args.length >= 1 && !isInteger(args[0])) {
 				sender.sendMessage("§7Please enter a valid block ID to delete");
 				return true;
 			}
-			if (args.length == 2 && !isInteger(args[1])) {
+			if (args.length == 2 && !isByte(args[1])) {
 				sender.sendMessage("§7Please enter a valid block data to delete");
 				return true;
 			}
@@ -2233,7 +2339,7 @@ public class EvilBook extends JavaPlugin {
 				sender.sendMessage("§7Please enter a valid block ID");
 				return true;
 			}
-			if (args.length == 2 && !isInteger(args[1])) {
+			if (args.length == 2 && !isByte(args[1])) {
 				sender.sendMessage("§7Please enter a valid block data");
 				return true;
 			}
@@ -2294,7 +2400,7 @@ public class EvilBook extends JavaPlugin {
 				sender.sendMessage("§7Please enter a valid block ID");
 				return true;
 			}
-			if (args.length == 2 && !isInteger(args[1])) {
+			if (args.length == 2 && !isByte(args[1])) {
 				sender.sendMessage("§7Please enter a valid block data");
 				return true;
 			}
@@ -2359,7 +2465,7 @@ public class EvilBook extends JavaPlugin {
 				sender.sendMessage("§7Please enter a valid block ID");
 				return true;
 			}
-			if (args.length == 2 && !isInteger(args[1])) {
+			if (args.length == 2 && !isByte(args[1])) {
 				sender.sendMessage("§7Please enter a valid block data");
 				return true;
 			}
@@ -3377,14 +3483,21 @@ public class EvilBook extends JavaPlugin {
 	// Returns if the string can be casted to an integer
 	//
 	public Boolean isInteger(String string) {
-		try {Integer.valueOf(string); return true;} catch (NumberFormatException nFE) {return false;}
+		try {Integer.valueOf(string); return true;} catch (Exception exception) {return false;}
 	}
 	
 	//
 	// Returns if the string can be casted to a double
 	//
 	public Boolean isDouble(String string) {
-		try {Double.valueOf(string); return true;} catch (NumberFormatException nFE) {return false;}
+		try {Double.valueOf(string); return true;} catch (Exception exception) {return false;}
+	}
+	
+	//
+	// Returns if the string can be casted to an byte
+	//
+	public Boolean isByte(String string) {
+		try {Byte.valueOf(string); return true;} catch (Exception exception) {return false;}
 	}
 	
 	//

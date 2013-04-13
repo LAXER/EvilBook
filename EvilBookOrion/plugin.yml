@@ -2,8 +2,11 @@ name: EvilBookOrion
 main: me.evilpeanut.EvilBook
 version: 1.5
 commands:
+  hsphere:
+    description: Generate a hollow sphere
+    usage: /<command>
   sphere:
-    description: Generate a sphere
+    description: Generate a filled sphere
     usage: /<command>
   creative:
     description: Teleport to the main creative world

@@ -14,7 +14,7 @@ public enum Rank {
 	CoOwner((byte)10, "§0[§6Co-Owner§0]", "6", 22000),
 	Owner((byte)11, "§0[§BOwner§0]", "B", 25000),
 	RainbowOwner((byte)12, "§0[§AO§Bw§Cn§De§Er§0]", "A", 50000),
-	GameMaster((byte)13, "§0[§AF§Bo§Cu§Dn§Ed§Ae§Br§0]", "6", 75000),
+	GameMaster((byte)13, "§0[§AF§Bo§Cu§Dn§Ed§Ae§Br§0]", "A", 75000),
 	ServerOwner((byte)14, "§0[§BServerHost§0]", "B", 1000000);
 	
 	Byte ID;
