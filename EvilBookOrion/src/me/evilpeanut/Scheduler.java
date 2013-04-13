@@ -70,56 +70,13 @@ public class Scheduler {
 	public void EvilEdit() {
 		plugin.getServer().getScheduler().runTaskTimer(plugin, new Runnable() {
 			public void run() {
-				if (plugin.EvilEdit.size() == 0) return;
-				EvilEditBlock block = (EvilEditBlock) plugin.EvilEdit.get(0);
-				block.location.getWorld().getBlockAt(block.location).setTypeIdAndData(block.typeID, block.data, true);
-				// TODO: Add log support
-				plugin.EvilEdit.remove(0);
-				if (plugin.EvilEdit.size() == 0) return;
-				block = (EvilEditBlock) plugin.EvilEdit.get(0);
-				block.location.getWorld().getBlockAt(block.location).setTypeIdAndData(block.typeID, block.data, true);
-				// TODO: Add log support
-				plugin.EvilEdit.remove(0);
-				if (plugin.EvilEdit.size() == 0) return;
-				block = (EvilEditBlock) plugin.EvilEdit.get(0);
-				block.location.getWorld().getBlockAt(block.location).setTypeIdAndData(block.typeID, block.data, true);
-				// TODO: Add log support
-				plugin.EvilEdit.remove(0);
-				if (plugin.EvilEdit.size() == 0) return;
-				block = (EvilEditBlock) plugin.EvilEdit.get(0);
-				block.location.getWorld().getBlockAt(block.location).setTypeIdAndData(block.typeID, block.data, true);
-				// TODO: Add log support
-				plugin.EvilEdit.remove(0);
-				if (plugin.EvilEdit.size() == 0) return;
-				block = (EvilEditBlock) plugin.EvilEdit.get(0);
-				block.location.getWorld().getBlockAt(block.location).setTypeIdAndData(block.typeID, block.data, true);
-				// TODO: Add log support
-				plugin.EvilEdit.remove(0);
-				if (plugin.EvilEdit.size() == 0) return;
-				block = (EvilEditBlock) plugin.EvilEdit.get(0);
-				block.location.getWorld().getBlockAt(block.location).setTypeIdAndData(block.typeID, block.data, true);
-				// TODO: Add log support
-				plugin.EvilEdit.remove(0);
-				if (plugin.EvilEdit.size() == 0) return;
-				block = (EvilEditBlock) plugin.EvilEdit.get(0);
-				block.location.getWorld().getBlockAt(block.location).setTypeIdAndData(block.typeID, block.data, true);
-				// TODO: Add log support
-				plugin.EvilEdit.remove(0);
-				if (plugin.EvilEdit.size() == 0) return;
-				block = (EvilEditBlock) plugin.EvilEdit.get(0);
-				block.location.getWorld().getBlockAt(block.location).setTypeIdAndData(block.typeID, block.data, true);
-				// TODO: Add log support
-				plugin.EvilEdit.remove(0);
-				if (plugin.EvilEdit.size() == 0) return;
-				block = (EvilEditBlock) plugin.EvilEdit.get(0);
-				block.location.getWorld().getBlockAt(block.location).setTypeIdAndData(block.typeID, block.data, true);
-				// TODO: Add log support
-				plugin.EvilEdit.remove(0);
-				if (plugin.EvilEdit.size() == 0) return;
-				block = (EvilEditBlock) plugin.EvilEdit.get(0);
-				block.location.getWorld().getBlockAt(block.location).setTypeIdAndData(block.typeID, block.data, true);
-				// TODO: Add log support
-				plugin.EvilEdit.remove(0);
+				for (int i = 0; i < 15; i++) {
+					if (plugin.EvilEdit.size() == 0) return;
+					EvilEditBlock block = (EvilEditBlock) plugin.EvilEdit.get(0);
+					block.location.getWorld().getBlockAt(block.location).setTypeIdAndData(block.typeID, block.data, true);
+					// TODO: Add log support
+					plugin.EvilEdit.remove(0);
+				}
 			}
 		}, 0L, 1L);
 	}
