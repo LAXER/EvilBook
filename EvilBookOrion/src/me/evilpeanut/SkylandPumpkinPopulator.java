@@ -5,7 +5,13 @@ import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.generator.BlockPopulator;
 
+/**
+ * @author Reece Aaron Lecrivain
+ */
 public class SkylandPumpkinPopulator extends BlockPopulator {
+	/**
+	 * Populate the chunk
+	 */
 	@Override
 	public void populate(World world, Random positionRandomizer, Chunk chunk) {
 		if (positionRandomizer.nextInt(25) == 0) {

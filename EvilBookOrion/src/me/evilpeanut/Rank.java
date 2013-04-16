@@ -1,5 +1,8 @@
 package me.evilpeanut;
 
+/**
+ * @author Reece Aaron Lecrivain
+ */
 public enum Rank {
 	Visitor((byte)0, "§0[§7Visitor§0]", "7", 0),
 	Builder((byte)1, "§0[§EBuilder§0]", "E", 0),
@@ -22,6 +25,13 @@ public enum Rank {
 	String color;
 	Integer evilEditAreaLimit;
 	
+	/**
+	 * Define a new rank
+	 * @param ID The ID of the rank
+	 * @param prefix The prefix of the rank
+	 * @param color The color of the rank
+	 * @param evilEditAreaLimit The evil edit area limit of the rank
+	 */
 	Rank (Byte ID, String prefix, String color, Integer evilEditAreaLimit) {
 		this.ID = ID;
 		this.prefix = prefix;
@@ -29,6 +39,11 @@ public enum Rank {
 		this.evilEditAreaLimit = evilEditAreaLimit;
 	}
 	
+	/**
+	 * Return the next rank on the rank ladder
+	 * @param rank The rank
+	 * @return The next rank on the rank ladder
+	 */
 	public static Rank getNextRank(Rank rank) {
 		switch (rank) {
 		case Visitor:
@@ -65,6 +80,11 @@ public enum Rank {
 		return rank;
 	}
 	
+	/**
+	 * Return the previous rank on the rank ladder
+	 * @param rank The rank
+	 * @return The previous rank on the rank ladder
+	 */
 	public static Rank getPreviousRank(Rank rank) {
 		switch (rank) {
 		case Visitor:

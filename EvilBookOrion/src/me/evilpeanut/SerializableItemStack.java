@@ -9,15 +9,22 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 
+/**
+ * @author Reece Aaron Lecrivain
+ */
 @SuppressWarnings("serial")
 public class SerializableItemStack implements Serializable {
-	public int amount, typeID;
-	public byte data;
-	public short durability;
-	public String displayName;
-	public Map<SerializableEnchantment, Integer> enchantmentList = new HashMap<SerializableEnchantment, Integer>();
-	public List<String> lore;
+	private int amount, typeID;
+	private byte data;
+	private short durability;
+	private String displayName;
+	private Map<SerializableEnchantment, Integer> enchantmentList = new HashMap<SerializableEnchantment, Integer>();
+	private List<String> lore;
 	
+	/**
+	 * Define a new serializable item stack
+	 * @param itemStack The item stack to serialize
+	 */
 	public SerializableItemStack(ItemStack itemStack) {
 		amount = itemStack.getAmount();
 		durability = itemStack.getDurability();
@@ -28,13 +35,15 @@ public class SerializableItemStack implements Serializable {
 		lore = itemStack.getItemMeta() == null ? null : itemStack.getItemMeta().getLore();
 	}
 	
+	/**
+	 * Return the serialized item stack as an item stack
+	 * @return The serialized item stack as an item stack
+	 */
 	public ItemStack toItemStack() {
 		ItemStack newStack = new ItemStack(typeID, amount);
 		newStack.setData(new MaterialData(typeID, data));
 		newStack.setDurability(durability);
-		
 		for (int i = 0; i < enchantmentList.size(); i++) newStack.addEnchantment(((SerializableEnchantment)enchantmentList.keySet().toArray()[i]).toEnchantment(), (Integer)enchantmentList.values().toArray()[i]);
-		
 		ItemMeta newMeta = newStack.getItemMeta();
 		if (lore != null) newMeta.setLore(lore);
 		if (displayName != null) newMeta.setDisplayName(displayName);

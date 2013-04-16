@@ -13,6 +13,9 @@ import java.util.logging.Logger;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+/**
+ * @author Reece Aaron Lecrivain
+ */
 public class PlayerProfile {
 	public Location deathLocation, homeLocation, actionLocationA, actionLocationB, creativeLocation, survivalLocation;
 	public String name, nameColor, nameTitle, nameAlias, lastMessage, mutedPlayers, warps, teleportantName;
@@ -25,8 +28,14 @@ public class PlayerProfile {
 	public Rank rank = Rank.Visitor;
 	public Spell selectedSpell;
 	public List<Spell> spellBook = new ArrayList<Spell>();
+	private EvilBook plugin;
 	
-	// Load a player profile for an offline player
+	/**
+	 * Load the profile of an offline player
+	 * @param plugin The parent EvilBook plugin
+	 * @param playerName The name of the player
+	 */
+	// TODO: Improve offline player profile loading
 	public PlayerProfile(EvilBook plugin, String playerName) {
 		Properties prop = new Properties();
 		name = playerName;
@@ -51,8 +60,13 @@ public class PlayerProfile {
 		}
 	}
 	
-	// Load a player profile for an online player
+	/**
+	 * Load the profile of an online player
+	 * @param plugin The parent EvilBook plugin
+	 * @param playerName The name of the player
+	 */
 	public PlayerProfile(EvilBook plugin, Player newPlayer) {
+		this.plugin = plugin;
 		name = newPlayer.getName();
 		Properties prop = new Properties();
 		File file = new File("plugins/EvilBook/Players/" + name + ".properties");
@@ -187,6 +201,9 @@ public class PlayerProfile {
 		newPlayer.sendMessage("§3Type §6/help §3for help");
 	}
 	
+	/**
+	 * Save the player profile
+	 */
 	public void saveProfile() {
 		try {
 			Properties prop = new Properties();
@@ -216,15 +233,20 @@ public class PlayerProfile {
 		}
 	}
 	
+	/**
+	 * Set the name color of the player
+	 * @param color The name color
+	 * @param player The player
+	 */
 	public void setNameColor(String color, Player player) {
 		setProperty("NameColor", color);
 		nameColor = color;
 		if (nameAlias.equals("null") == false) {
 			if (nameColor.equals("?")) {
 				if (nameTitle == null) {
-					player.setDisplayName(colorizeString(nameAlias) + "§f");
+					player.setDisplayName(plugin.colorizeString(nameAlias) + "§f");
 				} else {
-					player.setDisplayName("§d" + nameTitle + " " + colorizeString(nameAlias) + "§f");
+					player.setDisplayName("§d" + nameTitle + " " + plugin.colorizeString(nameAlias) + "§f");
 				}
 			} else {
 				if (nameTitle == null) {
@@ -236,9 +258,9 @@ public class PlayerProfile {
 		} else {
 			if (nameColor.equals("?")) {
 				if (nameTitle == null) {
-					player.setDisplayName(colorizeString(name) + "§f");
+					player.setDisplayName(plugin.colorizeString(name) + "§f");
 				} else {
-					player.setDisplayName("§d" + nameTitle + " " + colorizeString(name) + "§f");
+					player.setDisplayName("§d" + nameTitle + " " + plugin.colorizeString(name) + "§f");
 				}
 			} else {
 				if (nameTitle == null) {
@@ -250,15 +272,20 @@ public class PlayerProfile {
 		}
 	}
 	
+	/**
+	 * Set the title of the player
+	 * @param title The title
+	 * @param player The player
+	 */
 	public void setNameTitle(String title, Player player) {
 		setProperty("NameTitle", title);
 		nameTitle = title;
 		if (nameAlias.equals("null") == false) {
 			if (nameColor.equals("?")) {
 				if (nameTitle == null) {
-					player.setDisplayName(colorizeString(nameAlias) + "§f");
+					player.setDisplayName(plugin.colorizeString(nameAlias) + "§f");
 				} else {
-					player.setDisplayName("§d" + nameTitle + " " + colorizeString(nameAlias) + "§f");
+					player.setDisplayName("§d" + nameTitle + " " + plugin.colorizeString(nameAlias) + "§f");
 				}
 			} else {
 				if (nameTitle == null) {
@@ -270,9 +297,9 @@ public class PlayerProfile {
 		} else {
 			if (nameColor.equals("?")) {
 				if (nameTitle == null) {
-					player.setDisplayName(colorizeString(name) + "§f");
+					player.setDisplayName(plugin.colorizeString(name) + "§f");
 				} else {
-					player.setDisplayName("§d" + nameTitle + " " + colorizeString(name) + "§f");
+					player.setDisplayName("§d" + nameTitle + " " + plugin.colorizeString(name) + "§f");
 				}
 			} else {
 				if (nameTitle == null) {
@@ -284,15 +311,20 @@ public class PlayerProfile {
 		}
 	}
 
+	/**
+	 * Set the name alias of the player
+	 * @param alias The name alias
+	 * @param player The player
+	 */
 	public void setNameAlias(String alias, Player player) {
 		if (alias == null) {
 			setProperty("NameAlias", "null");
 			nameAlias = "null";
 			if (nameColor.equals("?")) {
 				if (nameTitle == null || nameTitle.equals("")) {
-					player.setDisplayName(colorizeString(name) + "§f");
+					player.setDisplayName(plugin.colorizeString(name) + "§f");
 				} else {
-					player.setDisplayName("§d" + nameTitle + " " + colorizeString(name) + "§f");
+					player.setDisplayName("§d" + nameTitle + " " + plugin.colorizeString(name) + "§f");
 				}
 			} else {
 				if (nameTitle == null || nameTitle.equals("")) {
@@ -307,9 +339,9 @@ public class PlayerProfile {
 			nameAlias = alias;
 			if (nameColor.equals("?")) {
 				if (nameTitle == null || nameTitle.equals("")) {
-					player.setDisplayName(colorizeString(nameAlias) + "§f");
+					player.setDisplayName(plugin.colorizeString(nameAlias) + "§f");
 				} else {
-					player.setDisplayName("§d" + nameTitle + " " + colorizeString(nameAlias) + "§f");
+					player.setDisplayName("§d" + nameTitle + " " + plugin.colorizeString(nameAlias) + "§f");
 				}
 			} else {
 				if (nameTitle == null || nameTitle.equals("")) {
@@ -322,6 +354,11 @@ public class PlayerProfile {
 		}
 	}
 
+	/**
+	 * Set a property on the player profile file
+	 * @param property The property to set
+	 * @param value The value of the property
+	 */
 	public void setProperty(String property, String value) {
 		File file = new File("plugins/EvilBook/Players/" + name + ".properties");
 		if (file.exists()) {
@@ -341,24 +378,10 @@ public class PlayerProfile {
 		}
 	}
 	
-	public String colorizeString(String string) {
-		String name = "";
-		int color = 0;
-        for (char c : string.toCharArray()) {
-        	if (color == 0) name += "§a" + c;
-        	if (color == 1) name += "§b" + c;
-        	if (color == 2) name += "§c" + c;
-        	if (color == 3) name += "§d" + c;
-        	if (color == 4) {
-        		name += "§e" + c;
-        		color = 0;
-        	} else {
-        		color++;
-        	}
-        }
-		return name;
-	}
-	
+	/**
+	 * Add a spell to the player profile
+	 * @param spell The spell to add
+	 */
 	public void addSpell(Spell spell) {
 		spellBook.add(spell);
 		try {

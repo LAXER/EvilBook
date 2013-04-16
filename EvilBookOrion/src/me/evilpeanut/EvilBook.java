@@ -71,6 +71,9 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
+/**
+ * @author Reece Aaron Lecrivain
+ */
 public class EvilBook extends JavaPlugin {
 	public Map<String, PlayerProfile> playerProfiles = new HashMap<String, PlayerProfile>();
 	public Map<Short, List<String>> blockList = new HashMap<Short, List<String>>();
@@ -88,6 +91,9 @@ public class EvilBook extends JavaPlugin {
 	public Scoreboard survivalStatsScoreboard;
 	public Team survivalTeam;
 	
+	/**
+	 * Called when the plugin is enabled
+	 */
 	public void onEnable() {
 		//
 		// Register The Event Listener
@@ -99,8 +105,6 @@ public class EvilBook extends JavaPlugin {
 		//
 		File check = new File("plugins/EvilBook");
 		if (check.exists() == false && check.mkdir() == false) logSevere("Failed to create directory 'plugins/EvilBook'");
-		check = new File("plugins/EvilBook/Library");
-		if (check.exists() == false && check.mkdir() == false) logSevere("Failed to create directory 'plugins/EvilBook/Library'");
 		check = new File("plugins/EvilBook/Players");
 		if (check.exists() == false && check.mkdir() == false) logSevere("Failed to create directory 'plugins/EvilBook/Players'");
 		check = new File("plugins/EvilBook/Regions");
@@ -137,15 +141,6 @@ public class EvilBook extends JavaPlugin {
 		Score fishingScore = objective.getScore(Bukkit.getOfflinePlayer("§aFishing"));
 		fishingScore.setScore(1);
 		//
-		// Delete old log files
-		//
-		//TODO: Add configuerable deletion paramters
-		String[] logFiles = new File("plugins/EvilBook/Protection").list();
-		long nowTime = new Date().getTime();
-		for (int logNo = 0; logNo < logFiles.length; logNo++) {
-			if (nowTime - new File("plugins/EvilBook/Protection/" + logFiles[logNo]).lastModified() > 1296000000L) new File("plugins/EvilBook/Protection/" + logFiles[logNo]).delete();
-		}
-		//
 		// Load the command blacklist
 		//
 		Properties prop = new Properties();
@@ -167,6 +162,7 @@ public class EvilBook extends JavaPlugin {
 				FileInputStream inputStream = new FileInputStream(check);
 				prop.load(inputStream);
 				inputStream.close();
+				prop.setProperty("/cleandatabase", Byte.toString(Rank.ServerOwner.ID));
 				prop.setProperty("/rollback", Byte.toString(Rank.ServerOwner.ID));
 				prop.setProperty("/spam", Byte.toString(Rank.ServerOwner.ID));
 				prop.setProperty("/toggleredstone", Byte.toString(Rank.ServerOwner.ID));
@@ -246,19 +242,25 @@ public class EvilBook extends JavaPlugin {
 			}
 		}
 		//
-		// Flatland Generator
+		// EvilLand Generator
+		//
+		WorldCreator evilLand = new WorldCreator("EvilLand");
+		evilLand.generator(new EvilWorldChunkGenerator());
+		getServer().createWorld(evilLand);
+		//
+		// FlatLand Generator
 		//
 		WorldCreator flatLand = new WorldCreator("FlatLand");
 		flatLand.type(WorldType.FLAT);
 		getServer().createWorld(flatLand);
 		//
-		// Spaceland Generator
+		// SpaceLand Generator
 		//
 		WorldCreator spaceLand = new WorldCreator("SpaceLand");
 		spaceLand.generator(new SpaceWorldGenerator(this));
 		getServer().createWorld(spaceLand);
 		//
-		// Freesurvival Generator
+		// FreeSurvival Generator
 		//
 		getServer().createWorld(new WorldCreator("FreeSurvivalLand"));
 		//
@@ -288,21 +290,20 @@ public class EvilBook extends JavaPlugin {
 		Properties regionProp;
 		for (int regionNo = 0; regionNo < regionFiles.length; regionNo++) {
 			try {
-				Region region = new Region();
 				FileInputStream inputStream = new FileInputStream("plugins/EvilBook/Regions/" + regionFiles[regionNo]);
 				regionProp = new Properties();
 				regionProp.load(inputStream);
 				inputStream.close();
 				if (getServer().getWorld(regionProp.getProperty("worldName")) == null) continue;
-				region.isProtected = Boolean.valueOf(regionProp.getProperty("isProtected"));
-				region.leaveMessage = regionProp.getProperty("leaveMessage");
-				region.locationA = new Location(getServer().getWorld(regionProp.getProperty("worldName")), Integer.valueOf(regionProp.getProperty("locationA").split(",")[0]), Integer.valueOf(regionProp.getProperty("locationA").split(",")[1]), Integer.valueOf(regionProp.getProperty("locationA").split(",")[2]));
-				region.locationB = new Location(getServer().getWorld(regionProp.getProperty("worldName")), Integer.valueOf(regionProp.getProperty("locationB").split(",")[0]), Integer.valueOf(regionProp.getProperty("locationB").split(",")[1]), Integer.valueOf(regionProp.getProperty("locationB").split(",")[2]));
-				region.ownerName = regionProp.getProperty("ownerName");
-				region.regionName = regionProp.getProperty("regionName");
-				region.warpName = regionProp.getProperty("warpName");
-				region.welcomeMessage = regionProp.getProperty("welcomeMessage");
-				region.allowedPlayers = regionProp.getProperty("allowedPlayers");
+				Region region = new Region(regionProp.getProperty("regionName"),
+						new Location(getServer().getWorld(regionProp.getProperty("worldName")), Integer.valueOf(regionProp.getProperty("locationA").split(",")[0]), Integer.valueOf(regionProp.getProperty("locationA").split(",")[1]), Integer.valueOf(regionProp.getProperty("locationA").split(",")[2])),
+						new Location(getServer().getWorld(regionProp.getProperty("worldName")), Integer.valueOf(regionProp.getProperty("locationB").split(",")[0]), Integer.valueOf(regionProp.getProperty("locationB").split(",")[1]), Integer.valueOf(regionProp.getProperty("locationB").split(",")[2])),
+						Boolean.valueOf(regionProp.getProperty("isProtected")),
+						regionProp.getProperty("ownerName"),
+						regionProp.getProperty("welcomeMessage"),
+						regionProp.getProperty("leaveMessage"),
+						regionProp.getProperty("allowedPlayers")
+						);
 				regionList.add(region);
 			} catch (Exception e) {
 				logSevere("Failed to load region " + regionFiles[regionNo]);
@@ -555,10 +556,12 @@ public class EvilBook extends JavaPlugin {
 		//
 		Scheduler scheduler = new Scheduler(this);
 		scheduler.TipsAutosave();
-		scheduler.EvilEditSigns();
+		scheduler.UpdateDynamicSigns();
 	}
 
-	@SuppressWarnings("unchecked")
+	/**
+	 * Called when a command is executed
+	 */
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		// TODO: Make certain commands available to effect other players eg. Spawn creature at x players position
 		// TODO: Add some honeypot stuff
@@ -1089,6 +1092,18 @@ public class EvilBook extends JavaPlugin {
 			return true;
 		}
 		//
+		// Clean Database Command
+		//
+		if (command.getName().equalsIgnoreCase("cleandatabase")) {
+			sender.sendMessage("§7Cleaning database");
+			String[] logFiles = new File("plugins/EvilBook/Protection").list();
+			long nowTime = new Date().getTime();
+			for (int logNo = 0; logNo < logFiles.length; logNo++) {
+				if (nowTime - new File("plugins/EvilBook/Protection/" + logFiles[logNo]).lastModified() > 1296000000L) new File("plugins/EvilBook/Protection/" + logFiles[logNo]).delete();
+			}
+			sender.sendMessage("§7Database cleaned");
+		}
+		//
 		// Adventure Command
 		//
 		if (command.getName().equalsIgnoreCase("adventure")) {
@@ -1186,91 +1201,6 @@ public class EvilBook extends JavaPlugin {
 			} else {
 				sender.sendMessage("§5Incorrect command usage");
 				sender.sendMessage("§d/name [name]");
-			}
-			return true;
-		}
-		//
-		// Library Command
-		//
-		if (command.getName().equalsIgnoreCase("library")) {
-			if (args.length == 0) {
-				try {
-					List<Book> books = (List<Book>)loadObject("plugins/EvilBook/Library/" + sender.getName() + ".db");
-					sender.sendMessage("§5Books in your library");
-					for (Book i : books) sender.sendMessage("§d" + i.title);
-					sender.sendMessage("§7Remove a book using /library remove [bookName]");
-					sender.sendMessage("§7Take out a book using /library withdraw [bookName]");
-				} catch (Exception e) {
-					sender.sendMessage("§7You have no books in your library");
-					sender.sendMessage("§7Add a book you are holding using /library add");
-				}
-			} else if (args.length == 1 && args[0].equalsIgnoreCase("add")) {
-				if (((Player)sender).getItemInHand().getTypeId() == 387) {
-					List<Book> books = new ArrayList<Book>();
-					try {
-						books = (List<Book>)loadObject("plugins/EvilBook/Library/" + sender.getName() + ".db");
-					} catch (Exception e) {
-						try {
-							new File("plugins/EvilBook/Library/" + sender.getName() + ".db").createNewFile();
-						} catch (Exception ex) {
-							ex.printStackTrace();
-						}
-					}
-					books.add(new Book(((BookMeta)((Player)sender).getItemInHand().getItemMeta()).getTitle(), ((BookMeta)((Player)sender).getItemInHand().getItemMeta()).getAuthor(), ((BookMeta)((Player)sender).getItemInHand().getItemMeta()).getPages()));
-					try {
-						saveObject(books, "plugins/EvilBook/Library/" + sender.getName() + ".db");
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					sender.sendMessage("§7The book §d" + ((BookMeta)((Player)sender).getItemInHand().getItemMeta()).getTitle() + " §7has been added to your library");
-				} else {
-					sender.sendMessage("§7You need to be holding a book to add it to your library");
-				}
-			} else if (args.length >= 2 && args[0].equalsIgnoreCase("remove")) {
-				List<Book> books = new ArrayList<Book>();
-				try {
-					books = (List<Book>)loadObject("plugins/EvilBook/Library/" + sender.getName() + ".db");
-				} catch (Exception e) {
-					try {
-						new File("plugins/EvilBook/Library/" + sender.getName() + ".db").createNewFile();
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-				}
-				String name = "";
-				for (String arg : args) if (arg.equals(args[0]) == false) name += arg + " ";
-				for (Book i : books) if (i.title.equalsIgnoreCase(name.trim())) {
-					books.remove(i);
-					sender.sendMessage("§7You have removed the book §d" + i.title + " §7from your library");
-				}
-				try {
-					saveObject(books, "plugins/EvilBook/Library/" + sender.getName() + ".db");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			} else if (args.length >= 2 && args[0].equalsIgnoreCase("withdraw")) {
-				List<Book> books = new ArrayList<Book>();
-				try {
-					books = (List<Book>)loadObject("plugins/EvilBook/Library/" + sender.getName() + ".db");
-				} catch (Exception e) {
-					try {
-						new File("plugins/EvilBook/Library/" + sender.getName() + ".db").createNewFile();
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-				}
-				String name = "";
-				for (String arg : args) if (arg.equals(args[0]) == false) name += arg + " ";
-				for (Book i : books) if (i.title.equalsIgnoreCase(name.trim())) {
-					((Player) sender).getInventory().addItem(i.toItemStack());
-					sender.sendMessage("§7You have withdrawn a copy of §d" + i.title);
-				}
-			} else {
-				sender.sendMessage("§5Incorrect command usage");
-				sender.sendMessage("§d/library");
-				sender.sendMessage("§d/library add");
-				sender.sendMessage("§d/library withdraw [bookName]");
-				sender.sendMessage("§d/library remove [bookName]");
 			}
 			return true;
 		}
@@ -1415,12 +1345,14 @@ public class EvilBook extends JavaPlugin {
 								sender.sendMessage("§7A region with this name already exists");
 								return true;
 							}
-							Region region = new Region();
-							region.regionName = args[1];
-							region.locationA = getProfile(sender).actionLocationA;
-							region.locationB = getProfile(sender).actionLocationB;
-							region.ownerName = sender.getName();
-							region.isProtected = false;
+							Region region = new Region(args[1],
+									getProfile(sender).actionLocationA,
+									getProfile(sender).actionLocationB,
+									false,
+									sender.getName(),
+									null,
+									null,
+									null);
 							regionList.add(region);
 							try {
 								Properties regionProp = new Properties();
@@ -1472,12 +1404,14 @@ public class EvilBook extends JavaPlugin {
 							if (getProfile(sender).actionLocationA == null || getProfile(sender).actionLocationB == null) {
 								sender.sendMessage("§7Please select two locations using the golden shovel tool");
 							} else {
-								Region region = new Region();
-								region.regionName = args[1];
-								region.locationA = getProfile(sender).actionLocationA;
-								region.locationB = getProfile(sender).actionLocationB;
-								region.ownerName = sender.getName();
-								region.isProtected = true;
+								Region region = new Region(args[1],
+										getProfile(sender).actionLocationA,
+										getProfile(sender).actionLocationB,
+										true,
+										sender.getName(),
+										null,
+										null,
+										null);
 								regionList.add(region);
 								try {
 									Properties regionProp = new Properties();
@@ -2240,27 +2174,27 @@ public class EvilBook extends JavaPlugin {
 				return true;
 			}
 	        try {
-				int topBlockX = getProfile(sender).EvilEditCopy.get(0).location.getBlockX();
-				int bottomBlockX = getProfile(sender).EvilEditCopy.get(0).location.getBlockX();
-		        int topBlockY = getProfile(sender).EvilEditCopy.get(0).location.getBlockY();
-		        int bottomBlockY = getProfile(sender).EvilEditCopy.get(0).location.getBlockY();
-		        int topBlockZ = getProfile(sender).EvilEditCopy.get(0).location.getBlockZ();
-		        int bottomBlockZ = getProfile(sender).EvilEditCopy.get(0).location.getBlockZ();
+				int topBlockX = getProfile(sender).EvilEditCopy.get(0).getLocation().getBlockX();
+				int bottomBlockX = getProfile(sender).EvilEditCopy.get(0).getLocation().getBlockX();
+		        int topBlockY = getProfile(sender).EvilEditCopy.get(0).getLocation().getBlockY();
+		        int bottomBlockY = getProfile(sender).EvilEditCopy.get(0).getLocation().getBlockY();
+		        int topBlockZ = getProfile(sender).EvilEditCopy.get(0).getLocation().getBlockZ();
+		        int bottomBlockZ = getProfile(sender).EvilEditCopy.get(0).getLocation().getBlockZ();
 		        for (EvilEditBlock block : getProfile(sender).EvilEditCopy) {
-		        	if (block.location.getBlockX() > topBlockX) topBlockX = block.location.getBlockX();
-		        	if (block.location.getBlockX() < bottomBlockX) bottomBlockX = block.location.getBlockX();
-		        	if (block.location.getBlockY() > topBlockY) topBlockY = block.location.getBlockY();
-		        	if (block.location.getBlockY() < bottomBlockY) bottomBlockY = block.location.getBlockY();
-		        	if (block.location.getBlockZ() > topBlockZ) topBlockZ = block.location.getBlockZ();
-		        	if (block.location.getBlockZ() < bottomBlockZ) bottomBlockZ = block.location.getBlockZ();
+		        	if (block.getLocation().getBlockX() > topBlockX) topBlockX = block.getLocation().getBlockX();
+		        	if (block.getLocation().getBlockX() < bottomBlockX) bottomBlockX = block.getLocation().getBlockX();
+		        	if (block.getLocation().getBlockY() > topBlockY) topBlockY = block.getLocation().getBlockY();
+		        	if (block.getLocation().getBlockY() < bottomBlockY) bottomBlockY = block.getLocation().getBlockY();
+		        	if (block.getLocation().getBlockZ() > topBlockZ) topBlockZ = block.getLocation().getBlockZ();
+		        	if (block.getLocation().getBlockZ() < bottomBlockZ) bottomBlockZ = block.getLocation().getBlockZ();
 		        }
 		        alertOwner(sender.getName() + " pasted an area of blocks");
 		        getProfile(sender).EvilEditUndo = new ArrayList<EvilEditBlock>();
 		        for (int i = 0; i != getProfile(sender).EvilEditCopy.size(); i++) {
-		        	Location loc = new Location(((Player)sender).getLocation().getWorld(), ((Player)sender).getLocation().getBlockX() - getProfile(sender).EvilEditCopy.get(i).location.getBlockX(), ((Player)sender).getLocation().getBlockY() - getProfile(sender).EvilEditCopy.get(i).location.getBlockY(), ((Player)sender).getLocation().getBlockZ() - getProfile(sender).EvilEditCopy.get(i).location.getBlockZ());
-		        	if (((Player)sender).getWorld().getBlockAt(loc).getTypeId() == getProfile(sender).EvilEditCopy.get(i).typeID && ((Player)sender).getWorld().getBlockAt(loc).getData() == getProfile(sender).EvilEditCopy.get(i).data) continue;
+		        	Location loc = new Location(((Player)sender).getLocation().getWorld(), ((Player)sender).getLocation().getBlockX() - getProfile(sender).EvilEditCopy.get(i).getLocation().getBlockX(), ((Player)sender).getLocation().getBlockY() - getProfile(sender).EvilEditCopy.get(i).getLocation().getBlockY(), ((Player)sender).getLocation().getBlockZ() - getProfile(sender).EvilEditCopy.get(i).getLocation().getBlockZ());
+		        	if (((Player)sender).getWorld().getBlockAt(loc).getTypeId() == getProfile(sender).EvilEditCopy.get(i).getTypeID() && ((Player)sender).getWorld().getBlockAt(loc).getData() == getProfile(sender).EvilEditCopy.get(i).getData()) continue;
 		        	getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(loc), ((Player)sender).getWorld().getBlockAt(loc).getData(), loc));
-                	EvilEdit.add(new EvilEditBlock(getProfile(sender).EvilEditCopy.get(i).typeID, getProfile(sender).EvilEditCopy.get(i).data, loc));
+                	EvilEdit.add(new EvilEditBlock(getProfile(sender).EvilEditCopy.get(i).getTypeID(), getProfile(sender).EvilEditCopy.get(i).getData(), loc));
 		        }
 	        } catch (Exception e) {
 	        	sender.sendMessage("§7Evil Edit action failed");
@@ -2716,6 +2650,13 @@ public class EvilBook extends JavaPlugin {
 		//
 		if (command.getName().equalsIgnoreCase("spaceland") || command.getName().equalsIgnoreCase("space")) {
 			((Player) sender).teleport(getServer().getWorld("Spaceland").getSpawnLocation());
+			return true;
+		}
+		//
+		// Teleport To EvilLand Command
+		//
+		if (command.getName().equalsIgnoreCase("evilland")) {
+			((Player) sender).teleport(getServer().getWorld("EvilLand").getSpawnLocation());
 			return true;
 		}
 		//
@@ -3386,95 +3327,119 @@ public class EvilBook extends JavaPlugin {
 		return false;
 	}
 	
-	//
-	// Print information into the logger
-	//
+	/**
+	 * Log information to the minecraft server console
+	 * @param information The information to log
+	 */
 	public void logInfo(String information) {
 		Logger.getLogger("Minecraft").log(Level.INFO, information);
 	}
 	
-	//
-	// Print severe information into the logger
-	//
+	/**
+	 * Log severe information to the minecraft server console
+	 * @param information The severe information to log
+	 */
 	public void logSevere(String information) {
 		Logger.getLogger("Minecraft").log(Level.SEVERE, information);
 	}
 	
-	//
-	// Returns if the entity is in a adventure world or not
-	//
+	/**
+	 * Check if an entity is in the adventure world
+	 * @param entity The entity execute the check with
+	 * @return If the entity is in an adventure world or not
+	 */
 	public Boolean isInAdventure(Entity entity) {
 		return entity.getWorld().getName() == "AdventureLand" ? true : false;
 	}
 	
-	//
-	// Returns if the entity is in a survival world or not
-	//
+	/**
+	 * Check if an entity is in the survival world
+	 * @param entity The entity execute the check with
+	 * @return If the entity is in an survival world or not
+	 */
 	public Boolean isInSurvival(Entity entity) {
 		return entity.getWorld().getName() == "FreeSurvivalLand" || entity.getWorld().getName() == "SurvivalLand" || entity.getWorld().getName() == "SurvivalLandNether" ? true : false;
 	}
 	
-	//
-	// Returns if the world is a survival world or not
-	//
+	/**
+	 * Check if a world is a survival world
+	 * @param worldName The world name to execute the check with
+	 * @return If the world is a survival world or not
+	 */
 	public Boolean isInSurvival(String worldName) {
 		return worldName.equals("FreeSurvivalLand") || worldName.equals("SurvivalLand") || worldName.equals("SurvivalLandNether") ? true : false;
 	}
 	
-	//
-	// Returns if the string can be casted to an integer
-	//
+	/**
+	 * Check if a string can be casted to an integer
+	 * @param string The string to execute the cast check with
+	 * @return If the string can be casted to an integer
+	 */
 	public Boolean isInteger(String string) {
 		try {Integer.valueOf(string); return true;} catch (Exception exception) {return false;}
 	}
 	
-	//
-	// Returns if the string can be casted to a double
-	//
+	/**
+	 * Check if a string can be casted to a double
+	 * @param string The string to execute the cast check with
+	 * @return If the string can be casted to a double
+	 */
 	public Boolean isDouble(String string) {
 		try {Double.valueOf(string); return true;} catch (Exception exception) {return false;}
 	}
 	
-	//
-	// Returns if the string can be casted to an byte
-	//
+	/**
+	 * Check if a string can be casted to a byte
+	 * @param string The string to execute the cast check with
+	 * @return If the string can be casted to a byte
+	 */
 	public Boolean isByte(String string) {
 		try {Byte.valueOf(string); return true;} catch (Exception exception) {return false;}
 	}
 	
-	//
-	// Returns if the command sender is a server operator
-	//
+	/**
+	 * Check if the command sender is an op
+	 * @param sender The sender to execute the op check with
+	 * @return If the sender is an op
+	 */
 	public Boolean isOp(CommandSender sender) {
 		return sender instanceof Player == false || getProfile(sender).rank.ID >= Rank.Admin.ID ? true : false;
 	}
 	
-	//
-	// Returns a player profile for the command sender
-	//
+	/**
+	 * Returns a player profile for the command sender
+	 * @param sender The sender to fetch the profile of
+	 * @return The player profile of the sender
+	 */
 	public PlayerProfile getProfile(CommandSender sender) {
 		return playerProfiles.get(sender.getName().toLowerCase());
 	}
 	
-	//
-	// Returns a player profile for the player name
-	//
+	/**
+	 * Returns a player profile for the player
+	 * @param player The player name to fetch the profile of
+	 * @param getOfflineProfile If the offline profile should be returned when the player is offline
+	 * @return The player profile of the player
+	 */
 	public PlayerProfile getProfile(String player, Boolean getOfflineProfile) {
 		if (playerProfiles.containsKey(getPlayer(player).getName().toLowerCase())) return playerProfiles.get(getPlayer(player).getName().toLowerCase());
 		if (getOfflineProfile) return new PlayerProfile(this, player); else return null;
 	}
 	
-	//
-	// Sends a message to the server owner
-	//
+	/**
+	 * Sends a message alert to the server owner
+	 * @param alert The message
+	 */
 	public void alertOwner(String alert) {
 		Player player = getServer().getPlayer("EvilPeanut");
 		if (player != null) player.sendMessage("§7Alert: §O" + alert);
 	}
 	
-	//
-	// Returns a player from the name
-	//
+	/**
+	 * Returns a player from the player name
+	 * @param name The name of the player
+	 * @return The player
+	 */
 	public Player getPlayer(String name) {
 		try {
 			if (getServer().getPlayer(name) != null) return getServer().getPlayer(name);
@@ -3490,9 +3455,12 @@ public class EvilBook extends JavaPlugin {
 		}
 	}
 	
-	//
-	// Returns if the player is in a region
-	//
+	/**
+	 * Returns if a location is in a region
+	 * @param region The region to execute the check with
+	 * @param loc The location to execute the check with
+	 * @return If the location is inside the region
+	 */
 	public Boolean isInRegion(Region region, Location loc) {
 		if (region.locationA.getWorld().getName().equals(loc.getWorld().getName()) == false) return false;
 		if (isInRegionXRange(region, loc)) {
@@ -3510,17 +3478,19 @@ public class EvilBook extends JavaPlugin {
 		}
 	}
 	
-	//
-	// Returns if the region is protected or not for the player
-	//
-	public Boolean isRegionProtected(Location loc, Player player) {
+	/**
+	 * Returns if the region is protected or not for the player
+	 * @param player The player to execute the check with
+	 * @param loc The location to execute the check with
+	 * @return If the location is in a protected region which the player doesn't have rights to
+	 */
+	public Boolean isInProtectedRegion(Location loc, Player player) {
 		if (regionList.size() == 0) return false;
 		if (getProfile(player).rank.ID >= Rank.Admin.ID) return false;
 		for (int regionNo = 0; regionNo < regionList.size(); regionNo++) {
 			if (regionList.get(regionNo).isProtected == false) continue;
 			if (regionList.get(regionNo).ownerName.equalsIgnoreCase(player.getName())) continue;
 			if (regionList.get(regionNo).locationA.getWorld().getName().equals(loc.getWorld().getName()) == false) continue;
-			//if (regionList.get(regionNo).isRankProtected && getProfile(player).rank.ID >= regionList.get(regionNo).protectedRankRequirement.ID) continue;
 			if (isInRegionXRange(regionList.get(regionNo), loc)) {
 				if (isInRegionYRange(regionList.get(regionNo), loc)) {
 					if (isInRegionZRange(regionList.get(regionNo), loc)) {
@@ -3538,21 +3508,27 @@ public class EvilBook extends JavaPlugin {
 		return false;
 	}
 
-	//
-	// Returns if the player is in the region's Z range or not
-	//
-	static Boolean isInRegionXRange(Region region, Location playerLocation) {
+	/**
+	 * Returns if the player is in the region's X range or not
+	 * @param region The region to execute the check with
+	 * @param location The location to execute the check with
+	 * @return If the location is in the region's X range
+	 */
+	static Boolean isInRegionXRange(Region region, Location location) {
 		if (region.locationA.getBlockX() <= region.locationB.getBlockX()) {
-			if (playerLocation.getBlockX() >= region.locationA.getBlockX() && playerLocation.getBlockX() <= region.locationB.getBlockX()) return true;
+			if (location.getBlockX() >= region.locationA.getBlockX() && location.getBlockX() <= region.locationB.getBlockX()) return true;
 		} else if (region.locationA.getBlockX() >= region.locationB.getBlockX()) {
-			if (playerLocation.getBlockX() <= region.locationA.getBlockX() && playerLocation.getBlockX() >= region.locationB.getBlockX()) return true;
+			if (location.getBlockX() <= region.locationA.getBlockX() && location.getBlockX() >= region.locationB.getBlockX()) return true;
 		}
 		return false;
 	}
 
-	//
-	// Returns if the player is in the region's Y range or not
-	//
+	/**
+	 * Returns if the player is in the region's Y range or not
+	 * @param region The region to execute the check with
+	 * @param location The location to execute the check with
+	 * @return If the location is in the region's Y range
+	 */
 	static Boolean isInRegionYRange(Region region, Location playerLocation) {
 		if (region.locationA.getBlockY() <= region.locationB.getBlockY()) {
 			if (playerLocation.getBlockY() >= region.locationA.getBlockY() && playerLocation.getBlockY() <= region.locationB.getBlockY()) return true;
@@ -3562,9 +3538,12 @@ public class EvilBook extends JavaPlugin {
 		return false;
 	}
 
-	//
-	// Returns if the player is in the region's Z range or not
-	//
+	/**
+	 * Returns if the player is in the region's Z range or not
+	 * @param region The region to execute the check with
+	 * @param location The location to execute the check with
+	 * @return If the location is in the region's Z range
+	 */
 	static Boolean isInRegionZRange(Region region, Location playerLocation) {
 		if (region.locationA.getBlockZ() <= region.locationB.getBlockZ()) {
 			if (playerLocation.getBlockZ() >= region.locationA.getBlockZ() && playerLocation.getBlockZ() <= region.locationB.getBlockZ()) return true;
@@ -3574,9 +3553,11 @@ public class EvilBook extends JavaPlugin {
 		return false;
 	}
 	
-	//
-	// Returns an entity type from an entity type name
-	//
+	/**
+	 * Return the entity type from the entity type name
+	 * @param name The name of the entity type
+	 * @return The entity type
+	 */
 	public EntityType getEntity(String name) {
 		if (EntityType.fromName(name) != null) return EntityType.fromName(name);
 		try {if (EntityType.fromId(Integer.valueOf(name)) != null) return EntityType.fromId(Integer.valueOf(name));} catch (Exception e) {}
@@ -3594,9 +3575,11 @@ public class EvilBook extends JavaPlugin {
 		return null;
 	}
 	
-	//
-	// Returns an enchantment from an enchantment name
-	//
+	/**
+	 * Return the enchantment from the enchantment name
+	 * @param name The name of the enchantment
+	 * @return The enchantment
+	 */
 	public Enchantment getEnchantment(String name) {
 		if (Enchantment.getByName(name) != null) return Enchantment.getByName(name);
 		try {if (Enchantment.getById(Integer.valueOf(name)) != null) return Enchantment.getById(Integer.valueOf(name));} catch (Exception e) {}
@@ -3625,9 +3608,11 @@ public class EvilBook extends JavaPlugin {
 		return null;
 	}
 	
-	//
-	// Returns a colorized string
-	//
+	/**
+	 * Returns a colorized string
+	 * @param string The string to colorize
+	 * @return The colorized string
+	 */
 	public String colorizeString(String string) {
 		String name = "";
 		int color = 0;
@@ -3646,9 +3631,13 @@ public class EvilBook extends JavaPlugin {
 		return name;
 	}
 	
-	//
-	// Returns an itemstack of a book
-	//
+	/**
+	 * Returns an itemstack of a book
+	 * @param title The title of the book
+	 * @param author The author of the book
+	 * @param text The text in the book
+	 * @return The book itemstack
+	 */
 	public ItemStack getBook(String title, String author, List<String> text) {
 		ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
 	    BookMeta meta = (BookMeta)book.getItemMeta();
@@ -3659,16 +3648,22 @@ public class EvilBook extends JavaPlugin {
 	    return book;
 	}
 	
-	//
-	// Returns the minecraft world time
-	//
-	public String getTime(Location loc) {
-		return (int)(Math.floor(loc.getWorld().getTime() / 1000)) + ":" + ((int) ((loc.getWorld().getTime() % 1000) / 1000.0 * 60) < 10 ? "0" + (int) ((loc.getWorld().getTime() % 1000) / 1000.0 * 60) : (int) ((loc.getWorld().getTime() % 1000) / 1000.0 * 60));
+	/**
+	 * Returns the minecraft world time
+	 * @param world The world to obtain the time of
+	 * @return The time of the minecraft world
+	 */
+	public String getTime(World world) {
+		return (int)(Math.floor(world.getTime() / 1000)) + ":" + ((int) ((world.getTime() % 1000) / 1000.0 * 60) < 10 ? "0" + (int) ((world.getTime() % 1000) / 1000.0 * 60) : (int) ((world.getTime() % 1000) / 1000.0 * 60));
 	}
 	
-	//
-	// Returns a string with characters replaced with other specified characters ignoring case on replacing
-	//
+	/**
+	 * Returns a string with characters replaced with other specified characters ignoring case on replacement
+	 * @param text The text
+	 * @param search The search word to replace
+	 * @param replacement The world to replace with
+	 * @return The string after all instances of the search word, ignoring case, are replaced
+	 */
 	public String replaceAllIgnoreCase(final String text, final String search, final String replacement){
 		if(search.equals(replacement)) return text;
 		final StringBuffer buffer = new StringBuffer(text);
@@ -3682,9 +3677,11 @@ public class EvilBook extends JavaPlugin {
 		return buffer.toString();
 	}
 	
-	//
-	// Returns a string number as roman numerals
-	//
+	/**
+	 * Returns a string number as roman numerals
+	 * @param number The number to convert into roman numerals
+	 * @return The string number as roman numerals
+	 */
 	public String toRomanNumerals(String number) {
 		if (number.equals("1")) return "I";
 		if (number.equals("2")) return "II";
@@ -3694,9 +3691,11 @@ public class EvilBook extends JavaPlugin {
 		return null;
 	}
 	
-	//
-	// Returns a formatted string
-	//
+	/**
+	 * Returns a formatted string
+	 * @param text The text to format
+	 * @return The formatted string
+	 */
 	public String toFormattedString(String text) {
 		if (!text.contains("&")) return text;
 		text = replaceAllIgnoreCase(text, "&a", "§a");
@@ -3724,9 +3723,11 @@ public class EvilBook extends JavaPlugin {
 		return text;
 	}
 	
-	//
-	// Returns the weather state in the blocks biome as a string
-	//
+	/**
+	 * Returns the weather state in the blocks biome as a string
+	 * @param block The block to get the weather data from
+	 * @return The weather state as a string at the block
+	 */
 	public String getWeather(Block block) {
 		if (block.getWorld().hasStorm() && block.getWorld().isThundering() && block.getBiome() != Biome.FROZEN_OCEAN && block.getBiome() != Biome.FROZEN_RIVER && block.getBiome() != Biome.ICE_MOUNTAINS && block.getBiome() != Biome.ICE_PLAINS && block.getBiome() != Biome.TAIGA && block.getBiome() != Biome.TAIGA_HILLS) return "Lightning";
 		if (block.getWorld().hasStorm() && (block.getBiome() == Biome.FROZEN_OCEAN || block.getBiome() == Biome.FROZEN_RIVER || block.getBiome() == Biome.ICE_MOUNTAINS || block.getBiome() == Biome.ICE_PLAINS || block.getBiome() == Biome.TAIGA || block.getBiome() == Biome.TAIGA_HILLS)) return "Snow";
@@ -3734,36 +3735,46 @@ public class EvilBook extends JavaPlugin {
 		return "Sunny";
 	}
 	
-	//
-	// Logging system
-	//TODO: Update to new system
+	/**
+	 * Log a block break
+	 * @param block The block to log
+	 * @param playerName The player's name who broke the block
+	 */
 	public void logBlockBreak(Block block, String playerName) {
 		// X,Y,Z¶PlayerName¶WorldName¶EditID¶BlockTypeID¶BlockData
 		writeFileNewLine("plugins/EvilBook/Protection/" + block.getWorld().getName() + "," + block.getX() + "," + block.getY() + "," + block.getZ() + ".txt", block.getX() + "," + block.getY() + "," + block.getZ() + "¶" + playerName + "¶" + block.getWorld().getName() + "¶0¶" + block.getTypeId() + "¶" + block.getData());
 		writeFileNewLine("plugins/EvilBook/Protection/" + playerName + ".txt", block.getX() + "," + block.getY() + "," + block.getZ() + "¶" + playerName + "¶" + block.getWorld().getName() + "¶0¶" + block.getTypeId() + "¶" + block.getData());
 	}
 	
-	//
-	// Log A Block Place
-	//
+	/**
+	 * Log a block place
+	 * @param block The block to log
+	 * @param playerName The player's name who placed the block
+	 */
 	public void logBlockPlace(Block block, String playerName) {
 		// X,Y,Z¶PlayerName¶WorldName¶EditID¶BlockTypeID¶BlockData
 		writeFileNewLine("plugins/EvilBook/Protection/" + block.getWorld().getName() + "," + block.getX() + "," + block.getY() + "," + block.getZ() + ".txt", block.getX() + "," + block.getY() + "," + block.getZ() + "¶" + playerName + "¶" + block.getWorld().getName() + "¶1¶" + block.getTypeId() + "¶" + block.getData());
 		writeFileNewLine("plugins/EvilBook/Protection/" + playerName + ".txt", block.getX() + "," + block.getY() + "," + block.getZ() + "¶" + playerName + "¶" + block.getWorld().getName() + "¶1¶" + block.getTypeId() + "¶0");
 	}
 	
-	//
-	// Log A Liquid Place
-	//
-	public void logLiquidPlace(Block block, int LiquidID, String playerName) {
+	/**
+	 * Log a liquid placement
+	 * @param block The block to log
+	 * @param liquidID The type ID of the liquid
+	 * @param playerName The player's name who placed the liquid
+	 */
+	public void logLiquidPlace(Block block, int liquidID, String playerName) {
 		// X,Y,Z¶PlayerName¶WorldName¶EditID¶LiquidID¶BlockData
-		writeFileNewLine("plugins/EvilBook/Protection/" + block.getWorld().getName() + "," + block.getX() + "," + block.getY() + "," + block.getZ() + ".txt", block.getX() + "," + block.getY() + "," + block.getZ() + "¶" + playerName + "¶" + block.getWorld().getName() + "¶2¶" + LiquidID + "¶0");
-		writeFileNewLine("plugins/EvilBook/Protection/" + playerName + ".txt", block.getX() + "," + block.getY() + "," + block.getZ() + "¶" + playerName + "¶" + block.getWorld().getName() + "¶2¶" + LiquidID + "¶0");
+		writeFileNewLine("plugins/EvilBook/Protection/" + block.getWorld().getName() + "," + block.getX() + "," + block.getY() + "," + block.getZ() + ".txt", block.getX() + "," + block.getY() + "," + block.getZ() + "¶" + playerName + "¶" + block.getWorld().getName() + "¶2¶" + liquidID + "¶0");
+		writeFileNewLine("plugins/EvilBook/Protection/" + playerName + ".txt", block.getX() + "," + block.getY() + "," + block.getZ() + "¶" + playerName + "¶" + block.getWorld().getName() + "¶2¶" + liquidID + "¶0");
 	}
 	
-	//
-	// Log A Sign Break
-	//
+	/**
+	 * Log a sign break
+	 * @param sign The sign to log
+	 * @param block The block to log
+	 * @param playerName The player's name who broke the block
+	 */
 	public void logSignBreak(Sign sign, Block block, String playerName) {
 		// X,Y,Z¶PlayerName¶WorldName¶EditID¶BlockTypeID¶BlockData¶BlockDirection¶Line1¶Line2¶Line3¶Line4
 		String[] signLine = new String[4];
@@ -3775,51 +3786,65 @@ public class EvilBook extends JavaPlugin {
 		writeFileNewLine("plugins/EvilBook/Protection/" + sign.getWorld().getName() + "," + sign.getX() + "," + sign.getY() + "," + sign.getZ() + ".txt", sign.getX() + "," + sign.getY() + "," + sign.getZ() + "¶" + playerName + "¶" + sign.getWorld().getName() + "¶3¶" + sign.getTypeId() + "¶0¶" + ((Directional) block.getType().getNewData(block.getData())).getFacing().toString() + "¶" + signLine[0] + "¶" + signLine[1] + "¶" + signLine[2] + "¶" + signLine[3]);
 	}
 	
-	//
-	// Get logged block location
-	//
+	/**
+	 * Return the location of a logged block
+	 * @param line The logged line containing the block information
+	 * @return The location of the logged block
+	 */
 	public Location getLogBlockLocation(String line) {
 		return new Location(getServer().getWorld(line.split("¶")[2]), Double.valueOf(line.split(",")[0]), Double.valueOf(line.split(",")[1]), Double.valueOf(line.split(",")[2].split("¶")[0]));
 	}
 	
-	//
-	// Get A Logged Block Editors Name
-	//
+	/**
+	 * Return the editor's name of a logged block
+	 * @param line The logged line containing the block information
+	 * @return The editor's name of the logged block
+	 */
 	public String getLogBlockEditor(String line) {
 		return line.split("¶")[1];
 	}
 	
-	//
-	// Get A Logged Block Edit ID
-	//
+	/**
+	 * Return the edit ID of a logged block
+	 * @param line The logged line containing the block information
+	 * @return The edit ID of the logged block
+	 */
 	public byte getLogBlockEditID(String line) {
 		return Byte.valueOf(line.split("¶")[3]);
 	}
 	
-	//
-	// Get A Logged Block Type ID
-	//
+	/**
+	 * Return the type ID of a logged block
+	 * @param line The logged line containing the block information
+	 * @return The type ID of the logged block
+	 */
 	public short getLogBlockTypeID(String line) {
 		return Short.valueOf(line.split("¶")[4]);
 	}
 	
-	//
-	// Get A Logged Block Data
-	//
+	/**
+	 * Return the data of a logged block
+	 * @param line The logged line containing the block information
+	 * @return The data of the logged block
+	 */
 	public byte getLogBlockData(String line) {
 		return Byte.valueOf(line.split("¶")[5]);
 	}
 	
-	//
-	// Get A Logged Block Direction
-	//
+	/**
+	 * Return the direction of a logged block
+	 * @param line The logged line containing the block information
+	 * @return The direction of the logged block
+	 */
 	public BlockFace getLogBlockDirection(String line) {
 		return BlockFace.valueOf(line.split("¶")[6]);
 	}
 	
-	//
-	// Get A Logged Block Extra Argument 1
-	//
+	/**
+	 * Return the extra argument one of a logged block
+	 * @param line The logged line containing the block information
+	 * @return The extra argument one of the logged block
+	 */
 	public String getLogBlockArg1(String line) {
 		try {
 			return line.split("¶")[7];
@@ -3828,9 +3853,11 @@ public class EvilBook extends JavaPlugin {
 		}
 	}
 	
-	//
-	// Get A Logged Block Extra Argument 2
-	//
+	/**
+	 * Return the extra argument two of a logged block
+	 * @param line The logged line containing the block information
+	 * @return The extra argument two of the logged block
+	 */
 	public String getLogBlockArg2(String line) {
 		try {
 			return line.split("¶")[8];
@@ -3839,9 +3866,11 @@ public class EvilBook extends JavaPlugin {
 		}
 	}
 	
-	//
-	// Get A Logged Block Extra Argument 3
-	//
+	/**
+	 * Return the extra argument three of a logged block
+	 * @param line The logged line containing the block information
+	 * @return The extra argument three of the logged block
+	 */
 	public String getLogBlockArg3(String line) {
 		try {
 			return line.split("¶")[9];
@@ -3850,9 +3879,11 @@ public class EvilBook extends JavaPlugin {
 		}
 	}
 	
-	//
-	// Get A Logged Block Extra Argument 4
-	//
+	/**
+	 * Return the extra argument four of a logged block
+	 * @param line The logged line containing the block information
+	 * @return The extra argument four of the logged block
+	 */
 	public String getLogBlockArg4(String line) {
 		try {
 			return line.split("¶")[10];
@@ -3861,10 +3892,12 @@ public class EvilBook extends JavaPlugin {
 		}
 	}
 	
-	//
-	// Return An Array Of Strings With The Blocks Edits
-	//
-	public List<String> getLogBlockInformation(Block block, Player player) {
+	/**
+	 * Return an array of strings with the blocks edits
+	 * @param block The block to gather the logging information on
+	 * @return The logging information for the block
+	 */
+	public List<String> getLogBlockInformation(Block block) {
 		List<String> info = new ArrayList<String>();
 		try {
 			BufferedReader br = new BufferedReader(new FileReader("plugins/EvilBook/Protection/" + block.getWorld().getName() + "," + block.getX() + "," + block.getY() + "," + block.getZ() + ".txt"));
@@ -3880,9 +3913,11 @@ public class EvilBook extends JavaPlugin {
 		return info;
 	}
 	
-	//
-	// Rollback A Players Edits
-	//
+	/**
+	 * Rollback a player's edits
+	 * @param player The player executing the rollback
+	 * @param badPlayer The player to rollback
+	 */
 	public void rollbackEdits(Player player, String badPlayer) {
 		player.sendMessage("§7Rolling back " + badPlayer);
 		try {
@@ -3911,9 +3946,11 @@ public class EvilBook extends JavaPlugin {
 		}
 	}
 	
-	//
-	// Write A New Line Of Text In A Given File
-	//
+	/**
+	 * Append text to a file
+	 * @param file The file
+	 * @param text The text to append
+	 */
 	public void writeFileNewLine(String file, String text) {
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
@@ -3925,9 +3962,11 @@ public class EvilBook extends JavaPlugin {
 		}
 	}
 	
-	//
-	// Save Object Into A File
-	//
+	/**
+	 * Save an object to a file
+	 * @param obj The object to save
+	 * @param path The path of the file to save to
+	 */
 	public void saveObject(Object obj, String path) throws Exception {
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path));
 		oos.writeObject(obj);
@@ -3935,9 +3974,11 @@ public class EvilBook extends JavaPlugin {
 		oos.close();
 	}
 
-	//
-	// Load Object From A File
-	//
+	/**
+	 * Load an object from a file
+	 * @param path The path of the file to load from
+	 * @return The object loaded from the file
+	 */
 	public Object loadObject(String path) throws Exception {
 		ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
 		Object result = ois.readObject();
@@ -3945,9 +3986,10 @@ public class EvilBook extends JavaPlugin {
 		return result;
 	}
 	
-	//
-	// Update website player statistics
-	//
+	/**
+	 * Update the online player web statistic
+	 * @param onlinePlayers The number of online players
+	 */
 	public void updateWebPlayerStatistics(int onlinePlayers) {
 		try {
 			BufferedWriter out = new BufferedWriter(new FileWriter("C:/Program Files (x86)/Apache Software Foundation/Apache2.2/htdocs/playerStats.htm"));
@@ -3958,16 +4000,19 @@ public class EvilBook extends JavaPlugin {
 		}
 	}
 	
-	//
-	// Return if a profile for the player exists
-	//
+	/**
+	 * Return if a player profile exists
+	 * @param playerName The player name to execute the check with
+	 * @return If the player's profile is existant
+	 */
 	public boolean isProfileExistant(String playerName) {
 		return new File("plugins/EvilBook/Players/" + playerName + ".properties").exists();
 	}
 	
-	//
-	// Get the player creative inventory
-	//
+	/**
+	 * Gets the players creative inventory and equips it
+	 * @param player The player
+	 */
 	public void getCreativeInventory(Player player) {	
 		/*
 		try {
@@ -3990,9 +4035,10 @@ public class EvilBook extends JavaPlugin {
 		}
 	}
 	
-	//
-	// Get the player survival inventory
-	//
+	/**
+	 * Get the players survival inventory and equip it
+	 * @param player The player
+	 */
 	public void getSurvivalInventory(Player player) {	
 		player.getInventory().clear();
 		player.getInventory().setArmorContents(new ItemStack[4]);
@@ -4007,9 +4053,10 @@ public class EvilBook extends JavaPlugin {
 		}
 	}
 	
-	//
-	// Set the player creative inventory
-	//
+	/**
+	 * Set the players creative inventory
+	 * @param player The player
+	 */
 	public void setCreativeInventory(Player player) {
 		try {
 			saveObject(new SerializableInventory(player.getInventory().getContents(), player.getInventory().getArmorContents()), "plugins/EvilBook/Inventories/Creative/" + player.getName() + ".inv");
@@ -4019,9 +4066,10 @@ public class EvilBook extends JavaPlugin {
 		}
 	}
 	
-	//
-	// Set the player survival inventory
-	//
+	/**
+	 * Set the players survival inventory
+	 * @param player The player
+	 */
 	public void setSurvivalInventory(Player player) {
 		try {
 			saveObject(new SerializableInventory(player.getInventory().getContents(), player.getInventory().getArmorContents()), "plugins/EvilBook/Inventories/Survival/" + player.getName() + ".inv");
@@ -4031,9 +4079,13 @@ public class EvilBook extends JavaPlugin {
 		}
 	}
 	
-	//
-	// Square a length
-	//
+	/**
+	 * Square a length
+	 * @param x The X length
+	 * @param y The Y length
+	 * @param z The Z length
+	 * @return The squared length
+	 */
     private static final double lengthSq(double x, double y, double z) {
         return (x * x) + (y * y) + (z * z);
     }

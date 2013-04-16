@@ -2,6 +2,9 @@ name: EvilBookOrion
 main: me.evilpeanut.EvilBook
 version: 1.6
 commands:
+  evilland:
+    description: Teleport to evilland
+    usage: /<command>
   hsphere:
     description: Generate a hollow sphere
     usage: /<command>
@@ -62,9 +65,6 @@ commands:
   name:
     description: Rename the held item
     usage: /<command> [name]
-  library:
-    description: Preform library operation
-    usage: /<command>
   advertise:
     description: Broadcast an advertisement
     usage: /<command> [message]

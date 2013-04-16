@@ -6,6 +6,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
+/**
+ * @author Reece Aaron Lecrivain
+ */
 public enum Spell {
 	LightningStrikeI("Lightning Strike I"),
 	InstantGrow("Instant Grow"),
@@ -14,10 +17,18 @@ public enum Spell {
 	
 	String name;
 	
+	/**
+	 * Define a new spell
+	 * @param name The name of the spell
+	 */
 	Spell (String name) {
 		this.name = name;
 	}
 	
+	/**
+	 * Preform the spell
+	 * @param event The player interact event
+	 */
 	public void preformSpell(PlayerInteractEvent event) {
 		//
 		// Lightning Strike I

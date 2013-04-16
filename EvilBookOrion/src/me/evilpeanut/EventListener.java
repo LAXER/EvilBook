@@ -55,6 +55,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -66,6 +67,7 @@ import org.bukkit.event.player.PlayerEggThrowEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
@@ -80,21 +82,35 @@ import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.ItemStack;
 //TODO: Re-add import org.kitteh.tag.PlayerReceiveNameTagEvent;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 
+/**
+ * @author Reece Aaron Lecrivain
+ */
 public class EventListener implements Listener {
-	EvilBook plugin;
+	private EvilBook plugin;
 
+	/**
+	 * Define a new event listener
+	 * @param evilBook The parent evilbook plugin
+	 */
 	public EventListener(EvilBook evilBook) {
 		plugin = evilBook;
 	}
 
-	//
-	// Player Events
-	//
+	/**
+	 * Called when a player moves
+	 */
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerMove(PlayerMoveEvent event) {
+		if (event.getTo().getBlockX() > 12550820 || event.getTo().getBlockX() < -12550820 || event.getTo().getBlockZ() > 12550820 || event.getTo().getBlockZ() < -12550820) {
+			event.getPlayer().sendMessage("§7The far-lands are blocked");
+			event.setCancelled(true);
+			return;
+		}
 		if (!plugin.isInSurvival(event.getPlayer()) && !plugin.isInAdventure(event.getPlayer())) {
 			if (plugin.getProfile(event.getPlayer()).jumpAmplifier != 0 && !event.getPlayer().isFlying() && event.getFrom().getY() < event.getTo().getY() && event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getTypeId() != 0) event.getPlayer().setVelocity(event.getPlayer().getVelocity().setY(plugin.getProfile(event.getPlayer()).jumpAmplifier));
 			if (event.getPlayer().isSprinting()) event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20, plugin.getProfile(event.getPlayer()).runAmplifier), true);
@@ -109,6 +125,41 @@ public class EventListener implements Listener {
 		}
 	}
 	
+	/**
+	 * Called when a splash potion hits an area
+	 */
+	@EventHandler(priority = EventPriority.LOW)
+	public void onPotionSplash(PotionSplashEvent event) {
+		if (event.getEntity().getShooter() instanceof Player == false) return;
+		if (plugin.isInSurvival(event.getEntity())) return;
+		Player shooter = (Player) event.getEntity().getShooter();
+		if (plugin.getProfile(shooter).rank.ID >= Rank.Admin.ID) return;
+		if (Potion.fromItemStack(event.getPotion().getItem()).getType() == PotionType.INVISIBILITY) {
+			shooter.sendMessage("§7Only admins can use invisibility potions");
+			event.setCancelled(true);
+		}
+	}
+	
+	/**
+	 * Called when a player finishes consuming an item
+	 */
+	@EventHandler(priority = EventPriority.LOW)
+	public void onPlayerDrinkPotion(PlayerItemConsumeEvent event) {
+		if (plugin.getProfile(event.getPlayer()).rank.ID >= Rank.Admin.ID) return;
+		if (plugin.isInSurvival(event.getPlayer())) return;
+		if (event.getItem().getType() == Material.POTION) {
+			if (event.getItem().getDurability() != 0) {
+				if (Potion.fromItemStack(event.getItem()).getType() == PotionType.INVISIBILITY) {
+					event.getPlayer().sendMessage("§7Only admins can use invisibility potions");
+					event.setCancelled(true);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Called when a player does a fishing related action
+	 */
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerFish(PlayerFishEvent event) {
@@ -128,11 +179,17 @@ public class EventListener implements Listener {
 		}
 	}
 	
+	/**
+	 * Called when a player throws an egg
+	 */
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerEggThrow(PlayerEggThrowEvent event) {
 		if (plugin.getProfile(event.getPlayer()).rank.ID < Rank.Admin.ID) event.setHatching(false);
 	}
 
+	/**
+	 * Called when a player is about to be teleported by a portal
+	 */
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerPortal(PlayerPortalEvent event) {
 		if (event.getFrom().getWorld().getName().equals("SurvivalLand")) event.getPlayer().teleport(plugin.getServer().getWorld("SurvivalLandNether").getSpawnLocation());
@@ -146,6 +203,9 @@ public class EventListener implements Listener {
 		}
 	}
 	
+	/**
+	 * Called when a player drops an item
+	 */
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDropItem(PlayerDropItemEvent event) {
 		int dropCount = 0;
@@ -155,6 +215,9 @@ public class EventListener implements Listener {
 		if (dropCount >= 128 && plugin.getProfile(event.getPlayer()).rank.ID < Rank.Moderator.ID) event.setCancelled(true);
 	}
 	
+	/**
+	 * Called when a player empties a bucket
+	 */
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
 		Player player = event.getPlayer();
@@ -200,6 +263,9 @@ public class EventListener implements Listener {
 		}
 	}
 	
+	/**
+	 * Called when a player dies
+	 */
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		Player player = event.getEntity();
@@ -318,6 +384,9 @@ public class EventListener implements Listener {
 		}
 	}
 	
+	/**
+	 * Called when a player attempts to login
+	 */
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerLogin(PlayerLoginEvent event) {
 		//
@@ -328,11 +397,20 @@ public class EventListener implements Listener {
 			return;
 		}
 		//
+		// Check the players location is valid to prevent integer overflow
+		//
+		if (event.getPlayer().getLocation().getBlockX() > 12550820 || event.getPlayer().getLocation().getBlockX() < -12550820 || event.getPlayer().getLocation().getBlockZ() > 12550820 || event.getPlayer().getLocation().getBlockZ() < -12550820) {
+			event.getPlayer().teleport(event.getPlayer().getWorld().getSpawnLocation());
+		}
+		//
 		// Update playerStats.htm
 		//
 		plugin.updateWebPlayerStatistics(plugin.getServer().getOnlinePlayers().length + 1);
 	}
 	
+	/**
+	 * Called when a player joins the server after login
+	 */
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		if (plugin.isInSurvival(event.getPlayer())) event.getPlayer().setScoreboard(plugin.survivalStatsScoreboard);
@@ -340,6 +418,9 @@ public class EventListener implements Listener {
 		event.setJoinMessage(null);
 	}
 	
+	/**
+	 * Called when a player respawns
+	 */
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
 		if (plugin.isInSurvival(event.getPlayer().getWorld().getName())) {
@@ -354,6 +435,9 @@ public class EventListener implements Listener {
 		}
 	}
 	
+	/**
+	 * Called when a player leaves the server
+	 */
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		//
@@ -368,11 +452,17 @@ public class EventListener implements Listener {
 		plugin.updateWebPlayerStatistics(plugin.getServer().getOnlinePlayers().length - 1);
 	}
 	
+	/**
+	 * Called when a player is kicked from the server
+	 */
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerKick(PlayerKickEvent event) {
 		event.setLeaveMessage("§7" + event.getPlayer().getName() + " has left the game");
 	}
 	
+	/**
+	 * Called when a player sends a chat message
+	 */
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onAsyncPlayerChat(AsyncPlayerChatEvent e) {
 		Player player = e.getPlayer();
@@ -394,6 +484,9 @@ public class EventListener implements Listener {
 		//plugin.getProfile(player).lastMessageTime = System.currentTimeMillis();
 	}
 	
+	/**
+	 * Called when a player interacts with an object or air
+	 */
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if (event.getPlayer().getItemInHand().getTypeId() == 280 && event.getPlayer().getName().equals("EvilPeanut")) {
@@ -426,6 +519,33 @@ public class EventListener implements Listener {
 			}
 		}
 		if (event.getClickedBlock() == null) return;
+		if ((event.getClickedBlock().getTypeId() == 63 || event.getClickedBlock().getTypeId() == 68) && event.getItem().getTypeId() == 351) {
+			String dyeTextColor;
+			byte dyeData = event.getItem().getData().getData();
+			switch (dyeData) {
+				case 1: dyeTextColor = "§c"; break;
+				case 2: dyeTextColor = "§2"; break;
+				case 4: dyeTextColor = "§1"; break;
+				case 5: dyeTextColor = "§5"; break;
+				case 6: dyeTextColor = "§3"; break;
+				case 7: dyeTextColor = "§7"; break;
+				case 8: dyeTextColor = "§8"; break;
+				case 9: dyeTextColor = "§d"; break;
+				case 10: dyeTextColor = "§a"; break;
+				case 11: dyeTextColor = "§e"; break;
+				case 12: dyeTextColor = "§b"; break;
+				case 13: dyeTextColor = "§d"; break;
+				case 14: dyeTextColor = "§6"; break;
+				case 15: dyeTextColor = "§f"; break;
+				default: dyeTextColor = "§0"; break;
+			}
+			Sign s = (Sign) event.getClickedBlock().getState();
+			if (s.getLine(0).length() != 0) s.setLine(0, dyeTextColor + (s.getLine(0).startsWith("§") && !s.getLine(0).startsWith("§l") && !s.getLine(0).startsWith("§k") && !s.getLine(0).startsWith("§n") && !s.getLine(0).startsWith("§m") && !s.getLine(0).startsWith("§o") && !s.getLine(0).startsWith("§r") ? s.getLine(0).substring(2, s.getLine(0).length()) : s.getLine(0)));
+			if (s.getLine(1).length() != 0) s.setLine(1, dyeTextColor + (s.getLine(1).startsWith("§") && !s.getLine(1).startsWith("§l") && !s.getLine(1).startsWith("§k") && !s.getLine(1).startsWith("§n") && !s.getLine(1).startsWith("§m") && !s.getLine(1).startsWith("§o") && !s.getLine(1).startsWith("§r") ? s.getLine(1).substring(2, s.getLine(1).length()) : s.getLine(1)));
+			if (s.getLine(2).length() != 0) s.setLine(2, dyeTextColor + (s.getLine(2).startsWith("§") && !s.getLine(2).startsWith("§l") && !s.getLine(2).startsWith("§k") && !s.getLine(2).startsWith("§n") && !s.getLine(2).startsWith("§m") && !s.getLine(2).startsWith("§o") && !s.getLine(2).startsWith("§r") ? s.getLine(2).substring(2, s.getLine(2).length()) : s.getLine(2)));
+			if (s.getLine(3).length() != 0) s.setLine(3, dyeTextColor + (s.getLine(3).startsWith("§") && !s.getLine(3).startsWith("§l") && !s.getLine(3).startsWith("§k") && !s.getLine(3).startsWith("§n") && !s.getLine(3).startsWith("§m") && !s.getLine(3).startsWith("§o") && !s.getLine(3).startsWith("§r") ? s.getLine(3).substring(2, s.getLine(3).length()) : s.getLine(3)));
+			s.update();
+		}
 		if (event.getClickedBlock().getTypeId() == 130 && plugin.isInSurvival(event.getPlayer()) && plugin.getProfile(event.getPlayer().getName(), false).rank != Rank.ServerOwner) {
 			event.getPlayer().sendMessage("§7Ender chests are blocked in survival");
 			event.setCancelled(true);
@@ -443,6 +563,9 @@ public class EventListener implements Listener {
 		}
 	}
 	
+	/**
+	 * Called when a player sends a command
+	 */
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		Player player = event.getPlayer();
@@ -471,14 +594,23 @@ public class EventListener implements Listener {
 		}
     }
 	
+	/**
+	 * Called when a player teleports
+	 */
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
 		Player player = event.getPlayer();
+		if (event.getTo().getBlockX() > 12550820 || event.getTo().getBlockX() < -12550820 || event.getTo().getBlockZ() > 12550820 || event.getTo().getBlockZ() < -12550820) {
+			player.sendMessage("§7The far-lands are blocked");
+			event.setCancelled(true);
+			return;
+		}
 		if (plugin.isInSurvival(event.getTo().getWorld().getName()) && plugin.getProfile(player).rank.ID >= Rank.Architect.ID) {
-			player.sendMessage("§7Welcome to the survival world beta test, report any bugs");
+			player.sendMessage("§7Welcome to the survival world");
 		} else if (plugin.isInSurvival(event.getTo().getWorld().getName()) && plugin.getProfile(player).rank.ID < Rank.Architect.ID) {
 			player.sendMessage("§7The survival world requires architect rank");
 			event.setCancelled(true);
+			return;
 		}
 		if (!plugin.isInSurvival(event.getTo().getWorld().getName()) && plugin.isInSurvival(event.getFrom().getWorld().getName())) {
 			plugin.getProfile(player).survivalLocation = event.getFrom();
@@ -491,6 +623,7 @@ public class EventListener implements Listener {
 				if (plugin.getProfile(player).rank.ID < plugin.commandBlacklist.get("/flatland")) {
 					player.sendMessage("§7You have to be a higher rank to access the flat lands");
 					event.setCancelled(true);
+					return;
 				} else {
 					player.sendMessage("§7Welcome to the flat lands");
 				}
@@ -510,12 +643,18 @@ public class EventListener implements Listener {
 		}
 	}
 	
+	/**
+	 * Called when a player has their game mode changed
+	 */
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
 		if (event.getNewGameMode() != GameMode.SURVIVAL && plugin.isInSurvival(event.getPlayer()) && plugin.getProfile(event.getPlayer()).rank != Rank.ServerOwner) event.setCancelled(true);
 		if (event.getNewGameMode() != GameMode.ADVENTURE && plugin.isInAdventure(event.getPlayer()) && plugin.getProfile(event.getPlayer()).rank != Rank.ServerOwner) event.setCancelled(true);
 	}
 	
+	/**
+	 * Called when a player changes world
+	 */
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerWorldChange(PlayerChangedWorldEvent event) {
 		if (plugin.isInSurvival(event.getPlayer())) {
@@ -548,19 +687,25 @@ public class EventListener implements Listener {
 		}
 	}
 	
-	//
-	// Block Events
-	//
+	/**
+	 * Called when a block is dispensed
+	 */
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onBlockDispense(BlockDispenseEvent event) {
 		if (event.getItem().getTypeId() == 326 || event.getItem().getTypeId() == 327) event.setCancelled(true);
 	}
 
+	/**
+	 * Called when a block is ignited
+	 */
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockIgnite(BlockIgniteEvent event) {
 		if (event.getCause() != BlockIgniteEvent.IgniteCause.FLINT_AND_STEEL) event.setCancelled(true);
 	}
 	
+	/**
+	 * Called when a block is formed
+	 */
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockForm(BlockFormEvent event) {
 		if (event.getNewState().getTypeId() == 78 && plugin.isInSurvival(event.getBlock().getWorld().getName()) == false) {
@@ -569,6 +714,9 @@ public class EventListener implements Listener {
 		}
 	}
 	
+	/**
+	 * Called when a block is broken
+	 */
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockBreak(BlockBreakEvent event) {
 		Block block = event.getBlock();
@@ -590,7 +738,7 @@ public class EventListener implements Listener {
 		//
 		// Region Protection
 		//
-		if (plugin.isRegionProtected(block.getLocation(), player) == true) {
+		if (plugin.isInProtectedRegion(block.getLocation(), player) == true) {
 			player.sendMessage("§cYou don't have permission to build here");
 			event.setCancelled(true);
 			return;
@@ -623,7 +771,7 @@ public class EventListener implements Listener {
 		// Block logging
 		//
 		if (plugin.getProfile(player).isLogging) {
-			List<String> info = plugin.getLogBlockInformation(event.getBlock(), player);
+			List<String> info = plugin.getLogBlockInformation(event.getBlock());
 			if (info.size() != 0) {
 				player.sendMessage("§b" + Integer.toString(info.size()) + " edits on this block");
 				for (int i = 0; i < info.size(); i++) player.sendMessage(info.get(i));
@@ -640,6 +788,9 @@ public class EventListener implements Listener {
 		}
 	}
 	
+	/**
+	 * Called when a block is placed
+	 */
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockPlace(BlockPlaceEvent event) {
 		Player player = event.getPlayer();
@@ -661,7 +812,7 @@ public class EventListener implements Listener {
 		//
 		// Region Protection
 		//
-		if (plugin.isRegionProtected(event.getBlock().getLocation(), player) == true) {
+		if (plugin.isInProtectedRegion(event.getBlock().getLocation(), player) == true) {
 			player.sendMessage("§cYou don't have permission to build here");
 			event.setCancelled(true);
 			return;
@@ -688,7 +839,7 @@ public class EventListener implements Listener {
 		// Block logging
 		//
 		if (plugin.getProfile(player).isLogging) {
-			List<String> info = plugin.getLogBlockInformation(event.getBlock(), player);
+			List<String> info = plugin.getLogBlockInformation(event.getBlock());
 			if (info.size() != 0) player.sendMessage("§b" + Integer.toString(info.size()) + " edits on this block");
 			if (info.size() == 0) player.sendMessage("§7" + "No edits on this block");
 			for (int i = 0; i < info.size(); i++) player.sendMessage(info.get(i));
@@ -698,6 +849,9 @@ public class EventListener implements Listener {
 		}
 	}
 	
+	/**
+	 * Called when a sign is changed by a player
+	 */
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onSignChange(SignChangeEvent e) {
 		if (e.getLines().length == 0) return;
@@ -737,7 +891,7 @@ public class EventListener implements Listener {
 				plugin.logSevere("Failed to save dynamic sign database '" + e.getBlock().getLocation().getWorld().getName() + e.getBlock().getLocation().getBlockX() + e.getBlock().getLocation().getBlockY() + e.getBlock().getLocation().getBlockZ() + ".db'");
 				e1.printStackTrace();
 			}
-			String time = plugin.getTime(e.getBlock().getLocation());
+			String time = plugin.getTime(e.getBlock().getWorld());
 			String weather = plugin.getWeather(e.getBlock());
 			e.setLine(0, text[0].replace("[time]", time).replace("[weather]", weather));
 			e.setLine(1, text[1].replace("[time]", time).replace("[weather]", weather));
@@ -746,12 +900,15 @@ public class EventListener implements Listener {
 		}
 	}
 	
+	/**
+	 * Called when a hanging entity is created
+	 */
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onHangingPlaceEvent(HangingPlaceEvent event) {
 		//
 		// Region Protection
 		//
-		if (plugin.isRegionProtected(event.getBlock().getLocation(), event.getPlayer()) == true) {
+		if (plugin.isInProtectedRegion(event.getBlock().getLocation(), event.getPlayer()) == true) {
 			event.getPlayer().sendMessage("§cYou don't have permission to build here");
 			event.setCancelled(true);
 			return;
@@ -762,10 +919,9 @@ public class EventListener implements Listener {
 		//TODO: Re-add
 	}
 	
-	//
-	// Entity Events
-	//
-	// TODO: Add event so only admins recieve invisibility potion effects
+	/**
+	 * Called when a vehicle moves
+	 */
 	@EventHandler(priority = EventPriority.LOW)
 	public void onVehicleMove(VehicleMoveEvent event) {
 		if (event.getVehicle().getPassenger() instanceof Player == false) return;
@@ -783,12 +939,15 @@ public class EventListener implements Listener {
 		}
 	}
 	
+	/**
+	 * Called when a hanging entity is removed by an entity
+	 */
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onHangingBreakByEntity(HangingBreakByEntityEvent event) {
 		//
 		// Region Protection
 		//
-		if (event.getRemover() instanceof Player && plugin.isRegionProtected(event.getEntity().getLocation(), ((Player) event.getRemover()).getPlayer()) == true) {
+		if (event.getRemover() instanceof Player && plugin.isInProtectedRegion(event.getEntity().getLocation(), ((Player) event.getRemover()).getPlayer()) == true) {
 			((Player) event.getRemover()).getPlayer().sendMessage("§cYou don't have permission to build here");
 			event.setCancelled(true);
 			return;
@@ -799,16 +958,25 @@ public class EventListener implements Listener {
 		//TODO: Re-add
 	}
 	
+	/**
+	 * Called when an entity explodes
+	 */
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onEntityExplode(EntityExplodeEvent event) {
 		if (plugin.isInSurvival(event.getEntity()) == false) event.setCancelled(true);
 	}
 	
+	/**
+	 * Called when an entity changes a block except players
+	 */
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntityChangeBlock(EntityChangeBlockEvent event) {
 		if (event.getEntityType() == EntityType.ENDERMAN) event.setCancelled(true);
 	}
 	
+	/**
+	 * Called when a creature is spawned
+	 */
 	@EventHandler(priority = EventPriority.LOW)
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
 		if (event.getEntityType() == EntityType.SHEEP && !plugin.isInSurvival(event.getEntity())) {
@@ -822,6 +990,9 @@ public class EventListener implements Listener {
 		}
 	}
 	
+	/**
+	 * Called when a vehicle is created
+	 */
 	@EventHandler(priority = EventPriority.LOW)
 	public void onVehicleCreate(VehicleCreateEvent event) {
 		//

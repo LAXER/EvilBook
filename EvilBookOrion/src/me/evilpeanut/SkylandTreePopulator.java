@@ -10,14 +10,23 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.generator.BlockPopulator;
 
+/**
+ * @author Reece Aaron Lecrivain
+ */
 public class SkylandTreePopulator extends BlockPopulator {
-
 	private Random random;
 
+	/**
+	 * Define a new tree populator
+	 * @param world
+	 */
 	public SkylandTreePopulator(World world){
 		this.random = new Random(world.getSeed());
 	}
 
+	/**
+	 * Populate the chunk
+	 */
 	public void populate(World world, Random random, Chunk chunk) {
 		int x, y, z;
 		Block block, ground;
