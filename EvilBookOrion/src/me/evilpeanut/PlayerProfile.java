@@ -160,10 +160,6 @@ public class PlayerProfile {
 				prop.setProperty("Rank", "Visitor");
 				rank = Rank.Visitor;
 				newPlayer.setPlayerListName("§" + rank.color + (name.length() > 14 ? name.substring(0, 14) : name));
-				/*
-				setProperty("CleanupVersion", player.getName(), "6");
-				setProperty("LastLoginDate", player.getName(), "0");
-				 */
 				prop.setProperty("Money", "0");
 				money = 0;
 				prop.setProperty("NameColor", "f");

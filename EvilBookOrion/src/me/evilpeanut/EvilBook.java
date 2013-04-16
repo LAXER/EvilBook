@@ -1130,7 +1130,7 @@ public class EvilBook extends JavaPlugin {
 		//
 		if (command.getName().equalsIgnoreCase("jump")) {
 			if (args.length == 1) {
-				if (isDouble(args[0])) {
+				if (isDouble(args[0]) && Double.valueOf(args[0]) <= 41) {
 					getProfile(sender).jumpAmplifier = Double.valueOf(args[0]) / 4;
 				} else {
 					sender.sendMessage("§7Please enter a valid jump height");
@@ -1146,7 +1146,7 @@ public class EvilBook extends JavaPlugin {
 		//
 		if (command.getName().equalsIgnoreCase("run")) {
 			if (args.length == 1) {
-				if (isInteger(args[0])) {
+				if (isInteger(args[0]) && Integer.valueOf(args[0]) <= 127) {
 					getProfile(sender).runAmplifier = Integer.valueOf(args[0]);
 				} else {
 					sender.sendMessage("§7Please enter a valid run speed");
