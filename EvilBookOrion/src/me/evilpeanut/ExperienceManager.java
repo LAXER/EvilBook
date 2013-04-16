@@ -47,15 +47,7 @@ public class ExperienceManager {
 		this.player = new WeakReference<Player>(player);
 		this.playerName = player.getName();
 	}
-
-	public static int getHardMaxLevel() {
-		return hardMaxLevel;
-	}
-
-	public static void setHardMaxLevel(int hardMaxLevel) {
-		ExperienceManager.hardMaxLevel = hardMaxLevel;
-	}
-
+	
 	/**
 	 * Initialize the XP lookup tables. Basing this on observations noted in
 	 * https://bukkit.atlassian.net/browse/BUKKIT-47
@@ -122,37 +114,6 @@ public class ExperienceManager {
 	}
 
 	/**
-	 * Adjust the player's XP by the given amount in an intelligent fashion.
-	 * Works around some of the non-intuitive behavior of the basic Bukkit
-	 * player.giveExp() method.
-	 * 
-	 * @param amt Amount of XP, may be negative
-	 */
-	public void changeExp(int amt) {
-		changeExp((double) amt);
-	}
-
-	/**
-	 * Adjust the player's XP by the given amount in an intelligent fashion.
-	 * Works around some of the non-intuitive behavior of the basic Bukkit
-	 * player.giveExp() method.
-	 * 
-	 * @param amt Amount of XP, may be negative
-	 */
-	public void changeExp(double amt) {
-		setExp(getCurrentFractionalXP(), amt);
-	}
-
-	/**
-	 * Set the player's experience
-	 * 
-	 * @param amt Amount of XP, should not be negative
-	 */
-	public void setExp(int amt) {
-		setExp(0, amt);
-	}
-
-	/**
 	 * Set the player's fractional experience.
 	 * 
 	 * @param amt Amount of XP, should not be negative
@@ -198,38 +159,6 @@ public class ExperienceManager {
 	}
 
 	/**
-	 * Get the player's current fractional XP.
-	 * @return The player's total XP with fractions.
-	 */
-	private double getCurrentFractionalXP() {
-		Player player = getPlayer();
-
-		int lvl = player.getLevel();
-		double cur = getXpForLevel(lvl) + (double) (xpRequiredForNextLevel[lvl] * player.getExp());
-		return cur;
-	}
-
-	/**
-	 * Checks if the player has the given amount of XP.
-	 * 
-	 * @param amt The amount to check for.
-	 * @return true if the player has enough XP, false otherwise
-	 */
-	public boolean hasExp(int amt) {
-		return getCurrentExp() >= amt;
-	}
-
-	/**
-	 * Checks if the player has the given amount of fractional XP.
-	 * 
-	 * @param amt The amount to check for.
-	 * @return true if the player has enough XP, false otherwise
-	 */
-	public boolean hasExp(double amt) {
-		return getCurrentFractionalXP() >= amt;
-	}
-
-	/**
 	 * Get the level that the given amount of XP falls within.
 	 * 
 	 * @param exp The amount to check for.
@@ -249,20 +178,6 @@ public class ExperienceManager {
 		}
 		int pos = Arrays.binarySearch(xpTotalToReachLevel, exp);
 		return pos < 0 ? -pos - 2 : pos;
-	}
-
-	/**
-	 * Retrieves the amount of experience the experience bar can hold at the given level.
-	 * @param level - level to check.
-	 * @return The amount of experience at this level in the level bar.
-	 */
-	public int getXpNeededToLevelUp(int level) {
-		if (level < 0)
-			throw new IllegalArgumentException("Level cannot be negative.");
-
-		// Initialize lookup tables
-		getXpForLevel(level);
-		return xpRequiredForNextLevel[level];
 	}
 
 	/**
