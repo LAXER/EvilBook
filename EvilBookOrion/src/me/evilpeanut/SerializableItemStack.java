@@ -18,7 +18,7 @@ public class SerializableItemStack implements Serializable {
 	private byte data;
 	private short durability;
 	private String displayName;
-	private Map<SerializableEnchantment, Integer> enchantmentList = new HashMap<SerializableEnchantment, Integer>();
+	private Map<Integer, Integer> enchantmentList = new HashMap<Integer, Integer>();
 	private List<String> lore;
 	
 	/**
@@ -28,7 +28,7 @@ public class SerializableItemStack implements Serializable {
 	public SerializableItemStack(ItemStack itemStack) {
 		amount = itemStack.getAmount();
 		durability = itemStack.getDurability();
-		for (int i = 0; i < itemStack.getEnchantments().size(); i++) enchantmentList.put(new SerializableEnchantment((Enchantment)itemStack.getEnchantments().keySet().toArray()[i]), (Integer)itemStack.getEnchantments().values().toArray()[i]);
+		for (int i = 0; i < itemStack.getEnchantments().size(); i++) enchantmentList.put((Integer)itemStack.getEnchantments().keySet().toArray()[i], (Integer)itemStack.getEnchantments().values().toArray()[i]);
 		typeID = itemStack.getTypeId();
 		data = itemStack.getData().getData();
 		displayName = itemStack.getItemMeta() == null ? null : itemStack.getItemMeta().getDisplayName();
@@ -43,7 +43,7 @@ public class SerializableItemStack implements Serializable {
 		ItemStack newStack = new ItemStack(typeID, amount);
 		newStack.setData(new MaterialData(typeID, data));
 		newStack.setDurability(durability);
-		for (int i = 0; i < enchantmentList.size(); i++) newStack.addEnchantment(((SerializableEnchantment)enchantmentList.keySet().toArray()[i]).toEnchantment(), (Integer)enchantmentList.values().toArray()[i]);
+		for (int i = 0; i < enchantmentList.size(); i++) newStack.addEnchantment(Enchantment.getById((int)enchantmentList.keySet().toArray()[i]), (Integer)enchantmentList.values().toArray()[i]);
 		ItemMeta newMeta = newStack.getItemMeta();
 		if (lore != null) newMeta.setLore(lore);
 		if (displayName != null) newMeta.setDisplayName(displayName);
