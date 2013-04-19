@@ -1,4 +1,5 @@
 package me.evilpeanut;
+
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;

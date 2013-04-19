@@ -1,4 +1,5 @@
 package me.evilpeanut;
+
 import org.bukkit.Location;
 
 /**

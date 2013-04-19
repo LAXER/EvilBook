@@ -1,4 +1,5 @@
 package me.evilpeanut;
+
 import java.util.Random;
 import org.bukkit.Chunk;
 import org.bukkit.Material;

@@ -1,4 +1,5 @@
 package me.evilpeanut;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Arrays;
