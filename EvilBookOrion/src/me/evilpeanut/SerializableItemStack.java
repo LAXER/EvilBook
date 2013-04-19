@@ -28,7 +28,7 @@ public class SerializableItemStack implements Serializable {
 	public SerializableItemStack(ItemStack itemStack) {
 		amount = itemStack.getAmount();
 		durability = itemStack.getDurability();
-		for (int i = 0; i < itemStack.getEnchantments().size(); i++) enchantmentList.put((Integer)itemStack.getEnchantments().keySet().toArray()[i], (Integer)itemStack.getEnchantments().values().toArray()[i]);
+		for (int i = 0; i < itemStack.getEnchantments().size(); i++) enchantmentList.put(((Enchantment)itemStack.getEnchantments().keySet().toArray()[i]).getId(), (Integer)itemStack.getEnchantments().values().toArray()[i]);
 		typeID = itemStack.getTypeId();
 		data = itemStack.getData().getData();
 		displayName = itemStack.getItemMeta() == null ? null : itemStack.getItemMeta().getDisplayName();
