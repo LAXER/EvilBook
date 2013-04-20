@@ -586,7 +586,7 @@ public class EvilBook extends JavaPlugin {
 		// Set All Command
 		//
 		if (command.getName().equalsIgnoreCase("setall")) {
-			if (args[0] == null || args[1] == null) return true;
+			if (args.length != 2 || args[0] == null || args[1] == null) return true;
 			for (Player p : getServer().getOnlinePlayers()) p.kickPlayer("§cUpdating player profiles, come back instantly");
 			String[] playerFiles = new File("plugins/EvilBook/Players").list();
 			Properties playerProp;
