@@ -163,6 +163,7 @@ public class EvilBook extends JavaPlugin {
 				FileInputStream inputStream = new FileInputStream(check);
 				prop.load(inputStream);
 				inputStream.close();
+				prop.setProperty("/setall", Byte.toString(Rank.ServerOwner.ID));
 				prop.setProperty("/cleandatabase", Byte.toString(Rank.ServerOwner.ID));
 				prop.setProperty("/rollback", Byte.toString(Rank.ServerOwner.ID));
 				prop.setProperty("/spam", Byte.toString(Rank.ServerOwner.ID));
@@ -581,6 +582,30 @@ public class EvilBook extends JavaPlugin {
 		// TODO: Add more sign commands
 		// TODO: Add projectile protection
 		// TODO: Improve speed of region checking (Per world region hashmaps?)	
+		//
+		// Set All Command
+		//
+		if (command.getName().equalsIgnoreCase("setall")) {
+			if (args[0] == null || args[1] == null) return true;
+			for (Player p : getServer().getOnlinePlayers()) p.kickPlayer("§cUpdating player profiles, come back instantly");
+			String[] playerFiles = new File("plugins/EvilBook/Players").list();
+			Properties playerProp;
+			for (int playerNo = 0; playerNo < playerFiles.length; playerNo++) {
+				try {
+					FileInputStream inputStream = new FileInputStream("plugins/EvilBook/Players/" + playerFiles[playerNo]);
+					playerProp = new Properties();
+					playerProp.load(inputStream);
+					inputStream.close();
+					playerProp.setProperty(args[0], args[1]);
+					FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/Players/" + playerFiles[playerNo]);
+					playerProp.store(outputStream, null);
+					outputStream.close();
+				} catch (Exception e) {
+					logSevere("Failed to load player " + playerFiles[playerNo]);
+					e.printStackTrace();
+				}
+			}
+		}
 		//
 		// Slap Command
 		//

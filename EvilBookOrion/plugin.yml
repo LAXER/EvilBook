@@ -2,6 +2,9 @@ name: EvilBookOrion
 main: me.evilpeanut.EvilBook
 version: 1.6
 commands:
+  setall:
+    description: Set the property to a value in all player profiles
+    usage: /<command>
   evilland:
     description: Teleport to evilland
     usage: /<command>
