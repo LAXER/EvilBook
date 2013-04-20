@@ -267,7 +267,8 @@ public class EvilBook extends JavaPlugin {
 		//
 		// Survival Generator
 		//
-		getServer().createWorld(new WorldCreator("SurvivalLand"));
+		WorldCreator survivalLand = new WorldCreator("SurvivalLand");
+		getServer().createWorld(survivalLand);
 		//
 		// Survival Nether Generator
 		//
@@ -664,9 +665,9 @@ public class EvilBook extends JavaPlugin {
 			} else if (args.length == 1) {
 				if (isProfileExistant(args[0])) {
 					if (getPlayer(args[0]) != null) {
-						sender.sendMessage("§5" + getPlayer(args[0]).getDisplayName() + "'s account balance is §d$" + getProfile(args[0], false).money);
+						sender.sendMessage("§5" + getPlayer(args[0]).getDisplayName() + "'s account balance is §d$" + getProfile(args[0]).money);
 					} else {
-						sender.sendMessage("§5" + getServer().getOfflinePlayer(args[0]).getName() + "'s account balance is §d$" + getProfile(args[0], true).money);
+						sender.sendMessage("§5" + getServer().getOfflinePlayer(args[0]).getName() + "'s account balance is §d$" + getOfflineProperty(args[0], "Money"));
 					}
 				} else {
 					sender.sendMessage("§7You can't view a player's balance who doesn't exist");
@@ -688,11 +689,11 @@ public class EvilBook extends JavaPlugin {
 					if (isProfileExistant(args[0])) {
 						if (getPlayer(args[0]) != null) {
 							getPlayer(args[0]).sendMessage("§7You have been charged $" + args[1]);
-							getProfile(args[0], false).money -= Integer.valueOf(args[1]);
+							getProfile(args[0]).money -= Integer.valueOf(args[1]);
 						} else {
-							PlayerProfile offlinePlayer = getProfile(args[0], true);
-							offlinePlayer.money -= Integer.valueOf(args[1]);
-							offlinePlayer.saveProfile();
+							String money = getOfflineProperty(args[0], "Money");
+							money = Integer.toString(Integer.valueOf(money) - Integer.valueOf(args[1]));
+							setOfflineProperty(args[0], "Money", money);
 						}
 						sender.sendMessage("§7Money charged from " + getServer().getOfflinePlayer(args[0]).getName());
 					} else {
@@ -716,11 +717,11 @@ public class EvilBook extends JavaPlugin {
 					if (isProfileExistant(args[0])) {
 						if (getPlayer(args[0]) != null) {
 							getPlayer(args[0]).sendMessage("§7You have been rewarded $" + args[1]);
-							getProfile(args[0], false).money += Integer.valueOf(args[1]);
+							getProfile(args[0]).money += Integer.valueOf(args[1]);
 						} else {
-							PlayerProfile offlinePlayer = getProfile(args[0], true);
-							offlinePlayer.money += Integer.valueOf(args[1]);
-							offlinePlayer.saveProfile();
+							String money = getOfflineProperty(args[0], "Money");
+							money = Integer.toString(Integer.valueOf(money) + Integer.valueOf(args[1]));
+							setOfflineProperty(args[0], "Money", money);
 						}
 						sender.sendMessage("§7Money rewarded to " + getServer().getOfflinePlayer(args[0]).getName());
 					} else {
@@ -781,14 +782,11 @@ public class EvilBook extends JavaPlugin {
 			if (args.length == 1) {
 				if (isProfileExistant(args[0])) {
 					if (getPlayer(args[0]) != null) {
-						getProfile(args[0], false).rank = Rank.Admin;
-						getPlayer(args[0]).setPlayerListName("§" + getProfile(args[0], false).rank.color + ((getProfile(args[0], false).nameAlias == null || getProfile(args[0], false).nameAlias.equals("null")) ? (getPlayer(args[0]).getName().length() > 14 ? getPlayer(args[0]).getName().substring(0, 14) : getPlayer(args[0]).getName()) : (getProfile(args[0], false).nameAlias.length() > 14 ? getProfile(args[0], false).nameAlias.substring(0, 14) : getProfile(args[0], false).nameAlias)));
-						getPlayer(args[0]).sendMessage("§7You have been promoted");
-						sender.sendMessage("§7" + args[0] + " has been promoted");
+						getProfile(args[0]).rank = Rank.Admin;
+						getPlayer(args[0]).setPlayerListName("§" + getProfile(args[0]).rank.color + ((getProfile(args[0]).nameAlias == null || getProfile(args[0]).nameAlias.equals("null")) ? (getPlayer(args[0]).getName().length() > 14 ? getPlayer(args[0]).getName().substring(0, 14) : getPlayer(args[0]).getName()) : (getProfile(args[0]).nameAlias.length() > 14 ? getProfile(args[0]).nameAlias.substring(0, 14) : getProfile(args[0]).nameAlias)));
+						getPlayer(args[0]).sendMessage("§7You have been promoted to admin");
 					} else {
-						PlayerProfile offlinePlayer = getProfile(args[0], true);
-						offlinePlayer.rank = Rank.Admin;
-						offlinePlayer.saveProfile();
+						setOfflineProperty(args[0], "Rank", "Admin");
 					}
 					sender.sendMessage("§7" + args[0] + " has been promoted to admin rank");
 				} else {
@@ -841,7 +839,7 @@ public class EvilBook extends JavaPlugin {
 		//
 		if (command.getName().equalsIgnoreCase("list")) {
 			sender.sendMessage("§6Online players §9[§6" + getServer().getOnlinePlayers().length + "/" + getServer().getMaxPlayers() + "§9]");
-			for (Player p : getServer().getOnlinePlayers()) sender.sendMessage((getProfile(p.getName(), false).nameAlias == null || !getProfile(p.getName(), false).nameAlias.equals("null")) ? p.getDisplayName() + " §7(" + p.getName() + ")" : p.getDisplayName());
+			for (Player p : getServer().getOnlinePlayers()) sender.sendMessage((getProfile(p.getName()).nameAlias == null || !getProfile(p.getName()).nameAlias.equals("null")) ? p.getDisplayName() + " §7(" + p.getName() + ")" : p.getDisplayName());
 			return true;
 		}
 		//
@@ -862,14 +860,12 @@ public class EvilBook extends JavaPlugin {
 			if (args.length == 1) {
 				if (isProfileExistant(args[0])) {
 					if (getPlayer(args[0]) != null) {
-						getProfile(args[0], false).rank = Rank.getPreviousRank(getProfile(args[0], false).rank);
-						getPlayer(args[0]).setPlayerListName("§" + getProfile(args[0], false).rank.color + ((getProfile(args[0], false).nameAlias == null || getProfile(args[0], false).nameAlias.equals("null")) ? (getPlayer(args[0]).getName().length() > 14 ? getPlayer(args[0]).getName().substring(0, 14) : getPlayer(args[0]).getName()) : (getProfile(args[0], false).nameAlias.length() > 14 ? getProfile(args[0], false).nameAlias.substring(0, 14) : getProfile(args[0], false).nameAlias)));
+						getProfile(args[0]).rank = Rank.getPreviousRank(getProfile(args[0]).rank);
+						getPlayer(args[0]).setPlayerListName("§" + getProfile(args[0]).rank.color + ((getProfile(args[0]).nameAlias == null || getProfile(args[0]).nameAlias.equals("null")) ? (getPlayer(args[0]).getName().length() > 14 ? getPlayer(args[0]).getName().substring(0, 14) : getPlayer(args[0]).getName()) : (getProfile(args[0]).nameAlias.length() > 14 ? getProfile(args[0]).nameAlias.substring(0, 14) : getProfile(args[0]).nameAlias)));
 						getPlayer(args[0]).sendMessage("§7You have been demoted");
 						sender.sendMessage("§7" + getPlayer(args[0]).getDisplayName() + " has been demoted");
 					} else {
-						PlayerProfile offlinePlayer = getProfile(args[0], true);
-						offlinePlayer.rank = Rank.getPreviousRank(offlinePlayer.rank);
-						offlinePlayer.saveProfile();
+						setOfflineProperty(args[0], "Rank", Rank.getPreviousRank(Rank.valueOf(getOfflineProperty(args[0], "Rank"))).toString());
 						sender.sendMessage("§7" + getServer().getOfflinePlayer(args[0]).getName() + " has been demoted");
 					}
 				} else {
@@ -888,26 +884,24 @@ public class EvilBook extends JavaPlugin {
 			if (args.length == 1) {
 				if (isProfileExistant(args[0])) {
 					if (getPlayer(args[0]) != null) {
-						if (Rank.getNextRank(getProfile(args[0], false).rank).ID > Rank.Moderator.ID && sender instanceof Player && getProfile(sender).rank.ID == Rank.GameMaster.ID) {
+						if (Rank.getNextRank(getProfile(args[0]).rank).ID > Rank.Moderator.ID && sender instanceof Player && getProfile(sender).rank.ID == Rank.GameMaster.ID) {
 							sender.sendMessage("§7You can't promote a player to above moderator");
 							return true;
 						}
-						if (Rank.getNextRank(getProfile(args[0], false).rank).ID > Rank.Architect.ID && sender instanceof Player && getProfile(sender).rank.ID < Rank.GameMaster.ID) {
+						if (Rank.getNextRank(getProfile(args[0]).rank).ID > Rank.Architect.ID && sender instanceof Player && getProfile(sender).rank.ID < Rank.GameMaster.ID) {
 							sender.sendMessage("§7You can't promote a player to above architect");
 							return true;
 						}
-						getProfile(args[0], false).rank = Rank.getNextRank(getProfile(args[0], false).rank);
-						getPlayer(args[0]).setPlayerListName("§" + getProfile(args[0], false).rank.color + ((getProfile(args[0], false).nameAlias == null || getProfile(args[0], false).nameAlias.equals("null")) ? (getPlayer(args[0]).getName().length() > 14 ? getPlayer(args[0]).getName().substring(0, 14) : getPlayer(args[0]).getName()) : (getProfile(args[0], false).nameAlias.length() > 14 ? getProfile(args[0], false).nameAlias.substring(0, 14) : getProfile(args[0], false).nameAlias)));
+						getProfile(args[0]).rank = Rank.getNextRank(getProfile(args[0]).rank);
+						getPlayer(args[0]).setPlayerListName("§" + getProfile(args[0]).rank.color + ((getProfile(args[0]).nameAlias == null || getProfile(args[0]).nameAlias.equals("null")) ? (getPlayer(args[0]).getName().length() > 14 ? getPlayer(args[0]).getName().substring(0, 14) : getPlayer(args[0]).getName()) : (getProfile(args[0]).nameAlias.length() > 14 ? getProfile(args[0]).nameAlias.substring(0, 14) : getProfile(args[0]).nameAlias)));
 						getPlayer(args[0]).sendMessage("§7You have been promoted");
 						sender.sendMessage("§7" + getPlayer(args[0]).getDisplayName() + " has been promoted");
 					} else {
-						PlayerProfile offlinePlayer = getProfile(args[0], true);
-						if (Rank.getNextRank(offlinePlayer.rank).ID > Rank.Architect.ID && sender instanceof Player && getProfile(sender).rank != Rank.ServerOwner) {
-							sender.sendMessage("§7You can't promote a player to above architect");
+						if (sender instanceof Player && getProfile(sender).rank != Rank.ServerOwner) {
+							sender.sendMessage("§7You can't promote offline players");
 							return true;
 						}
-						offlinePlayer.rank = Rank.getNextRank(offlinePlayer.rank);
-						offlinePlayer.saveProfile();
+						setOfflineProperty(args[0], "Rank", Rank.getNextRank(Rank.valueOf(getOfflineProperty(args[0], "Rank"))).toString());
 						sender.sendMessage("§7" + getServer().getOfflinePlayer(args[0]).getName() + " has been promoted");
 					}
 				} else {
@@ -1650,13 +1644,13 @@ public class EvilBook extends JavaPlugin {
 						if (getProfile(sender).money >= Integer.valueOf(args[1])) {
 							if (getPlayer(args[0]) != null) {
 								getProfile(sender).money -= Integer.valueOf(args[1]);
-								getProfile(args[0], false).money += Integer.valueOf(args[1]);
+								getProfile(args[0]).money += Integer.valueOf(args[1]);
 								getPlayer(args[0]).sendMessage("§7You have recieved §a$" + args[1] + " §7from " + getPlayer(args[0]).getDisplayName());
 								sender.sendMessage("§7You have paid " + getPlayer(args[0]).getDisplayName() + " §c$" + args[1]);
 							} else {
-								PlayerProfile offlinePlayer = getProfile(args[0], true);
-								offlinePlayer.money += Integer.valueOf(args[1]);
-								offlinePlayer.saveProfile();
+								String money = getOfflineProperty(args[0], "Money");
+								money = Integer.toString(Integer.valueOf(money) + Integer.valueOf(args[1]));
+								setOfflineProperty(args[0], "Money", money);
 								getProfile(sender).money -= Integer.valueOf(args[1]);
 								sender.sendMessage("§7You have paid " + getServer().getOfflinePlayer(args[0]).getName() + " §c$" + args[1]);
 							}
@@ -3419,12 +3413,11 @@ public class EvilBook extends JavaPlugin {
 	/**
 	 * Returns a player profile for the player
 	 * @param player The player name to fetch the profile of
-	 * @param getOfflineProfile If the offline profile should be returned when the player is offline
 	 * @return The player profile of the player
 	 */
-	public PlayerProfile getProfile(String player, Boolean getOfflineProfile) {
+	public PlayerProfile getProfile(String player) {
 		if (playerProfiles.containsKey(getPlayer(player).getName().toLowerCase())) return playerProfiles.get(getPlayer(player).getName().toLowerCase());
-		if (getOfflineProfile) return new PlayerProfile(this, player); else return null;
+		return null;
 	}
 	
 	/**
@@ -4089,5 +4082,49 @@ public class EvilBook extends JavaPlugin {
 	 */
     private static final double lengthSq(double x, double y, double z) {
         return (x * x) + (y * y) + (z * z);
+    }
+    
+    /**
+     * Get a property of an offline player's profile
+     * @param player The player name
+     * @param property The property name
+     * @return The property value
+     */
+    public String getOfflineProperty(String player, String property) {
+    	Properties prop = new Properties();
+		File file = new File("plugins/EvilBook/Players/" + player + ".properties");
+		if (file.exists()) {
+			try {
+				FileInputStream inputStream = new FileInputStream(file);
+				prop.load(inputStream);
+				inputStream.close();
+				return prop.getProperty(property);
+			} catch (Exception e) {
+				return null;
+			}
+		} else {
+			return null;
+		}
+    }
+    
+    /**
+     * Set a property of an offline player's profile
+     * @param player The player name
+     * @param property The property name
+     * @param value The new value of the property
+     */
+    public void setOfflineProperty(String player, String property, String value) {
+    	try {
+			Properties prop = new Properties();
+			FileInputStream inputStream = new FileInputStream(new File("plugins/EvilBook/Players/" + player + ".properties"));
+			prop.load(inputStream);
+			inputStream.close();
+			prop.setProperty(property, value);
+			FileOutputStream outputStream = new FileOutputStream(new File("plugins/EvilBook/Players/" + player + ".properties"));
+			prop.store(outputStream, null);
+			outputStream.close();
+		} catch (Exception e) {
+			System.out.println("Failed to save " + player + "'s player profile");
+		}
     }
 }

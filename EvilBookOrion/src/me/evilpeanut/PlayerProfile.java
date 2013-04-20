@@ -32,36 +32,6 @@ public class PlayerProfile {
 	private EvilBook plugin;
 	
 	/**
-	 * Load the profile of an offline player
-	 * @param plugin The parent EvilBook plugin
-	 * @param playerName The name of the player
-	 */
-	// TODO: Improve offline player profile loading
-	public PlayerProfile(EvilBook plugin, String playerName) {
-		Properties prop = new Properties();
-		name = playerName;
-		try {
-			FileInputStream inputStream = new FileInputStream(new File("plugins/EvilBook/Players/" + playerName + ".properties"));
-			prop.load(inputStream);
-			inputStream.close();
-			rank = Rank.valueOf(prop.getProperty("Rank"));
-			money = Integer.valueOf(prop.getProperty("Money"));
-			if (prop.getProperty("HomeLocation") != null) {
-				String[] location = prop.getProperty("HomeLocation").split(">");
-				homeLocation = new Location(plugin.getServer().getWorld(location[3]), Double.valueOf(location[0]), Double.valueOf(location[1]), Double.valueOf(location[2]));
-			}
-			nameColor = prop.getProperty("NameColor");
-			nameTitle = prop.getProperty("NameTitle");
-			nameAlias = prop.getProperty("NameAlias");
-			mutedPlayers = prop.getProperty("MutedPlayers");
-			warps = prop.getProperty("Warps");
-		} catch (Exception e) {
-			Logger.getLogger("Minecraft").log(Level.SEVERE, "Failed to load player profile: " + playerName);
-			e.printStackTrace();
-		}
-	}
-	
-	/**
 	 * Load the profile of an online player
 	 * @param plugin The parent EvilBook plugin
 	 * @param playerName The name of the player

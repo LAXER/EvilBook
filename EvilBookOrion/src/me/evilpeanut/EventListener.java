@@ -81,7 +81,6 @@ import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.ItemStack;
-//TODO: Re-add import org.kitteh.tag.PlayerReceiveNameTagEvent;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
@@ -547,7 +546,7 @@ public class EventListener implements Listener {
 			if (s.getLine(3).length() != 0) s.setLine(3, dyeTextColor + (s.getLine(3).startsWith("§") && !s.getLine(3).startsWith("§l") && !s.getLine(3).startsWith("§k") && !s.getLine(3).startsWith("§n") && !s.getLine(3).startsWith("§m") && !s.getLine(3).startsWith("§o") && !s.getLine(3).startsWith("§r") ? s.getLine(3).substring(2, s.getLine(3).length()) : s.getLine(3)));
 			s.update();
 		}
-		if (event.getClickedBlock().getTypeId() == 130 && plugin.isInSurvival(event.getPlayer()) && plugin.getProfile(event.getPlayer().getName(), false).rank != Rank.ServerOwner) {
+		if (event.getClickedBlock().getTypeId() == 130 && plugin.isInSurvival(event.getPlayer()) && plugin.getProfile(event.getPlayer().getName()).rank != Rank.ServerOwner) {
 			event.getPlayer().sendMessage("§7Ender chests are blocked in survival");
 			event.setCancelled(true);
 			return;
