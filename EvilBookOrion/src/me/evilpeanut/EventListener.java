@@ -425,12 +425,8 @@ public class EventListener implements Listener {
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
 		if (plugin.isInSurvival(event.getPlayer().getWorld().getName())) {
 			event.getPlayer().getInventory().clear();
-			//TODO: Save the player survival inventory
-			if (event.getPlayer().getWorld().getName().equals("SurvivalLand")) {
-				event.setRespawnLocation(plugin.getServer().getWorld("SurvivalLand").getSpawnLocation());
-			} else {
-				//event.setRespawnLocation(plugin.getServer().getWorld("FreeSurvivalLand").getSpawnLocation());
-			}
+			plugin.setSurvivalInventory(event.getPlayer());
+			if (plugin.isInSurvival(event.getPlayer().getWorld().getName())) event.setRespawnLocation(plugin.getServer().getWorld("SurvivalLand").getSpawnLocation());
 			event.getPlayer().setGameMode(GameMode.SURVIVAL);
 		}
 	}
