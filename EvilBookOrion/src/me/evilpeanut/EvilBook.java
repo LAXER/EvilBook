@@ -168,7 +168,7 @@ public class EvilBook extends JavaPlugin {
 				prop.setProperty("/rollback", Byte.toString(Rank.ServerOwner.ID));
 				prop.setProperty("/spam", Byte.toString(Rank.ServerOwner.ID));
 				prop.setProperty("/toggleredstone", Byte.toString(Rank.ServerOwner.ID));
-				prop.setProperty("/evilbookorion", Byte.toString(Rank.ServerOwner.ID));
+				prop.setProperty("/evilbook", Byte.toString(Rank.ServerOwner.ID));
 				prop.setProperty("/stop", Byte.toString(Rank.ServerOwner.ID));
 				prop.setProperty("/op", Byte.toString(Rank.ServerOwner.ID));
 				prop.setProperty("/deop", Byte.toString(Rank.ServerOwner.ID));
