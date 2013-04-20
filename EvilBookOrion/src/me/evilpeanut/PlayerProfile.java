@@ -144,7 +144,7 @@ public class PlayerProfile {
 				FileOutputStream outputStream = new FileOutputStream(file);
 				prop.store(outputStream, null);
 				outputStream.close();
-				newPlayer.getInventory().addItem(plugin.getBook("Welcome to Amentrix", "EvilPeanut", Arrays.asList("Welcome to the Amentrix Server\n\nRules:\n§a[§b1§a] §6Dont Greif\n§a[§b2§a] §6Dont Advertise\n§a[§b3§a] §6Dont Hack\n\n§0Website:\n§7http://amentrix.no-ip.org\n\n§0Enjoy your stay!\n§7 - EvilPeanut")));
+				newPlayer.getInventory().addItem(plugin.getBook("Welcome to Amentrix", "EvilPeanut", Arrays.asList("Welcome to the Amentrix Server\n\nRules:\n§a[§b1§a] §6Dont Greif\n§a[§b2§a] §6Dont Advertise\n§a[§b3§a] §6Dont Spam\n\n§0Website:\n§7http://amentrix.no-ip.org\n\n§0Enjoy your stay!\n§7 - EvilPeanut")));
 			} catch (FileNotFoundException e) {
 				Logger.getLogger("Minecraft").log(Level.SEVERE, "Failed to create player profile: " + name);
 			} catch (IOException e) {
