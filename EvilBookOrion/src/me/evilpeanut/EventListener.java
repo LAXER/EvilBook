@@ -485,36 +485,49 @@ public class EventListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerInteract(PlayerInteractEvent event) {
-		if (event.getPlayer().getItemInHand().getTypeId() == 280 && event.getPlayer().getName().equals("EvilPeanut")) {
-			ItemMeta meta = event.getPlayer().getItemInHand().getItemMeta();
+		if (!event.hasBlock()) return;
+		Player player = event.getPlayer();
+		/*
+		 * TODO: Add ledgit way to obtain wands
+		if (player.getItemInHand().getTypeId() == 280 && player.getName().equals("EvilPeanut")) {
+			ItemMeta meta = player.getItemInHand().getItemMeta();
 			meta.setLore(Arrays.asList("Preforms ancient magical arts"));
-			event.getPlayer().getItemInHand().setItemMeta(meta);
+			player.getItemInHand().setItemMeta(meta);
 			
-			plugin.getProfile(event.getPlayer()).addSpell(Spell.LightningStrikeI);
-			plugin.getProfile(event.getPlayer()).addSpell(Spell.ShockWaveI);
-			plugin.getProfile(event.getPlayer()).addSpell(Spell.ShockWaveII);
-			plugin.getProfile(event.getPlayer()).addSpell(Spell.InstantGrow);
+			plugin.getProfile(player).addSpell(Spell.LightningStrikeI);
+			plugin.getProfile(player).addSpell(Spell.ShockWaveI);
+			plugin.getProfile(player).addSpell(Spell.ShockWaveII);
+			plugin.getProfile(player).addSpell(Spell.InstantGrow);
 		}
-		if (plugin.isInSurvival(event.getPlayer()) && event.getPlayer().getItemInHand().getTypeId() == 280 && event.getPlayer().getItemInHand().getItemMeta() != null && event.getPlayer().getItemInHand().getItemMeta().getLore().get(0).equals("Preforms ancient magical arts")) {
-			if (plugin.getProfile(event.getPlayer()).spellBook.size() == 0) {
-				event.getPlayer().sendMessage("§7You don't have any spells in your spellbook");
+		*/
+		if (plugin.isInSurvival(player)) {
+			if (event.getClickedBlock().getTypeId() == 130 && plugin.getProfile(player.getName()).rank != Rank.ServerOwner) {
+				player.sendMessage("§7Ender chests are blocked in survival");
+				event.setCancelled(true);
 				return;
 			}
-			if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-				// Preform magic
-				plugin.getProfile(event.getPlayer()).selectedSpell.preformSpell(event);
-			} else if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-				// Change spell
-				if (plugin.getProfile(event.getPlayer()).selectedSpell == plugin.getProfile(event.getPlayer()).spellBook.get(plugin.getProfile(event.getPlayer()).spellBook.size() - 1)) {
-					plugin.getProfile(event.getPlayer()).selectedSpell = plugin.getProfile(event.getPlayer()).spellBook.get(0);
-					event.getPlayer().sendMessage("§5Changed spell to §d" + plugin.getProfile(event.getPlayer()).selectedSpell.name);
-				} else {
-					plugin.getProfile(event.getPlayer()).selectedSpell = plugin.getProfile(event.getPlayer()).spellBook.get(plugin.getProfile(event.getPlayer()).spellBook.indexOf(plugin.getProfile(event.getPlayer()).selectedSpell) + 1);
-					event.getPlayer().sendMessage("§5Changed spell to §d" + plugin.getProfile(event.getPlayer()).selectedSpell.name);
+			if (!event.hasItem()) return;
+			if (event.getItem().getTypeId() == 280 && event.getItem().getItemMeta() != null && event.getItem().getItemMeta().getLore().get(0).equals("Preforms ancient magical arts")) {
+				if (plugin.getProfile(player).spellBook.size() == 0) {
+					player.sendMessage("§7You don't have any spells in your spellbook");
+					return;
+				}
+				if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+					// Preform magic
+					plugin.getProfile(player).selectedSpell.preformSpell(event);
+				} else if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+					// Change spell
+					if (plugin.getProfile(player).selectedSpell == plugin.getProfile(player).spellBook.get(plugin.getProfile(player).spellBook.size() - 1)) {
+						plugin.getProfile(player).selectedSpell = plugin.getProfile(player).spellBook.get(0);
+						player.sendMessage("§5Changed spell to §d" + plugin.getProfile(player).selectedSpell.name);
+					} else {
+						plugin.getProfile(player).selectedSpell = plugin.getProfile(player).spellBook.get(plugin.getProfile(player).spellBook.indexOf(plugin.getProfile(player).selectedSpell) + 1);
+						player.sendMessage("§5Changed spell to §d" + plugin.getProfile(player).selectedSpell.name);
+					}
 				}
 			}
-		}
-		if (event.getClickedBlock() == null || event.getItem() == null) return;
+		}	
+		if (!event.hasItem()) return;
 		if ((event.getClickedBlock().getTypeId() == 63 || event.getClickedBlock().getTypeId() == 68) && event.getItem().getTypeId() == 351) {
 			String dyeTextColor;
 			byte dyeData = event.getItem().getData().getData();
@@ -542,21 +555,17 @@ public class EventListener implements Listener {
 			if (s.getLine(3).length() != 0) s.setLine(3, dyeTextColor + (s.getLine(3).startsWith("§") && !s.getLine(3).startsWith("§l") && !s.getLine(3).startsWith("§k") && !s.getLine(3).startsWith("§n") && !s.getLine(3).startsWith("§m") && !s.getLine(3).startsWith("§o") && !s.getLine(3).startsWith("§r") ? s.getLine(3).substring(2, s.getLine(3).length()) : s.getLine(3)));
 			s.update();
 		}
-		if (event.getClickedBlock().getTypeId() == 130 && plugin.isInSurvival(event.getPlayer()) && plugin.getProfile(event.getPlayer().getName()).rank != Rank.ServerOwner) {
-			event.getPlayer().sendMessage("§7Ender chests are blocked in survival");
-			event.setCancelled(true);
-			return;
-		}
-		if (event.getPlayer().isOp()) {
-			if (plugin.isInSurvival(event.getPlayer().getWorld().getName()) == false || plugin.getProfile(event.getPlayer()).rank == Rank.ServerOwner) {
-				if (event.hasBlock() && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getPlayer().getItemInHand().getTypeId() == 284) {
+		if (player.isOp()) {
+			if (plugin.isInSurvival(player.getWorld().getName()) == false || plugin.getProfile(player).rank == Rank.ServerOwner) {
+				if (event.hasBlock() && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem().getTypeId() == 284) {
 					Block block = event.getClickedBlock();
-					plugin.getProfile(event.getPlayer()).actionLocationB = block.getLocation();
-					event.getPlayer().sendMessage("§7Second point selected (" + block.getX() + ", " + block.getY() + ", " + block.getZ() + ")");
+					plugin.getProfile(player).actionLocationB = block.getLocation();
+					player.sendMessage("§7Second point selected (" + block.getX() + ", " + block.getY() + ", " + block.getZ() + ")");
 					event.setCancelled(true);
 				}
 			}
 		}
+		
 	}
 	
 	/**
