@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
+
+import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -529,24 +531,23 @@ public class EventListener implements Listener {
 		}	
 		if (!event.hasItem()) return;
 		if ((event.getClickedBlock().getTypeId() == 63 || event.getClickedBlock().getTypeId() == 68) && event.getItem().getTypeId() == 351) {
-			String dyeTextColor;
-			byte dyeData = event.getItem().getData().getData();
-			switch (dyeData) {
-				case 1: dyeTextColor = "§c"; break;
-				case 2: dyeTextColor = "§2"; break;
-				case 4: dyeTextColor = "§1"; break;
-				case 5: dyeTextColor = "§5"; break;
-				case 6: dyeTextColor = "§3"; break;
-				case 7: dyeTextColor = "§7"; break;
-				case 8: dyeTextColor = "§8"; break;
-				case 9: dyeTextColor = "§d"; break;
-				case 10: dyeTextColor = "§a"; break;
-				case 11: dyeTextColor = "§e"; break;
-				case 12: dyeTextColor = "§b"; break;
-				case 13: dyeTextColor = "§d"; break;
-				case 14: dyeTextColor = "§6"; break;
-				case 15: dyeTextColor = "§f"; break;
-				default: dyeTextColor = "§0"; break;
+			ChatColor dyeTextColor;
+			switch (event.getItem().getData().getData()) {
+				case 1: dyeTextColor = ChatColor.RED; break;
+				case 2: dyeTextColor = ChatColor.DARK_GREEN; break;
+				case 4: dyeTextColor = ChatColor.BLUE; break;
+				case 5: dyeTextColor = ChatColor.DARK_PURPLE; break;
+				case 6: dyeTextColor = ChatColor.DARK_AQUA; break;
+				case 7: dyeTextColor = ChatColor.GRAY; break;
+				case 8: dyeTextColor = ChatColor.DARK_GRAY; break;
+				case 9: dyeTextColor = ChatColor.LIGHT_PURPLE; break;
+				case 10: dyeTextColor = ChatColor.GREEN; break;
+				case 11: dyeTextColor = ChatColor.YELLOW; break;
+				case 12: dyeTextColor = ChatColor.AQUA; break;
+				case 13: dyeTextColor = ChatColor.LIGHT_PURPLE; break;
+				case 14: dyeTextColor = ChatColor.GOLD; break;
+				case 15: dyeTextColor = ChatColor.WHITE; break;
+				default: dyeTextColor = ChatColor.BLACK; break;
 			}
 			Sign s = (Sign) event.getClickedBlock().getState();
 			if (s.getLine(0).length() != 0) s.setLine(0, dyeTextColor + (s.getLine(0).startsWith("§") && !s.getLine(0).startsWith("§l") && !s.getLine(0).startsWith("§k") && !s.getLine(0).startsWith("§n") && !s.getLine(0).startsWith("§m") && !s.getLine(0).startsWith("§o") && !s.getLine(0).startsWith("§r") ? s.getLine(0).substring(2, s.getLine(0).length()) : s.getLine(0)));
