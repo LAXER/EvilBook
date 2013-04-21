@@ -514,7 +514,7 @@ public class EventListener implements Listener {
 				}
 			}
 		}
-		if (event.getClickedBlock() == null) return;
+		if (event.getClickedBlock() == null || event.getItem() == null) return;
 		if ((event.getClickedBlock().getTypeId() == 63 || event.getClickedBlock().getTypeId() == 68) && event.getItem().getTypeId() == 351) {
 			String dyeTextColor;
 			byte dyeData = event.getItem().getData().getData();
