@@ -346,7 +346,7 @@ public class EvilBook extends JavaPlugin {
 				FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/Warps.db");
 				warpFile.store(outputStream, null);
 				outputStream.close();
-				logSevere("Removed " + removedCorruptWarps + " corrupt warps");
+				logInfo("Removed " + removedCorruptWarps + " corrupt warps");
 			} catch (Exception e) {
 				logSevere("Failed to remove " + removedCorruptWarps + " corrupt warps");
 				e.printStackTrace();
