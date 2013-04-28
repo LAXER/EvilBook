@@ -336,7 +336,8 @@ public class EvilBook extends JavaPlugin {
 						Float.valueOf(warpFile.getProperty((String) key).split(":")[4]),
 						Float.valueOf(warpFile.getProperty((String) key).split(":")[5])));
 			} catch (Exception e) {
-				logSevere("Failed to load corrupt warp: " + key);
+				warpList.remove(key);
+				logSevere("Removed corrupt warp " + key);
 			}
 		}
 		//
