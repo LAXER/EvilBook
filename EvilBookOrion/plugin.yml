@@ -2,6 +2,9 @@ name: EvilBook
 main: me.evilpeanut.EvilBook
 version: 1.6
 commands:
+  cleandatabase:
+    description: Clean the database
+    usage: /<command>
   setall:
     description: Set the property to a value in all player profiles
     usage: /<command>
