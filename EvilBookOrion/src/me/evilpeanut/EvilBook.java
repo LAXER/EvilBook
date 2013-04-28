@@ -585,6 +585,18 @@ public class EvilBook extends JavaPlugin {
 		// TODO: Add projectile protection
 		// TODO: Improve speed of region checking (Per world region hashmaps?)	
 		//
+		// Clean Database Command
+		//
+		if (command.getName().equalsIgnoreCase("cleandatabase")) {
+			sender.sendMessage("§7Cleaning database");
+			String[] logFiles = new File("plugins/EvilBook/Protection").list();
+			long nowTime = new Date().getTime();
+			for (int logNo = 0; logNo < logFiles.length; logNo++) {
+				if (nowTime - new File("plugins/EvilBook/Protection/" + logFiles[logNo]).lastModified() > 1296000000L) new File("plugins/EvilBook/Protection/" + logFiles[logNo]).delete();
+			}
+			sender.sendMessage("§7Database cleaned");
+		}
+		//
 		// Set All Command
 		//
 		if (command.getName().equalsIgnoreCase("setall")) {
@@ -1112,18 +1124,6 @@ public class EvilBook extends JavaPlugin {
 		if (sender instanceof Player == false) {
 			logInfo("This command is not supported by the console");
 			return true;
-		}
-		//
-		// Clean Database Command
-		//
-		if (command.getName().equalsIgnoreCase("cleandatabase")) {
-			sender.sendMessage("§7Cleaning database");
-			String[] logFiles = new File("plugins/EvilBook/Protection").list();
-			long nowTime = new Date().getTime();
-			for (int logNo = 0; logNo < logFiles.length; logNo++) {
-				if (nowTime - new File("plugins/EvilBook/Protection/" + logFiles[logNo]).lastModified() > 1296000000L) new File("plugins/EvilBook/Protection/" + logFiles[logNo]).delete();
-			}
-			sender.sendMessage("§7Database cleaned");
 		}
 		//
 		// Adventure Command
