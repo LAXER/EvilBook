@@ -113,7 +113,7 @@ public class EventListener implements Listener {
 		}
 		if (!plugin.isInSurvival(event.getPlayer()) && !plugin.isInAdventure(event.getPlayer())) {
 			if (plugin.getProfile(event.getPlayer()).jumpAmplifier != 0 && !event.getPlayer().isFlying() && event.getFrom().getY() < event.getTo().getY() && event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getTypeId() != 0) event.getPlayer().setVelocity(event.getPlayer().getVelocity().setY(plugin.getProfile(event.getPlayer()).jumpAmplifier));
-			if (event.getPlayer().isSprinting()) event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20, plugin.getProfile(event.getPlayer()).runAmplifier), true);
+			if (plugin.getProfile(event.getPlayer()).runAmplifier != 0 && event.getPlayer().isSprinting()) event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20, plugin.getProfile(event.getPlayer()).runAmplifier), true);
 		}
 		for (Region region : plugin.regionList) {
 			if (region.leaveMessage != null && plugin.isInRegion(region, event.getFrom()) && plugin.isInRegion(region, event.getTo()) == false) {
@@ -130,9 +130,10 @@ public class EventListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPotionSplash(PotionSplashEvent event) {
-		if (event.getEntity().getShooter() instanceof Player == false) return;
-		if (plugin.isInSurvival(event.getEntity())) return;
-		Player shooter = (Player) event.getEntity().getShooter();
+		Entity entity = event.getEntity().getShooter();
+		if (entity instanceof Player == false) return;
+		if (plugin.isInSurvival(entity)) return;
+		Player shooter = (Player) entity;
 		if (plugin.getProfile(shooter).rank.ID >= Rank.Admin.ID) return;
 		if (Potion.fromItemStack(event.getPotion().getItem()).getType() == PotionType.INVISIBILITY) {
 			shooter.sendMessage("§7Only admins can use invisibility potions");
