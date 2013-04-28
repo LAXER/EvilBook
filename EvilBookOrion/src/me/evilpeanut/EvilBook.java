@@ -320,13 +320,14 @@ public class EvilBook extends JavaPlugin {
 		//
 		Properties warpFile = new Properties();
 		try {
-			FileInputStream inputStream = new FileInputStream(new File("plugins/EvilBook/Warps.db"));
+			FileInputStream inputStream = new FileInputStream("plugins/EvilBook/Warps.db");
 			warpFile.load(inputStream);
 			inputStream.close();
 		} catch (Exception e) {
 			logSevere("Failed to load warp file");
 			e.printStackTrace();
 		}
+		int removedCorruptWarps = 0;
 		for (Object key : warpFile.keySet().toArray()) {
 			try {
 				warpList.put((String)key, new Location(getServer().getWorld(warpFile.getProperty((String) key).split(":")[0]), 
@@ -336,8 +337,19 @@ public class EvilBook extends JavaPlugin {
 						Float.valueOf(warpFile.getProperty((String) key).split(":")[4]),
 						Float.valueOf(warpFile.getProperty((String) key).split(":")[5])));
 			} catch (Exception e) {
-				warpList.remove(key);
-				logSevere("Removed corrupt warp " + key);
+				warpFile.remove(key);
+				removedCorruptWarps++;
+			}
+		}
+		if (removedCorruptWarps != 0) {
+			try {
+				FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/Warps.db");
+				warpFile.store(outputStream, null);
+				outputStream.close();
+				logSevere("Removed " + removedCorruptWarps + " corrupt warps");
+			} catch (Exception e) {
+				logSevere("Failed to remove " + removedCorruptWarps + " corrupt warps");
+				e.printStackTrace();
 			}
 		}
 		//
@@ -371,7 +383,7 @@ public class EvilBook extends JavaPlugin {
 			Properties propTimeSign = new Properties();
 			String[] timeSignFiles = new File("plugins/EvilBook/Dynamic Signs/").list();
 			for (int timeSignNo = 0; timeSignNo < timeSignFiles.length; timeSignNo++) {
-				FileInputStream inputStream = new FileInputStream(new File("plugins/EvilBook/Dynamic Signs/" + timeSignFiles[timeSignNo]));
+				FileInputStream inputStream = new FileInputStream("plugins/EvilBook/Dynamic Signs/" + timeSignFiles[timeSignNo]);
 				propTimeSign.load(inputStream);
 				inputStream.close();
 				String location = propTimeSign.getProperty("Location");
@@ -4144,11 +4156,11 @@ public class EvilBook extends JavaPlugin {
     public void setOfflineProperty(String player, String property, String value) {
     	try {
 			Properties prop = new Properties();
-			FileInputStream inputStream = new FileInputStream(new File("plugins/EvilBook/Players/" + player + ".properties"));
+			FileInputStream inputStream = new FileInputStream("plugins/EvilBook/Players/" + player + ".properties");
 			prop.load(inputStream);
 			inputStream.close();
 			prop.setProperty(property, value);
-			FileOutputStream outputStream = new FileOutputStream(new File("plugins/EvilBook/Players/" + player + ".properties"));
+			FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/Players/" + player + ".properties");
 			prop.store(outputStream, null);
 			outputStream.close();
 		} catch (Exception e) {
