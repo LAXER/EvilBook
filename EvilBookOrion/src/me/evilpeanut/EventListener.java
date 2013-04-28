@@ -1,12 +1,10 @@
 package me.evilpeanut;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
-
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.GameMode;
@@ -488,6 +486,7 @@ public class EventListener implements Listener {
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if (!event.hasBlock()) return;
+		int ID = event.getClickedBlock().getTypeId();
 		Player player = event.getPlayer();
 		/*
 		 * TODO: Add ledgit way to obtain wands
@@ -503,8 +502,13 @@ public class EventListener implements Listener {
 		}
 		*/
 		if (plugin.isInSurvival(player)) {
-			if (event.getClickedBlock().getTypeId() == 130 && plugin.getProfile(player.getName()).rank != Rank.ServerOwner) {
+			if (ID == 130 && plugin.getProfile(player.getName()).rank != Rank.ServerOwner) {
 				player.sendMessage("§7Ender chests are blocked in survival");
+				event.setCancelled(true);
+				return;
+			}
+			if ((ID == 23 || ID == 54 || ID == 58 || ID == 61 || ID == 62 || ID == 117 || ID == 146 || ID == 158) && plugin.getProfile(player.getName()).rank != Rank.ServerOwner && plugin.isContainerProtected(event.getClickedBlock().getLocation(), player)) {
+				player.sendMessage("§7This container is protected");
 				event.setCancelled(true);
 				return;
 			}
@@ -530,7 +534,7 @@ public class EventListener implements Listener {
 			}
 		}	
 		if (!event.hasItem()) return;
-		if ((event.getClickedBlock().getTypeId() == 63 || event.getClickedBlock().getTypeId() == 68) && event.getItem().getTypeId() == 351) {
+		if ((ID == 63 || ID == 68) && event.getItem().getTypeId() == 351) {
 			ChatColor dyeTextColor;
 			switch (event.getItem().getData().getData()) {
 				case 1: dyeTextColor = ChatColor.RED; break;
@@ -726,6 +730,7 @@ public class EventListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockBreak(BlockBreakEvent event) {
 		Block block = event.getBlock();
+		int ID = block.getTypeId();
 		Player player = event.getPlayer();
 		if (plugin.isInSurvival(event.getPlayer()) && event.getPlayer().getItemInHand().getTypeId() == 280 && event.getPlayer().getItemInHand().getItemMeta() != null && event.getPlayer().getItemInHand().getItemMeta().getLore().get(0).equals("Preforms ancient magical arts")) {
 			event.setCancelled(true);
@@ -785,12 +790,21 @@ public class EventListener implements Listener {
 				player.sendMessage("§7No edits on this block");
 			}
 			event.setCancelled(true);
+			return;
 		} else {
 			if (block.getTypeId() == 63 || block.getTypeId() == 68) {
 				plugin.logSignBreak((Sign) block.getState(), block, player.getName());
 			} else {
 				if (block.getTypeId() != 0) plugin.logBlockBreak(block, player.getName());
 			}
+		}
+		//
+		// Survival Container Protection
+		//
+		if (plugin.isInSurvival(player) && (ID == 23 || ID == 54 || ID == 58 || ID == 61 || ID == 62 || ID == 117 || ID == 146 || ID == 158) && !plugin.isContainerProtected(block.getLocation(), player)) {
+			plugin.unprotectContainer(event.getBlock().getLocation());
+			//TODO: Display the container type eg. Furnace, Chest ect...
+			player.sendMessage(ChatColor.GRAY + "Container protection removed");
 		}
 	}
 	
@@ -800,10 +814,10 @@ public class EventListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockPlace(BlockPlaceEvent event) {
 		Player player = event.getPlayer();
+		int ID = event.getBlock().getType().getId();
 		//
 		// Block Protection
 		//
-		int ID = event.getBlock().getType().getId();
 		if (plugin.getProfile(player).rank.ID < Rank.AdvancedBuilder.ID && (ID == 6 || ID == 12 || ID == 13 || ID == 31 || ID == 32 || ID == 39 || ID == 40 || ID == 106)) {
 			player.sendMessage("§dThis block requires §5Advanced Builder §drank or higher");
 			event.setCancelled(true);
@@ -850,8 +864,17 @@ public class EventListener implements Listener {
 			if (info.size() == 0) player.sendMessage("§7" + "No edits on this block");
 			for (int i = 0; i < info.size(); i++) player.sendMessage(info.get(i));
 			event.setCancelled(true);
+			return;
 		} else {
 			plugin.logBlockPlace(event.getBlock(), player.getName());
+		}
+		//
+		// Survival Container Protection
+		//
+		if (plugin.isInSurvival(player) && (ID == 23 || ID == 54 || ID == 58 || ID == 61 || ID == 62 || ID == 117 || ID == 146 || ID == 158)) {
+			plugin.protectContainer(event.getBlock().getLocation(), player);
+			//TODO: Display the container type eg. Furnace, Chest ect...
+			player.sendMessage(ChatColor.GRAY + "Container protected");
 		}
 	}
 	

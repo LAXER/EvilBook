@@ -124,6 +124,8 @@ public class EvilBook extends JavaPlugin {
 		if (check.exists() == false && check.mkdir() == false) logSevere("Failed to create directory 'plugins/EvilBook/Inventories/Survival'");
 		check = new File("plugins/EvilBook/Warps.db");
 		if (check.exists() == false) try {check.createNewFile();} catch (Exception e) {logSevere("Failed to create file 'plugins/EvilBook/Warps.db'");}
+		check = new File("plugins/EvilBook/ContainerProtection.db");
+		if (check.exists() == false) try {check.createNewFile();} catch (Exception e) {logSevere("Failed to create file 'plugins/EvilBook/ContainerProtection.db'");}
 		//
 		// Scoreboard stuff
 		//
@@ -4154,19 +4156,17 @@ public class EvilBook extends JavaPlugin {
     }
     
     /**
-     * Protect a container (Chest, furnace & brewing stand) in the survival world
-     * @param x The X position of the container in the world
-     * @param y The Y position of the container in the world
-     * @param z The Z position of the container in the world
+     * Protect a container (Chest, furnace & brewing stand ect...) in the survival world
+     * @param location The position of the container in the world
      * @param player The player owner of the container
      */
-    public void protectContainer(int x, int y, int z, String player) {
+    public void protectContainer(Location location, Player player) {
     	try {
     		FileInputStream inputStream = new FileInputStream("plugins/EvilBook/ContainerProtection.db");
     		Properties protectionProp = new Properties();
     		protectionProp.load(inputStream);
     		inputStream.close();
-    		protectionProp.setProperty(x + ":" + y + ":" + z, player);
+    		protectionProp.setProperty(location.getBlockX() + ":" + location.getBlockY() + ":" + location.getBlockZ(), player.getName());
     		FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/ContainerProtection.db");
     		protectionProp.store(outputStream, null);
     		outputStream.close();
@@ -4177,18 +4177,16 @@ public class EvilBook extends JavaPlugin {
     }
     
     /**
-     * Unprotect a container (Chest, furnace & brewing stand) in the survival world
-     * @param x The X position of the container in the world
-     * @param y The Y position of the container in the world
-     * @param z The Z position of the container in the world
+     * Unprotect a container (Chest, furnace & brewing stand ect...) in the survival world
+     * @param location The position of the container in the world
      */
-    public void unprotectContainer(int x, int y, int z) {
+    public void unprotectContainer(Location location) {
     	try {
     		FileInputStream inputStream = new FileInputStream("plugins/EvilBook/ContainerProtection.db");
     		Properties protectionProp = new Properties();
     		protectionProp.load(inputStream);
     		inputStream.close();
-    		protectionProp.remove(x + ":" + y + ":" + z);
+    		protectionProp.remove(location.getBlockX() + ":" + location.getBlockY() + ":" + location.getBlockZ());
     		FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/ContainerProtection.db");
     		protectionProp.store(outputStream, null);
     		outputStream.close();
@@ -4199,20 +4197,18 @@ public class EvilBook extends JavaPlugin {
     }
     
     /**
-     * Return if the container (Chest, furnace & brewing stand) is protected to the player
-     * @param x The X position of the container in the world
-     * @param y The Y position of the container in the world
-     * @param z The Z position of the container in the world
+     * Return if the container (Chest, furnace & brewing stand ect...) is protected to the player
+     * @param location The position of the container in the world
      * @param player The player to execute the check with
      * @return If the container is protected to the player
      */
-    public Boolean isContainerProtected(int x, int y, int z, String player) {
+    public Boolean isContainerProtected(Location location, Player player) {
     	try {
     		FileInputStream inputStream = new FileInputStream("plugins/EvilBook/ContainerProtection.db");
     		Properties protectionProp = new Properties();
     		protectionProp.load(inputStream);
     		inputStream.close();
-    		return protectionProp.getProperty(x + ":" + y + ":" + z) == player ? true : false;
+    		return protectionProp.getProperty(location.getBlockX() + ":" + location.getBlockY() + ":" + location.getBlockZ()).equals(player.getName()) ? false : true;
     	} catch (Exception e) {
     		logSevere("Failed to read ContainerProtection.db");
     		e.printStackTrace();
