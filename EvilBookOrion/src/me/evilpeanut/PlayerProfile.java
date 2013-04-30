@@ -47,6 +47,13 @@ public class PlayerProfile {
 				prop.load(inputStream);
 				inputStream.close();
 				rank = Rank.valueOf(prop.getProperty("Rank"));
+				if (rank == Rank.Custom) {
+					String prefix = prop.getProperty("CustomRankPrefix");
+					if (prefix != null) {
+						rank.setColor(prefix.substring(1, 2));
+						rank.setPrefix("§0[" + prefix.replaceAll("&", "§") + "§0]");
+					}
+				}
 				if (prop.getProperty("Money") != null) {
 					money = Integer.valueOf(prop.getProperty("Money"));
 				} else {
@@ -96,7 +103,7 @@ public class PlayerProfile {
 							newPlayer.setDisplayName("§d" + nameTitle + " §" + nameColor + nameAlias + "§f");
 						}
 					}
-					newPlayer.setPlayerListName("§" + rank.color + (nameAlias.length() > 14 ? nameAlias.substring(0, 14) : nameAlias));
+					newPlayer.setPlayerListName("§" + rank.getColor() + (nameAlias.length() > 14 ? nameAlias.substring(0, 14) : nameAlias));
 				} else {
 					if (nameColor.equals("?")) {
 						if (nameTitle == null || nameTitle.equals("")) {
@@ -111,7 +118,7 @@ public class PlayerProfile {
 							newPlayer.setDisplayName("§d" + nameTitle + " §" + nameColor + name + "§f");
 						}
 					}
-					newPlayer.setPlayerListName("§" + rank.color + (name.length() > 14 ? name.substring(0, 14) : name));
+					newPlayer.setPlayerListName("§" + rank.getColor() + (name.length() > 14 ? name.substring(0, 14) : name));
 				}
 				mutedPlayers = prop.getProperty("MutedPlayers");
 			} catch (Exception e) {
@@ -130,7 +137,7 @@ public class PlayerProfile {
 				inputStream.close();
 				prop.setProperty("Rank", "Visitor");
 				rank = Rank.Visitor;
-				newPlayer.setPlayerListName("§" + rank.color + (name.length() > 14 ? name.substring(0, 14) : name));
+				newPlayer.setPlayerListName("§" + rank.getColor() + (name.length() > 14 ? name.substring(0, 14) : name));
 				prop.setProperty("Money", "0");
 				money = 0;
 				prop.setProperty("NameColor", "f");
@@ -300,7 +307,7 @@ public class PlayerProfile {
 					player.setDisplayName("§d" + nameTitle + " §" + nameColor + name + "§f");
 				}
 			}
-			player.setPlayerListName("§" + rank.color + player.getName());
+			player.setPlayerListName("§" + rank.getColor() + player.getName());
 		} else {
 			setProperty("NameAlias", alias);
 			nameAlias = alias;
@@ -317,7 +324,7 @@ public class PlayerProfile {
 					player.setDisplayName("§d" + nameTitle + " §" + nameColor + nameAlias + "§f");
 				}
 			}
-			player.setPlayerListName("§" + rank.color + nameAlias);
+			player.setPlayerListName("§" + rank.getColor() + nameAlias);
 		}
 	}
 

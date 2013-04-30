@@ -17,13 +17,53 @@ public enum Rank {
 	CoOwner((byte)10, "§0[§6Co-Owner§0]", "6", 22000),
 	Owner((byte)11, "§0[§BOwner§0]", "B", 25000),
 	RainbowOwner((byte)12, "§0[§AO§Bw§Cn§De§Er§0]", "A", 50000),
-	GameMaster((byte)13, "§0[§AF§Bo§Cu§Dn§Ed§Ae§Br§0]", "A", 75000),
+	Custom((byte)13, "§0[§6Custom§0]", "6", 75000),
 	ServerOwner((byte)14, "§0[§BServerHost§0]", "B", 1000000);
 	
-	Byte ID;
-	String prefix;
-	String color;
-	Integer evilEditAreaLimit;
+	private Byte ID;
+	private String prefix;
+	private String color;
+	private Integer evilEditAreaLimit;
+	
+	/**
+	 * @return The ID of the rank
+	 */
+	Byte getID(){ return ID; }
+	
+	/**
+	 * @param ID The ID of the rank
+	 */
+	void setID(Byte ID){ this.ID = ID; }
+	
+	/**
+	 * @return The prefix of the rank
+	 */
+	String getPrefix(){ return prefix; }
+	
+	/**
+	 * @param prefix The prefix of the rank
+	 */
+	void setPrefix(String prefix){ this.prefix = prefix; }
+	
+	/**
+	 * @return The color of the rank
+	 */
+	String getColor(){ return color; }
+	
+	/**
+	 * @param color The color of the rank
+	 */
+	void setColor(String color){ this.color = color; }
+	
+	/**
+	 * @return The evil edit area limit of the rank
+	 */
+	Integer getEvilEditAreaLimit(){ return evilEditAreaLimit; }
+	
+	/**
+	 * @param evilEditAreaLimit The evil edit area limit of the rank
+	 */
+	void setEvilEditAreaLimit(Integer evilEditAreaLimit){ this.evilEditAreaLimit = evilEditAreaLimit; }
 	
 	/**
 	 * Define a new rank
@@ -71,8 +111,8 @@ public enum Rank {
 		case Owner:
 			return Rank.RainbowOwner;
 		case RainbowOwner:
-			return Rank.GameMaster;
-		case GameMaster:
+			return Rank.Custom;
+		case Custom:
 			return Rank.ServerOwner;
 		case ServerOwner:
 			return Rank.ServerOwner;
@@ -113,10 +153,10 @@ public enum Rank {
 			return Rank.CoOwner;
 		case RainbowOwner:
 			return Rank.Owner;
-		case GameMaster:
+		case Custom:
 			return Rank.RainbowOwner;
 		case ServerOwner:
-			return Rank.GameMaster;
+			return Rank.Custom;
 		}
 		return rank;
 	}

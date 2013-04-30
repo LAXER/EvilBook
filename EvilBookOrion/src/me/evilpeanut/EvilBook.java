@@ -165,79 +165,80 @@ public class EvilBook extends JavaPlugin {
 				FileInputStream inputStream = new FileInputStream(check);
 				prop.load(inputStream);
 				inputStream.close();
-				prop.setProperty("/setall", Byte.toString(Rank.ServerOwner.ID));
-				prop.setProperty("/cleandatabase", Byte.toString(Rank.ServerOwner.ID));
-				prop.setProperty("/rollback", Byte.toString(Rank.ServerOwner.ID));
-				prop.setProperty("/spam", Byte.toString(Rank.ServerOwner.ID));
-				prop.setProperty("/toggleredstone", Byte.toString(Rank.ServerOwner.ID));
-				prop.setProperty("/evilbook", Byte.toString(Rank.ServerOwner.ID));
-				prop.setProperty("/stop", Byte.toString(Rank.ServerOwner.ID));
-				prop.setProperty("/op", Byte.toString(Rank.ServerOwner.ID));
-				prop.setProperty("/deop", Byte.toString(Rank.ServerOwner.ID));
-				prop.setProperty("/reload", Byte.toString(Rank.ServerOwner.ID));
-				prop.setProperty("/debug", Byte.toString(Rank.ServerOwner.ID));
-				prop.setProperty("/xp", Byte.toString(Rank.ServerOwner.ID));
-				prop.setProperty("/charge", Byte.toString(Rank.ServerOwner.ID));
-				prop.setProperty("/reward", Byte.toString(Rank.ServerOwner.ID));
-				prop.setProperty("/rewardall", Byte.toString(Rank.ServerOwner.ID));
-				prop.setProperty("/makeadmin", Byte.toString(Rank.ServerOwner.ID));
-				prop.setProperty("/demote", Byte.toString(Rank.ServerOwner.ID));
-				prop.setProperty("/kickall", Byte.toString(Rank.ServerOwner.ID));
-				prop.setProperty("/setspawn", Byte.toString(Rank.ServerOwner.ID));
-				prop.setProperty("/pardon", Byte.toString(Rank.RainbowOwner.ID));
-				prop.setProperty("/promote", Byte.toString(Rank.RainbowOwner.ID));
-				prop.setProperty("/broadcast", Byte.toString(Rank.Owner.ID));
-				prop.setProperty("/say", Byte.toString(Rank.Owner.ID));
-				prop.setProperty("/vanish", Byte.toString(Rank.CoOwner.ID));
-				prop.setProperty("/hide", Byte.toString(Rank.CoOwner.ID));
-				prop.setProperty("/unvanish", Byte.toString(Rank.CoOwner.ID));
-				prop.setProperty("/show", Byte.toString(Rank.CoOwner.ID));
-				prop.setProperty("/regen", Byte.toString(Rank.Elite.ID));
-				prop.setProperty("/copy", Byte.toString(Rank.Councillor.ID));
-				prop.setProperty("/paste", Byte.toString(Rank.Councillor.ID));
-				prop.setProperty("/sphere", Byte.toString(Rank.SpecialAdmin.ID));
-				prop.setProperty("/cspawn", Byte.toString(Rank.SpecialAdmin.ID));
-				prop.setProperty("/spawncreature", Byte.toString(Rank.SpecialAdmin.ID));
-				prop.setProperty("/drain", Byte.toString(Rank.Admin.ID));
-				prop.setProperty("/overlay", Byte.toString(Rank.Admin.ID));
-				prop.setProperty("/walls", Byte.toString(Rank.Admin.ID));
-				prop.setProperty("/outline", Byte.toString(Rank.Admin.ID));
-				prop.setProperty("/hollow", Byte.toString(Rank.Admin.ID));	
-				prop.setProperty("/undo", Byte.toString(Rank.Admin.ID));
-				prop.setProperty("/fill", Byte.toString(Rank.Admin.ID));
-				prop.setProperty("/replace", Byte.toString(Rank.Admin.ID));
-				prop.setProperty("/memstat", Byte.toString(Rank.Admin.ID));
-				prop.setProperty("/clean", Byte.toString(Rank.Admin.ID));
-				prop.setProperty("/del", Byte.toString(Rank.Admin.ID));
-				prop.setProperty("/delete", Byte.toString(Rank.Admin.ID));
-				prop.setProperty("/storm", Byte.toString(Rank.Admin.ID));
-				prop.setProperty("/rain", Byte.toString(Rank.Admin.ID));
-				prop.setProperty("/sun", Byte.toString(Rank.Admin.ID));
-				prop.setProperty("/time", Byte.toString(Rank.Admin.ID));
-				prop.setProperty("/butcher", Byte.toString(Rank.Admin.ID));
-				prop.setProperty("/tree", Byte.toString(Rank.Admin.ID));
-				prop.setProperty("/dawn", Byte.toString(Rank.Admin.ID));
-				prop.setProperty("/day", Byte.toString(Rank.Admin.ID));
-				prop.setProperty("/dusk", Byte.toString(Rank.Admin.ID));
-				prop.setProperty("/night", Byte.toString(Rank.Admin.ID));
-				prop.setProperty("/rename", Byte.toString(Rank.Admin.ID));
-				prop.setProperty("/tphere", Byte.toString(Rank.Admin.ID));
-				prop.setProperty("/teleporthere", Byte.toString(Rank.Admin.ID));
-				prop.setProperty("/region", Byte.toString(Rank.Admin.ID));
-				prop.setProperty("/log", Byte.toString(Rank.Admin.ID));
-				prop.setProperty("/kick", Byte.toString(Rank.Moderator.ID));
-				prop.setProperty("/sky", Byte.toString(Rank.Moderator.ID));
-				prop.setProperty("/skyland", Byte.toString(Rank.Moderator.ID));
-				prop.setProperty("/spaceland", Byte.toString(Rank.Architect.ID));
-				prop.setProperty("/space", Byte.toString(Rank.Architect.ID));
-				prop.setProperty("/flatland", Byte.toString(Rank.AdvancedBuilder.ID));
+				prop.setProperty("/setall", Byte.toString(Rank.ServerOwner.getID()));
+				prop.setProperty("/cleandatabase", Byte.toString(Rank.ServerOwner.getID()));
+				prop.setProperty("/rollback", Byte.toString(Rank.ServerOwner.getID()));
+				prop.setProperty("/spam", Byte.toString(Rank.ServerOwner.getID()));
+				prop.setProperty("/toggleredstone", Byte.toString(Rank.ServerOwner.getID()));
+				prop.setProperty("/evilbook", Byte.toString(Rank.ServerOwner.getID()));
+				prop.setProperty("/stop", Byte.toString(Rank.ServerOwner.getID()));
+				prop.setProperty("/op", Byte.toString(Rank.ServerOwner.getID()));
+				prop.setProperty("/deop", Byte.toString(Rank.ServerOwner.getID()));
+				prop.setProperty("/reload", Byte.toString(Rank.ServerOwner.getID()));
+				prop.setProperty("/debug", Byte.toString(Rank.ServerOwner.getID()));
+				prop.setProperty("/xp", Byte.toString(Rank.ServerOwner.getID()));
+				prop.setProperty("/charge", Byte.toString(Rank.ServerOwner.getID()));
+				prop.setProperty("/reward", Byte.toString(Rank.ServerOwner.getID()));
+				prop.setProperty("/rewardall", Byte.toString(Rank.ServerOwner.getID()));
+				prop.setProperty("/makeadmin", Byte.toString(Rank.ServerOwner.getID()));
+				prop.setProperty("/demote", Byte.toString(Rank.ServerOwner.getID()));
+				prop.setProperty("/kickall", Byte.toString(Rank.ServerOwner.getID()));
+				prop.setProperty("/setspawn", Byte.toString(Rank.ServerOwner.getID()));
+				prop.setProperty("/setrank", Byte.toString(Rank.Custom.getID()));
+				prop.setProperty("/pardon", Byte.toString(Rank.RainbowOwner.getID()));
+				prop.setProperty("/promote", Byte.toString(Rank.RainbowOwner.getID()));
+				prop.setProperty("/broadcast", Byte.toString(Rank.Owner.getID()));
+				prop.setProperty("/say", Byte.toString(Rank.Owner.getID()));
+				prop.setProperty("/vanish", Byte.toString(Rank.CoOwner.getID()));
+				prop.setProperty("/hide", Byte.toString(Rank.CoOwner.getID()));
+				prop.setProperty("/unvanish", Byte.toString(Rank.CoOwner.getID()));
+				prop.setProperty("/show", Byte.toString(Rank.CoOwner.getID()));
+				prop.setProperty("/regen", Byte.toString(Rank.Elite.getID()));
+				prop.setProperty("/copy", Byte.toString(Rank.Councillor.getID()));
+				prop.setProperty("/paste", Byte.toString(Rank.Councillor.getID()));
+				prop.setProperty("/sphere", Byte.toString(Rank.SpecialAdmin.getID()));
+				prop.setProperty("/cspawn", Byte.toString(Rank.SpecialAdmin.getID()));
+				prop.setProperty("/spawncreature", Byte.toString(Rank.SpecialAdmin.getID()));
+				prop.setProperty("/drain", Byte.toString(Rank.Admin.getID()));
+				prop.setProperty("/overlay", Byte.toString(Rank.Admin.getID()));
+				prop.setProperty("/walls", Byte.toString(Rank.Admin.getID()));
+				prop.setProperty("/outline", Byte.toString(Rank.Admin.getID()));
+				prop.setProperty("/hollow", Byte.toString(Rank.Admin.getID()));	
+				prop.setProperty("/undo", Byte.toString(Rank.Admin.getID()));
+				prop.setProperty("/fill", Byte.toString(Rank.Admin.getID()));
+				prop.setProperty("/replace", Byte.toString(Rank.Admin.getID()));
+				prop.setProperty("/memstat", Byte.toString(Rank.Admin.getID()));
+				prop.setProperty("/clean", Byte.toString(Rank.Admin.getID()));
+				prop.setProperty("/del", Byte.toString(Rank.Admin.getID()));
+				prop.setProperty("/delete", Byte.toString(Rank.Admin.getID()));
+				prop.setProperty("/storm", Byte.toString(Rank.Admin.getID()));
+				prop.setProperty("/rain", Byte.toString(Rank.Admin.getID()));
+				prop.setProperty("/sun", Byte.toString(Rank.Admin.getID()));
+				prop.setProperty("/time", Byte.toString(Rank.Admin.getID()));
+				prop.setProperty("/butcher", Byte.toString(Rank.Admin.getID()));
+				prop.setProperty("/tree", Byte.toString(Rank.Admin.getID()));
+				prop.setProperty("/dawn", Byte.toString(Rank.Admin.getID()));
+				prop.setProperty("/day", Byte.toString(Rank.Admin.getID()));
+				prop.setProperty("/dusk", Byte.toString(Rank.Admin.getID()));
+				prop.setProperty("/night", Byte.toString(Rank.Admin.getID()));
+				prop.setProperty("/rename", Byte.toString(Rank.Admin.getID()));
+				prop.setProperty("/tphere", Byte.toString(Rank.Admin.getID()));
+				prop.setProperty("/teleporthere", Byte.toString(Rank.Admin.getID()));
+				prop.setProperty("/region", Byte.toString(Rank.Admin.getID()));
+				prop.setProperty("/log", Byte.toString(Rank.Admin.getID()));
+				prop.setProperty("/kick", Byte.toString(Rank.Moderator.getID()));
+				prop.setProperty("/sky", Byte.toString(Rank.Moderator.getID()));
+				prop.setProperty("/skyland", Byte.toString(Rank.Moderator.getID()));
+				prop.setProperty("/spaceland", Byte.toString(Rank.Architect.getID()));
+				prop.setProperty("/space", Byte.toString(Rank.Architect.getID()));
+				prop.setProperty("/flatland", Byte.toString(Rank.AdvancedBuilder.getID()));
 				FileOutputStream outputStream = new FileOutputStream(check);
-				prop.store(outputStream, "Format:\nCommand = Minimum rank required\nRank values:\nVisitor = " + Rank.Visitor.ID + 
-						"\nBuilder = " + Rank.Builder.ID + "\nAdvancedBuilder = " + Rank.AdvancedBuilder + "\nArchitect = " + Rank.Architect.ID + "\nModerator = " + Rank.Moderator.ID + 
-						"\nPolice = " + Rank.Police.ID + "\nAdmin = " + Rank.Admin.ID + "\nSpecialAdmin = " + Rank.SpecialAdmin.ID + 
-						"\nCounciller = " + Rank.Councillor.ID + "\nElite = " + Rank.Elite.ID + "\nCoOwner = " + Rank.CoOwner.ID + 
-						"\nOwner = " + Rank.Owner.ID + "\nRainbowOwner = " + Rank.RainbowOwner.ID + "\nGameMaster = " + Rank.GameMaster.ID +
-						"\nServerOwner = " + Rank.ServerOwner.ID + "\nDate created:");
+				prop.store(outputStream, "Format:\nCommand = Minimum rank required\nRank values:\nVisitor = " + Rank.Visitor.getID() + 
+						"\nBuilder = " + Rank.Builder.getID() + "\nAdvancedBuilder = " + Rank.AdvancedBuilder + "\nArchitect = " + Rank.Architect.getID() + "\nModerator = " + Rank.Moderator.getID() + 
+						"\nPolice = " + Rank.Police.getID() + "\nAdmin = " + Rank.Admin.getID() + "\nSpecialAdmin = " + Rank.SpecialAdmin.getID() + 
+						"\nCounciller = " + Rank.Councillor.getID() + "\nElite = " + Rank.Elite.getID() + "\nCoOwner = " + Rank.CoOwner.getID() + 
+						"\nOwner = " + Rank.Owner.getID() + "\nRainbowOwner = " + Rank.RainbowOwner.getID() + "\nCustom = " + Rank.Custom.getID() +
+						"\nServerOwner = " + Rank.ServerOwner.getID() + "\nDate created:");
 				outputStream.close();
 				for (String propName : prop.stringPropertyNames()) commandBlacklist.put(propName, Byte.valueOf(prop.getProperty(propName)));
 			} catch (Exception exception) {
@@ -815,7 +816,7 @@ public class EvilBook extends JavaPlugin {
 			if (args.length == 0) {
 				((Player) sender).setHealth(0);
 			} else {
-				if (sender instanceof Player == false || getProfile(sender).rank.ID >= Rank.GameMaster.ID) {
+				if (sender instanceof Player == false || getProfile(sender).rank.getID() >= Rank.Custom.getID()) {
 					if (getPlayer(args[0]) != null) {
 						getPlayer(args[0]).setHealth(0);
 					} else {
@@ -835,7 +836,7 @@ public class EvilBook extends JavaPlugin {
 				if (isProfileExistant(args[0])) {
 					if (getPlayer(args[0]) != null) {
 						getProfile(args[0]).rank = Rank.Admin;
-						getPlayer(args[0]).setPlayerListName("§" + getProfile(args[0]).rank.color + ((getProfile(args[0]).nameAlias == null || getProfile(args[0]).nameAlias.equals("null")) ? (getPlayer(args[0]).getName().length() > 14 ? getPlayer(args[0]).getName().substring(0, 14) : getPlayer(args[0]).getName()) : (getProfile(args[0]).nameAlias.length() > 14 ? getProfile(args[0]).nameAlias.substring(0, 14) : getProfile(args[0]).nameAlias)));
+						getPlayer(args[0]).setPlayerListName("§" + getProfile(args[0]).rank.getColor() + ((getProfile(args[0]).nameAlias == null || getProfile(args[0]).nameAlias.equals("null")) ? (getPlayer(args[0]).getName().length() > 14 ? getPlayer(args[0]).getName().substring(0, 14) : getPlayer(args[0]).getName()) : (getProfile(args[0]).nameAlias.length() > 14 ? getProfile(args[0]).nameAlias.substring(0, 14) : getProfile(args[0]).nameAlias)));
 						getPlayer(args[0]).sendMessage("§7You have been promoted to admin");
 					} else {
 						setOfflineProperty(args[0], "Rank", "Admin");
@@ -913,7 +914,7 @@ public class EvilBook extends JavaPlugin {
 				if (isProfileExistant(args[0])) {
 					if (getPlayer(args[0]) != null) {
 						getProfile(args[0]).rank = Rank.getPreviousRank(getProfile(args[0]).rank);
-						getPlayer(args[0]).setPlayerListName("§" + getProfile(args[0]).rank.color + ((getProfile(args[0]).nameAlias == null || getProfile(args[0]).nameAlias.equals("null")) ? (getPlayer(args[0]).getName().length() > 14 ? getPlayer(args[0]).getName().substring(0, 14) : getPlayer(args[0]).getName()) : (getProfile(args[0]).nameAlias.length() > 14 ? getProfile(args[0]).nameAlias.substring(0, 14) : getProfile(args[0]).nameAlias)));
+						getPlayer(args[0]).setPlayerListName("§" + getProfile(args[0]).rank.getColor() + ((getProfile(args[0]).nameAlias == null || getProfile(args[0]).nameAlias.equals("null")) ? (getPlayer(args[0]).getName().length() > 14 ? getPlayer(args[0]).getName().substring(0, 14) : getPlayer(args[0]).getName()) : (getProfile(args[0]).nameAlias.length() > 14 ? getProfile(args[0]).nameAlias.substring(0, 14) : getProfile(args[0]).nameAlias)));
 						getPlayer(args[0]).sendMessage("§7You have been demoted");
 						sender.sendMessage("§7" + getPlayer(args[0]).getDisplayName() + " has been demoted");
 					} else {
@@ -936,16 +937,16 @@ public class EvilBook extends JavaPlugin {
 			if (args.length == 1) {
 				if (isProfileExistant(args[0])) {
 					if (getPlayer(args[0]) != null) {
-						if (Rank.getNextRank(getProfile(args[0]).rank).ID > Rank.Moderator.ID && sender instanceof Player && getProfile(sender).rank.ID == Rank.GameMaster.ID) {
+						if (Rank.getNextRank(getProfile(args[0]).rank).getID() > Rank.Moderator.getID() && sender instanceof Player && getProfile(sender).rank.getID() == Rank.Custom.getID()) {
 							sender.sendMessage("§7You can't promote a player to above moderator");
 							return true;
 						}
-						if (Rank.getNextRank(getProfile(args[0]).rank).ID > Rank.Architect.ID && sender instanceof Player && getProfile(sender).rank.ID < Rank.GameMaster.ID) {
+						if (Rank.getNextRank(getProfile(args[0]).rank).getID() > Rank.Architect.getID() && sender instanceof Player && getProfile(sender).rank.getID() < Rank.Custom.getID()) {
 							sender.sendMessage("§7You can't promote a player to above architect");
 							return true;
 						}
 						getProfile(args[0]).rank = Rank.getNextRank(getProfile(args[0]).rank);
-						getPlayer(args[0]).setPlayerListName("§" + getProfile(args[0]).rank.color + ((getProfile(args[0]).nameAlias == null || getProfile(args[0]).nameAlias.equals("null")) ? (getPlayer(args[0]).getName().length() > 14 ? getPlayer(args[0]).getName().substring(0, 14) : getPlayer(args[0]).getName()) : (getProfile(args[0]).nameAlias.length() > 14 ? getProfile(args[0]).nameAlias.substring(0, 14) : getProfile(args[0]).nameAlias)));
+						getPlayer(args[0]).setPlayerListName("§" + getProfile(args[0]).rank.getColor() + ((getProfile(args[0]).nameAlias == null || getProfile(args[0]).nameAlias.equals("null")) ? (getPlayer(args[0]).getName().length() > 14 ? getPlayer(args[0]).getName().substring(0, 14) : getPlayer(args[0]).getName()) : (getProfile(args[0]).nameAlias.length() > 14 ? getProfile(args[0]).nameAlias.substring(0, 14) : getProfile(args[0]).nameAlias)));
 						getPlayer(args[0]).sendMessage("§7You have been promoted");
 						sender.sendMessage("§7" + getPlayer(args[0]).getDisplayName() + " has been promoted");
 					} else {
@@ -1031,11 +1032,11 @@ public class EvilBook extends JavaPlugin {
 				sender.sendMessage("§cRanks §f- §cPage 2 of 2 §f- §7/ranks <page>");
 				sender.sendMessage("§0[§4SpecAdmin§0] §7Purchased from the Amentrix website");
 				sender.sendMessage("§0[§ACounciller§0] §7Purchased from the Amentrix website");
-				sender.sendMessage("§0[§BElite§0] §7Purchased from the Amentrix website");
+				sender.sendMessage("§0[§CElite§0] §7Purchased from the Amentrix website");
 				sender.sendMessage("§0[§6Co-Owner§0] §7Purchased from the Amentrix website");
 				sender.sendMessage("§0[§BOwner§0] §7Purchased from the Amentrix website");
 				sender.sendMessage("§0[§AO§Bw§Cn§De§Er§0] §7Purchased from the Amentrix website");
-				sender.sendMessage("§0[§CServerHost§0] §7EvilPeanut");
+				sender.sendMessage("§0[§BServerHost§0] §7EvilPeanut");
 				sender.sendMessage("§7To purchase a rank please see /admin");
 			}
 			return true;
@@ -1136,6 +1137,37 @@ public class EvilBook extends JavaPlugin {
 		//
 		if (sender instanceof Player == false) {
 			logInfo("This command is not supported by the console");
+			return true;
+		}
+		//
+		// Set Rank Command
+		//
+		if (command.getName().equalsIgnoreCase("setrank")) {
+			if (args.length == 1) {
+				if (args[0].toLowerCase().contains("ServerHost")) {
+					sender.sendMessage("§7This rank is blocked");
+					return true;
+				}
+				try {
+					FileInputStream inputStream = new FileInputStream("plugins/EvilBook/Players/" + sender.getName() + ".properties");
+					Properties playerProp = new Properties();
+					playerProp.load(inputStream);
+					inputStream.close();
+					String prefix = args[0].startsWith("&") ? args[0] : "&6" + args[0];
+					playerProp.setProperty("CustomRankPrefix", prefix);
+					FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/Players/" + sender.getName() + ".properties");
+					playerProp.store(outputStream, null);
+					outputStream.close();
+					getProfile(sender).rank.setColor(prefix.substring(1, 2));
+					getProfile(sender).rank.setPrefix("§0[" + prefix.replaceAll("&", "§") + "§0]");
+				} catch (Exception e) {
+					logSevere("Failed to set rank in player profile 'plugins/EvilBook/Players/" + sender.getName() + ".properties'");
+					e.printStackTrace();
+				}
+			} else {
+				sender.sendMessage("§5Incorrect command usage");
+				sender.sendMessage("§d/setrank [rank]");
+			}
 			return true;
 		}
 		//
@@ -1475,11 +1507,11 @@ public class EvilBook extends JavaPlugin {
 					if (args.length == 2) {
 						for (int regionNo = 0; regionNo < regionList.size(); regionNo++) {
 							if (regionList.get(regionNo).regionName.equalsIgnoreCase(args[1])) {
-								if (sender.getName() != regionList.get(regionNo).ownerName && getProfile(sender).rank.ID < Rank.Elite.ID) {
+								if (sender.getName() != regionList.get(regionNo).ownerName && getProfile(sender).rank.getID() < Rank.Elite.getID()) {
 									sender.sendMessage("§7You don't own this region");
 									return true;
 								}
-								if (regionList.get(regionNo).ownerName.equalsIgnoreCase(sender.getName()) || getProfile(sender).rank.ID >= Rank.RainbowOwner.ID) {
+								if (regionList.get(regionNo).ownerName.equalsIgnoreCase(sender.getName()) || getProfile(sender).rank.getID() >= Rank.RainbowOwner.getID()) {
 									new File("plugins/EvilBook/Regions/" + args[1] + ".properties").delete();
 									regionList.remove(regionNo);
 									sender.sendMessage("§7Region " + args[1] + " removed");
@@ -1644,7 +1676,7 @@ public class EvilBook extends JavaPlugin {
 				for (String msg : args) message += msg + " ";
 				Boolean adminOnline = false;
 				for (Player p : getServer().getOnlinePlayers()) {
-					if (getProfile(p).rank.ID >= Rank.Admin.ID) {
+					if (getProfile(p).rank.getID() >= Rank.Admin.getID()) {
 						p.sendMessage(sender.getName() + " requires admin assistance: " + message.trim());
 						adminOnline = true;
 					}
@@ -1995,8 +2027,8 @@ public class EvilBook extends JavaPlugin {
 		        int bottomBlockY = (getProfile(sender).actionLocationA.getBlockY() > getProfile(sender).actionLocationB.getBlockY() ? getProfile(sender).actionLocationB.getBlockY() : getProfile(sender).actionLocationA.getBlockY());
 		        int topBlockZ = (getProfile(sender).actionLocationA.getBlockZ() < getProfile(sender).actionLocationB.getBlockZ() ? getProfile(sender).actionLocationB.getBlockZ() : getProfile(sender).actionLocationA.getBlockZ());
 		        int bottomBlockZ = (getProfile(sender).actionLocationA.getBlockZ() > getProfile(sender).actionLocationB.getBlockZ() ? getProfile(sender).actionLocationB.getBlockZ() : getProfile(sender).actionLocationA.getBlockZ());
-		        if (((topBlockX - bottomBlockX) * (topBlockY - bottomBlockY) * (topBlockZ - bottomBlockZ)) > getProfile(sender).rank.evilEditAreaLimit && getProfile(sender).rank != Rank.ServerOwner) {
-		        	sender.sendMessage("§7You can only replace up to an area of " + getProfile(sender).rank.evilEditAreaLimit + " blocks");
+		        if (((topBlockX - bottomBlockX) * (topBlockY - bottomBlockY) * (topBlockZ - bottomBlockZ)) > getProfile(sender).rank.getEvilEditAreaLimit() && getProfile(sender).rank != Rank.ServerOwner) {
+		        	sender.sendMessage("§7You can only replace up to an area of " + getProfile(sender).rank.getEvilEditAreaLimit() + " blocks");
 		        	sender.sendMessage("§7Rank-up to lift this limit");
 					return true;
 		        }
@@ -2061,8 +2093,8 @@ public class EvilBook extends JavaPlugin {
 		        int bottomBlockY = (getProfile(sender).actionLocationA.getBlockY() > getProfile(sender).actionLocationB.getBlockY() ? getProfile(sender).actionLocationB.getBlockY() : getProfile(sender).actionLocationA.getBlockY());
 		        int topBlockZ = (getProfile(sender).actionLocationA.getBlockZ() < getProfile(sender).actionLocationB.getBlockZ() ? getProfile(sender).actionLocationB.getBlockZ() : getProfile(sender).actionLocationA.getBlockZ());
 		        int bottomBlockZ = (getProfile(sender).actionLocationA.getBlockZ() > getProfile(sender).actionLocationB.getBlockZ() ? getProfile(sender).actionLocationB.getBlockZ() : getProfile(sender).actionLocationA.getBlockZ());
-		        if (((topBlockX - bottomBlockX) * (topBlockY - bottomBlockY) * (topBlockZ - bottomBlockZ)) > getProfile(sender).rank.evilEditAreaLimit && getProfile(sender).rank != Rank.ServerOwner) {
-		        	sender.sendMessage("§7You can only fill up to an area of " + getProfile(sender).rank.evilEditAreaLimit + " blocks");
+		        if (((topBlockX - bottomBlockX) * (topBlockY - bottomBlockY) * (topBlockZ - bottomBlockZ)) > getProfile(sender).rank.getEvilEditAreaLimit() && getProfile(sender).rank != Rank.ServerOwner) {
+		        	sender.sendMessage("§7You can only fill up to an area of " + getProfile(sender).rank.getEvilEditAreaLimit() + " blocks");
 		        	sender.sendMessage("§7Rank-up to lift this limit");
 					return true;
 		        }
@@ -2125,8 +2157,8 @@ public class EvilBook extends JavaPlugin {
 		        int bottomBlockY = (getProfile(sender).actionLocationA.getBlockY() > getProfile(sender).actionLocationB.getBlockY() ? getProfile(sender).actionLocationB.getBlockY() : getProfile(sender).actionLocationA.getBlockY());
 		        int topBlockZ = (getProfile(sender).actionLocationA.getBlockZ() < getProfile(sender).actionLocationB.getBlockZ() ? getProfile(sender).actionLocationB.getBlockZ() : getProfile(sender).actionLocationA.getBlockZ());
 		        int bottomBlockZ = (getProfile(sender).actionLocationA.getBlockZ() > getProfile(sender).actionLocationB.getBlockZ() ? getProfile(sender).actionLocationB.getBlockZ() : getProfile(sender).actionLocationA.getBlockZ());
-		        if (((topBlockX - bottomBlockX) * (topBlockY - bottomBlockY) * (topBlockZ - bottomBlockZ)) > getProfile(sender).rank.evilEditAreaLimit && getProfile(sender).rank != Rank.ServerOwner) {
-		        	sender.sendMessage("§7You can only delete up to an area of " + getProfile(sender).rank.evilEditAreaLimit + " blocks");
+		        if (((topBlockX - bottomBlockX) * (topBlockY - bottomBlockY) * (topBlockZ - bottomBlockZ)) > getProfile(sender).rank.getEvilEditAreaLimit() && getProfile(sender).rank != Rank.ServerOwner) {
+		        	sender.sendMessage("§7You can only delete up to an area of " + getProfile(sender).rank.getEvilEditAreaLimit() + " blocks");
 		        	sender.sendMessage("§7Rank-up to lift this limit");
 					return true;
 		        }
@@ -2169,8 +2201,8 @@ public class EvilBook extends JavaPlugin {
 		        int bottomBlockY = (getProfile(sender).actionLocationA.getBlockY() > getProfile(sender).actionLocationB.getBlockY() ? getProfile(sender).actionLocationB.getBlockY() : getProfile(sender).actionLocationA.getBlockY());
 		        int topBlockZ = (getProfile(sender).actionLocationA.getBlockZ() < getProfile(sender).actionLocationB.getBlockZ() ? getProfile(sender).actionLocationB.getBlockZ() : getProfile(sender).actionLocationA.getBlockZ());
 		        int bottomBlockZ = (getProfile(sender).actionLocationA.getBlockZ() > getProfile(sender).actionLocationB.getBlockZ() ? getProfile(sender).actionLocationB.getBlockZ() : getProfile(sender).actionLocationA.getBlockZ());
-		        if (((topBlockX - bottomBlockX) * (topBlockY - bottomBlockY) * (topBlockZ - bottomBlockZ)) > getProfile(sender).rank.evilEditAreaLimit && getProfile(sender).rank != Rank.ServerOwner) {
-		        	sender.sendMessage("§7You can only copy up to an area of " + getProfile(sender).rank.evilEditAreaLimit + " blocks");
+		        if (((topBlockX - bottomBlockX) * (topBlockY - bottomBlockY) * (topBlockZ - bottomBlockZ)) > getProfile(sender).rank.getEvilEditAreaLimit() && getProfile(sender).rank != Rank.ServerOwner) {
+		        	sender.sendMessage("§7You can only copy up to an area of " + getProfile(sender).rank.getEvilEditAreaLimit() + " blocks");
 		        	sender.sendMessage("§7Rank-up to lift this limit");
 					return true;
 		        }
@@ -2270,8 +2302,8 @@ public class EvilBook extends JavaPlugin {
 		        int bottomBlockY = (getProfile(sender).actionLocationA.getBlockY() > getProfile(sender).actionLocationB.getBlockY() ? getProfile(sender).actionLocationB.getBlockY() : getProfile(sender).actionLocationA.getBlockY());
 		        int topBlockZ = (getProfile(sender).actionLocationA.getBlockZ() < getProfile(sender).actionLocationB.getBlockZ() ? getProfile(sender).actionLocationB.getBlockZ() : getProfile(sender).actionLocationA.getBlockZ());
 		        int bottomBlockZ = (getProfile(sender).actionLocationA.getBlockZ() > getProfile(sender).actionLocationB.getBlockZ() ? getProfile(sender).actionLocationB.getBlockZ() : getProfile(sender).actionLocationA.getBlockZ());
-		        if (((topBlockX - bottomBlockX) * (topBlockY - bottomBlockY) * (topBlockZ - bottomBlockZ)) > getProfile(sender).rank.evilEditAreaLimit && getProfile(sender).rank != Rank.ServerOwner) {
-		        	sender.sendMessage("§7You can only overlay up to an area of " + getProfile(sender).rank.evilEditAreaLimit + " blocks");
+		        if (((topBlockX - bottomBlockX) * (topBlockY - bottomBlockY) * (topBlockZ - bottomBlockZ)) > getProfile(sender).rank.getEvilEditAreaLimit() && getProfile(sender).rank != Rank.ServerOwner) {
+		        	sender.sendMessage("§7You can only overlay up to an area of " + getProfile(sender).rank.getEvilEditAreaLimit() + " blocks");
 		        	sender.sendMessage("§7Rank-up to lift this limit");
 					return true;
 		        }
@@ -2331,8 +2363,8 @@ public class EvilBook extends JavaPlugin {
 		        int bottomBlockY = (getProfile(sender).actionLocationA.getBlockY() > getProfile(sender).actionLocationB.getBlockY() ? getProfile(sender).actionLocationB.getBlockY() : getProfile(sender).actionLocationA.getBlockY());
 		        int topBlockZ = (getProfile(sender).actionLocationA.getBlockZ() < getProfile(sender).actionLocationB.getBlockZ() ? getProfile(sender).actionLocationB.getBlockZ() : getProfile(sender).actionLocationA.getBlockZ());
 		        int bottomBlockZ = (getProfile(sender).actionLocationA.getBlockZ() > getProfile(sender).actionLocationB.getBlockZ() ? getProfile(sender).actionLocationB.getBlockZ() : getProfile(sender).actionLocationA.getBlockZ());
-		        if (((topBlockX - bottomBlockX) * (topBlockY - bottomBlockY) * (topBlockZ - bottomBlockZ)) > getProfile(sender).rank.evilEditAreaLimit && getProfile(sender).rank != Rank.ServerOwner) {
-		        	sender.sendMessage("§7You can only wall up to an area of " + getProfile(sender).rank.evilEditAreaLimit + " blocks");
+		        if (((topBlockX - bottomBlockX) * (topBlockY - bottomBlockY) * (topBlockZ - bottomBlockZ)) > getProfile(sender).rank.getEvilEditAreaLimit() && getProfile(sender).rank != Rank.ServerOwner) {
+		        	sender.sendMessage("§7You can only wall up to an area of " + getProfile(sender).rank.getEvilEditAreaLimit() + " blocks");
 		        	sender.sendMessage("§7Rank-up to lift this limit");
 					return true;
 		        }
@@ -2396,8 +2428,8 @@ public class EvilBook extends JavaPlugin {
 		        int bottomBlockY = (getProfile(sender).actionLocationA.getBlockY() > getProfile(sender).actionLocationB.getBlockY() ? getProfile(sender).actionLocationB.getBlockY() : getProfile(sender).actionLocationA.getBlockY());
 		        int topBlockZ = (getProfile(sender).actionLocationA.getBlockZ() < getProfile(sender).actionLocationB.getBlockZ() ? getProfile(sender).actionLocationB.getBlockZ() : getProfile(sender).actionLocationA.getBlockZ());
 		        int bottomBlockZ = (getProfile(sender).actionLocationA.getBlockZ() > getProfile(sender).actionLocationB.getBlockZ() ? getProfile(sender).actionLocationB.getBlockZ() : getProfile(sender).actionLocationA.getBlockZ());
-		        if (((topBlockX - bottomBlockX) * (topBlockY - bottomBlockY) * (topBlockZ - bottomBlockZ)) > getProfile(sender).rank.evilEditAreaLimit && getProfile(sender).rank != Rank.ServerOwner) {
-		        	sender.sendMessage("§7You can only outline up to an area of " + getProfile(sender).rank.evilEditAreaLimit + " blocks");
+		        if (((topBlockX - bottomBlockX) * (topBlockY - bottomBlockY) * (topBlockZ - bottomBlockZ)) > getProfile(sender).rank.getEvilEditAreaLimit() && getProfile(sender).rank != Rank.ServerOwner) {
+		        	sender.sendMessage("§7You can only outline up to an area of " + getProfile(sender).rank.getEvilEditAreaLimit() + " blocks");
 		        	sender.sendMessage("§7Rank-up to lift this limit");
 					return true;
 		        }
@@ -2448,8 +2480,8 @@ public class EvilBook extends JavaPlugin {
 		        int bottomBlockY = (getProfile(sender).actionLocationA.getBlockY() > getProfile(sender).actionLocationB.getBlockY() ? getProfile(sender).actionLocationB.getBlockY() : getProfile(sender).actionLocationA.getBlockY());
 		        int topBlockZ = (getProfile(sender).actionLocationA.getBlockZ() < getProfile(sender).actionLocationB.getBlockZ() ? getProfile(sender).actionLocationB.getBlockZ() : getProfile(sender).actionLocationA.getBlockZ());
 		        int bottomBlockZ = (getProfile(sender).actionLocationA.getBlockZ() > getProfile(sender).actionLocationB.getBlockZ() ? getProfile(sender).actionLocationB.getBlockZ() : getProfile(sender).actionLocationA.getBlockZ());
-		        if (((topBlockX - bottomBlockX) * (topBlockY - bottomBlockY) * (topBlockZ - bottomBlockZ)) > getProfile(sender).rank.evilEditAreaLimit && getProfile(sender).rank != Rank.ServerOwner) {
-		        	sender.sendMessage("§7You can only hollow up to an area of " + getProfile(sender).rank.evilEditAreaLimit + " blocks");
+		        if (((topBlockX - bottomBlockX) * (topBlockY - bottomBlockY) * (topBlockZ - bottomBlockZ)) > getProfile(sender).rank.getEvilEditAreaLimit() && getProfile(sender).rank != Rank.ServerOwner) {
+		        	sender.sendMessage("§7You can only hollow up to an area of " + getProfile(sender).rank.getEvilEditAreaLimit() + " blocks");
 		        	sender.sendMessage("§7Rank-up to lift this limit");
 					return true;
 		        }
@@ -2520,8 +2552,8 @@ public class EvilBook extends JavaPlugin {
 		        int bottomBlockY = (getProfile(sender).actionLocationA.getBlockY() > getProfile(sender).actionLocationB.getBlockY() ? getProfile(sender).actionLocationB.getBlockY() : getProfile(sender).actionLocationA.getBlockY());
 		        int topBlockZ = (getProfile(sender).actionLocationA.getBlockZ() < getProfile(sender).actionLocationB.getBlockZ() ? getProfile(sender).actionLocationB.getBlockZ() : getProfile(sender).actionLocationA.getBlockZ());
 		        int bottomBlockZ = (getProfile(sender).actionLocationA.getBlockZ() > getProfile(sender).actionLocationB.getBlockZ() ? getProfile(sender).actionLocationB.getBlockZ() : getProfile(sender).actionLocationA.getBlockZ());
-		        if (((topBlockX - bottomBlockX) * (topBlockY - bottomBlockY) * (topBlockZ - bottomBlockZ)) > getProfile(sender).rank.evilEditAreaLimit && getProfile(sender).rank != Rank.ServerOwner) {
-		        	sender.sendMessage("§7You can only drain up to an area of " + getProfile(sender).rank.evilEditAreaLimit + " blocks");
+		        if (((topBlockX - bottomBlockX) * (topBlockY - bottomBlockY) * (topBlockZ - bottomBlockZ)) > getProfile(sender).rank.getEvilEditAreaLimit() && getProfile(sender).rank != Rank.ServerOwner) {
+		        	sender.sendMessage("§7You can only drain up to an area of " + getProfile(sender).rank.getEvilEditAreaLimit() + " blocks");
 		        	sender.sendMessage("§7Rank-up to lift this limit");
 					return true;
 		        }
@@ -2786,7 +2818,7 @@ public class EvilBook extends JavaPlugin {
 		//
 		if (command.getName().equalsIgnoreCase("setwarp") || command.getName().equalsIgnoreCase("createwarp")) {
 			if (args.length == 1) {
-				if (getProfile(sender).money >= 20 || getProfile(sender).rank.ID >= Rank.Admin.ID) {
+				if (getProfile(sender).money >= 20 || getProfile(sender).rank.getID() >= Rank.Admin.getID()) {
 					if (args[0].length() <= 16) {
 						try {
 							Properties warpFile = new Properties();
@@ -2801,7 +2833,7 @@ public class EvilBook extends JavaPlugin {
 								warpFile.store(outputStream, null);
 								outputStream.close();
 								warpList.put(args[0].toLowerCase(), loc);
-								if (getProfile(sender).rank.ID >= Rank.Admin.ID) {
+								if (getProfile(sender).rank.getID() >= Rank.Admin.getID()) {
 									sender.sendMessage("§7Created warp §d" + args[0]);
 								} else {
 									getProfile(sender).money -= 20;
@@ -3131,7 +3163,7 @@ public class EvilBook extends JavaPlugin {
 			if (args.length == 1) {
 				if (getPlayer(args[0]) != null) {
 					if (!isInSurvival(getPlayer(args[0])) || getProfile(sender).rank == Rank.ServerOwner) {
-						if (getProfile(getPlayer(args[0])).rank.ID >= Rank.Admin.ID && getProfile(sender).rank.ID < Rank.GameMaster.ID) {
+						if (getProfile(getPlayer(args[0])).rank.getID() >= Rank.Admin.getID() && getProfile(sender).rank.getID() < Rank.Custom.getID()) {
 							getProfile(getPlayer(args[0])).teleportantName = sender.getName();
 							getPlayer(args[0]).sendMessage("§d" + ((Player) sender).getDisplayName() + " §dwishes to teleport to you");
 							getPlayer(args[0]).sendMessage("§aTo accept the request type /accept");
@@ -3145,7 +3177,7 @@ public class EvilBook extends JavaPlugin {
 				} else {
 					sender.sendMessage("§7You can't teleport to an offline player");
 				}
-			} else if (args.length == 2 && getProfile(sender).rank.ID >= Rank.CoOwner.ID) {
+			} else if (args.length == 2 && getProfile(sender).rank.getID() >= Rank.CoOwner.getID()) {
 				if (getPlayer(args[0]) != null && getPlayer(args[1]) != null) {
 					if ((!isInSurvival(getPlayer(args[0])) && !isInSurvival(getPlayer(args[1]))) || getProfile(sender).rank == Rank.ServerOwner) {
 						getPlayer(args[0]).teleport(getPlayer(args[1]));
@@ -3438,7 +3470,7 @@ public class EvilBook extends JavaPlugin {
 	 * @return If the sender is an op
 	 */
 	public Boolean isOp(CommandSender sender) {
-		return sender instanceof Player == false || getProfile(sender).rank.ID >= Rank.Admin.ID ? true : false;
+		return sender instanceof Player == false || getProfile(sender).rank.getID() >= Rank.Admin.getID() ? true : false;
 	}
 	
 	/**
@@ -3520,7 +3552,7 @@ public class EvilBook extends JavaPlugin {
 	 */
 	public Boolean isInProtectedRegion(Location loc, Player player) {
 		if (regionList.size() == 0) return false;
-		if (getProfile(player).rank.ID >= Rank.Admin.ID) return false;
+		if (getProfile(player).rank.getID() >= Rank.Admin.getID()) return false;
 		for (int regionNo = 0; regionNo < regionList.size(); regionNo++) {
 			if (regionList.get(regionNo).isProtected == false) continue;
 			if (regionList.get(regionNo).ownerName.equalsIgnoreCase(player.getName())) continue;

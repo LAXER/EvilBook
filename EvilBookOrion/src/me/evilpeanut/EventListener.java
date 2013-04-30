@@ -134,7 +134,7 @@ public class EventListener implements Listener {
 		if (entity instanceof Player == false) return;
 		if (plugin.isInSurvival(entity)) return;
 		Player shooter = (Player) entity;
-		if (plugin.getProfile(shooter).rank.ID >= Rank.Admin.ID) return;
+		if (plugin.getProfile(shooter).rank.getID() >= Rank.Admin.getID()) return;
 		if (Potion.fromItemStack(event.getPotion().getItem()).getType() == PotionType.INVISIBILITY) {
 			shooter.sendMessage("§7Only admins can use invisibility potions");
 			event.setCancelled(true);
@@ -146,7 +146,7 @@ public class EventListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerDrinkPotion(PlayerItemConsumeEvent event) {
-		if (plugin.getProfile(event.getPlayer()).rank.ID >= Rank.Admin.ID) return;
+		if (plugin.getProfile(event.getPlayer()).rank.getID() >= Rank.Admin.getID()) return;
 		if (plugin.isInSurvival(event.getPlayer())) return;
 		if (event.getItem().getType() == Material.POTION) {
 			if (event.getItem().getDurability() != 0) {
@@ -185,7 +185,7 @@ public class EventListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerEggThrow(PlayerEggThrowEvent event) {
-		if (plugin.getProfile(event.getPlayer()).rank.ID < Rank.Admin.ID) event.setHatching(false);
+		if (plugin.getProfile(event.getPlayer()).rank.getID() < Rank.Admin.getID()) event.setHatching(false);
 	}
 
 	/**
@@ -213,7 +213,7 @@ public class EventListener implements Listener {
 		for (Entity e : event.getPlayer().getLocation().getWorld().getEntities()) {
 			if (e.getType() == EntityType.DROPPED_ITEM) dropCount++;
 		}
-		if (dropCount >= 128 && plugin.getProfile(event.getPlayer()).rank.ID < Rank.Moderator.ID) event.setCancelled(true);
+		if (dropCount >= 128 && plugin.getProfile(event.getPlayer()).rank.getID() < Rank.Moderator.getID()) event.setCancelled(true);
 	}
 	
 	/**
@@ -225,7 +225,7 @@ public class EventListener implements Listener {
 		//
 		// Liquid protection
 		//
-		if (plugin.getProfile(player).rank.ID < Rank.Admin.ID) {
+		if (plugin.getProfile(player).rank.getID() < Rank.Admin.getID()) {
 			player.sendMessage((event.getBucket().getId() == 327 ?  "§dLava buckets" : "§dWater buckets") + " are an §5Admin §donly feature");
 			player.sendMessage("§dPlease type §6/admin §dto learn how to become admin");
 			event.setCancelled(true);
@@ -467,7 +467,7 @@ public class EventListener implements Listener {
 		e.setCancelled(true);
 		for (Player p : plugin.getServer().getOnlinePlayers()) {
 			if (plugin.getProfile(p).mutedPlayers != null && plugin.getProfile(p).mutedPlayers.contains(player.getName().toLowerCase()) == false) {
-				p.sendMessage(plugin.getProfile(player).rank.prefix + " §" + plugin.getProfile(player).rank.color + "<" + player.getDisplayName() + "§" + plugin.getProfile(player).rank.color + "> §f" + plugin.toFormattedString(e.getMessage()));
+				p.sendMessage(plugin.getProfile(player).rank.getPrefix() + " §" + plugin.getProfile(player).rank.getColor() + "<" + player.getDisplayName() + "§" + plugin.getProfile(player).rank.getColor() + "> §f" + plugin.toFormattedString(e.getMessage()));
 			}
 		}
 		// Anti-Spam Hack Protection
@@ -591,11 +591,11 @@ public class EventListener implements Listener {
 		plugin.getProfile(player).lastMessageTime = System.currentTimeMillis();
 		//
 		if (plugin.commandBlacklist.containsKey(event.getMessage().toLowerCase().split(" ")[0]) == false) return;
-		if (plugin.getProfile(player).rank.ID < plugin.commandBlacklist.get(event.getMessage().toLowerCase().split(" ")[0])) {
-			if (plugin.getProfile(player).rank.ID < Rank.Admin.ID && plugin.commandBlacklist.get(event.getMessage().toLowerCase().split(" ")[0]) >= Rank.Admin.ID) {
+		if (plugin.getProfile(player).rank.getID() < plugin.commandBlacklist.get(event.getMessage().toLowerCase().split(" ")[0])) {
+			if (plugin.getProfile(player).rank.getID() < Rank.Admin.getID() && plugin.commandBlacklist.get(event.getMessage().toLowerCase().split(" ")[0]) >= Rank.Admin.getID()) {
 				player.sendMessage("§dThis is an §5Admin §donly command");
 				player.sendMessage("§dPlease type §6/admin §dto learn how to become admin");
-			} else if (plugin.commandBlacklist.get(event.getMessage().toLowerCase().split(" ")[0]) == Rank.ServerOwner.ID) {
+			} else if (plugin.commandBlacklist.get(event.getMessage().toLowerCase().split(" ")[0]) == Rank.ServerOwner.getID()) {
 				player.sendMessage("§7This command is blocked for security reasons");
 			} else {
 				player.sendMessage("§7This command is for higher ranks only");
@@ -616,9 +616,9 @@ public class EventListener implements Listener {
 			event.setCancelled(true);
 			return;
 		}
-		if (plugin.isInSurvival(event.getTo().getWorld().getName()) && plugin.getProfile(player).rank.ID >= Rank.Architect.ID) {
+		if (plugin.isInSurvival(event.getTo().getWorld().getName()) && plugin.getProfile(player).rank.getID() >= Rank.Architect.getID()) {
 			player.sendMessage("§7Welcome to the survival world");
-		} else if (plugin.isInSurvival(event.getTo().getWorld().getName()) && plugin.getProfile(player).rank.ID < Rank.Architect.ID) {
+		} else if (plugin.isInSurvival(event.getTo().getWorld().getName()) && plugin.getProfile(player).rank.getID() < Rank.Architect.getID()) {
 			player.sendMessage("§7The survival world requires architect rank");
 			event.setCancelled(true);
 			return;
@@ -631,7 +631,7 @@ public class EventListener implements Listener {
 		}
 		try {
 			if (event.getTo().getWorld().getName().equals("FlatLand")) {
-				if (plugin.getProfile(player).rank.ID < plugin.commandBlacklist.get("/flatland")) {
+				if (plugin.getProfile(player).rank.getID() < plugin.commandBlacklist.get("/flatland")) {
 					player.sendMessage("§7You have to be a higher rank to access the flat lands");
 					event.setCancelled(true);
 					return;
@@ -641,7 +641,7 @@ public class EventListener implements Listener {
 				return;
 			}
 			if (event.getTo().getWorld().getName().equals("SpaceLand")) {
-				if (plugin.getProfile(player).rank.ID < plugin.commandBlacklist.get("/spaceland")) {
+				if (plugin.getProfile(player).rank.getID() < plugin.commandBlacklist.get("/spaceland")) {
 					player.sendMessage("§7You have to be a higher rank to access the space lands");
 					event.setCancelled(true);
 				} else {
@@ -819,12 +819,12 @@ public class EventListener implements Listener {
 		//
 		// Block Protection
 		//
-		if (plugin.getProfile(player).rank.ID < Rank.AdvancedBuilder.ID && (ID == 6 || ID == 12 || ID == 13 || ID == 31 || ID == 32 || ID == 39 || ID == 40 || ID == 106)) {
+		if (plugin.getProfile(player).rank.getID() < Rank.AdvancedBuilder.getID() && (ID == 6 || ID == 12 || ID == 13 || ID == 31 || ID == 32 || ID == 39 || ID == 40 || ID == 106)) {
 			player.sendMessage("§dThis block requires §5Advanced Builder §drank or higher");
 			event.setCancelled(true);
 			return;
 		}
-		if (plugin.getProfile(player).rank.ID < Rank.Admin.ID && (ID == 8 || ID == 9 || ID == 10 || ID == 11 || ID == 46 || ID == 51 || ID == 52 || ID == 79 || ID == 90 || ID == 122 || ID == 259)) {
+		if (plugin.getProfile(player).rank.getID() < Rank.Admin.getID() && (ID == 8 || ID == 9 || ID == 10 || ID == 11 || ID == 46 || ID == 51 || ID == 52 || ID == 79 || ID == 90 || ID == 122 || ID == 259)) {
 			player.sendMessage("§dThis block is §5Admin §donly");
 			player.sendMessage("§dPlease type §6/admin §dto learn how to become admin");
 			event.setCancelled(true);

@@ -1,7 +1,10 @@
 name: EvilBook
 main: me.evilpeanut.EvilBook
-version: 1.6
+version: 1.7
 commands:
+  setrank:
+    description: Set the player's custom rank
+    usage: /<command>
   cleandatabase:
     description: Clean the database
     usage: /<command>
