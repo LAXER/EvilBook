@@ -4254,7 +4254,7 @@ public class EvilBook extends JavaPlugin {
     		protectionProp.load(inputStream);
     		inputStream.close();
     		String protection = protectionProp.getProperty(location.getBlockX() + ":" + location.getBlockY() + ":" + location.getBlockZ());
-    		return protection.equals(player.getName()) || protection == null ? false : true;
+    		return protection == null || protection.equals(player.getName()) ? false : true;
     	} catch (Exception e) {
     		logSevere("Failed to read ContainerProtection.db");
     		e.printStackTrace();
