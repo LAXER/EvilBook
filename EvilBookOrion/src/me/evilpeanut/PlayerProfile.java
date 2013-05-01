@@ -19,7 +19,7 @@ import org.bukkit.entity.Player;
  */
 public class PlayerProfile {
 	public Location deathLocation, homeLocation, actionLocationA, actionLocationB, creativeLocation, survivalLocation;
-	public String name, nameColor, nameTitle, nameAlias, lastMessage, mutedPlayers, warps, teleportantName;
+	public String name, nameColor, nameTitle, nameAlias, lastMessage, mutedPlayers, warps, teleportantName, customRankPrefix = "Custom", customRankColor = "6";
 	public List<EvilEditBlock> EvilEditUndo = new ArrayList<EvilEditBlock>();
 	public List<EvilEditBlock> EvilEditCopy = new ArrayList<EvilEditBlock>();
 	public Boolean isLogging = false;
@@ -50,8 +50,8 @@ public class PlayerProfile {
 				if (rank == Rank.Custom) {
 					String prefix = prop.getProperty("CustomRankPrefix");
 					if (prefix != null) {
-						rank.setColor(prefix.substring(1, 2));
-						rank.setPrefix("§0[" + prefix.replaceAll("&", "§") + "§0]");
+						customRankColor = prefix.substring(1, 2);
+						customRankPrefix = "§0[" + prefix.replaceAll("&", "§") + "§0]";
 					}
 				}
 				if (prop.getProperty("Money") != null) {
@@ -103,7 +103,7 @@ public class PlayerProfile {
 							newPlayer.setDisplayName("§d" + nameTitle + " §" + nameColor + nameAlias + "§f");
 						}
 					}
-					newPlayer.setPlayerListName("§" + rank.getColor() + (nameAlias.length() > 14 ? nameAlias.substring(0, 14) : nameAlias));
+					newPlayer.setPlayerListName("§" + rank.getColor(this) + (nameAlias.length() > 14 ? nameAlias.substring(0, 14) : nameAlias));
 				} else {
 					if (nameColor.equals("?")) {
 						if (nameTitle == null || nameTitle.equals("")) {
@@ -118,7 +118,7 @@ public class PlayerProfile {
 							newPlayer.setDisplayName("§d" + nameTitle + " §" + nameColor + name + "§f");
 						}
 					}
-					newPlayer.setPlayerListName("§" + rank.getColor() + (name.length() > 14 ? name.substring(0, 14) : name));
+					newPlayer.setPlayerListName("§" + rank.getColor(this) + (name.length() > 14 ? name.substring(0, 14) : name));
 				}
 				mutedPlayers = prop.getProperty("MutedPlayers");
 			} catch (Exception e) {
@@ -137,7 +137,7 @@ public class PlayerProfile {
 				inputStream.close();
 				prop.setProperty("Rank", "Visitor");
 				rank = Rank.Visitor;
-				newPlayer.setPlayerListName("§" + rank.getColor() + (name.length() > 14 ? name.substring(0, 14) : name));
+				newPlayer.setPlayerListName("§" + rank.getColor(this) + (name.length() > 14 ? name.substring(0, 14) : name));
 				prop.setProperty("Money", "0");
 				money = 0;
 				prop.setProperty("NameColor", "f");
@@ -307,7 +307,7 @@ public class PlayerProfile {
 					player.setDisplayName("§d" + nameTitle + " §" + nameColor + name + "§f");
 				}
 			}
-			player.setPlayerListName("§" + rank.getColor() + player.getName());
+			player.setPlayerListName("§" + rank.getColor(this) + player.getName());
 		} else {
 			setProperty("NameAlias", alias);
 			nameAlias = alias;
@@ -324,7 +324,7 @@ public class PlayerProfile {
 					player.setDisplayName("§d" + nameTitle + " §" + nameColor + nameAlias + "§f");
 				}
 			}
-			player.setPlayerListName("§" + rank.getColor() + nameAlias);
+			player.setPlayerListName("§" + rank.getColor(this) + nameAlias);
 		}
 	}
 

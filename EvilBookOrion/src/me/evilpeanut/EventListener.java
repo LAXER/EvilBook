@@ -2,13 +2,17 @@ package me.evilpeanut;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -82,10 +86,12 @@ import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.Stairs;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
+import org.bukkit.util.Vector;
 
 /**
  * @author Reece Aaron Lecrivain
@@ -467,7 +473,7 @@ public class EventListener implements Listener {
 		e.setCancelled(true);
 		for (Player p : plugin.getServer().getOnlinePlayers()) {
 			if (plugin.getProfile(p).mutedPlayers != null && plugin.getProfile(p).mutedPlayers.contains(player.getName().toLowerCase()) == false) {
-				p.sendMessage(plugin.getProfile(player).rank.getPrefix() + " §" + plugin.getProfile(player).rank.getColor() + "<" + player.getDisplayName() + "§" + plugin.getProfile(player).rank.getColor() + "> §f" + plugin.toFormattedString(e.getMessage()));
+				p.sendMessage(plugin.getProfile(player).rank.getPrefix(plugin.getProfile(player)) + " §" + plugin.getProfile(player).rank.getColor(plugin.getProfile(player)) + "<" + player.getDisplayName() + "§" + plugin.getProfile(player).rank.getColor(plugin.getProfile(player)) + "> §f" + plugin.toFormattedString(e.getMessage()));
 			}
 		}
 		// Anti-Spam Hack Protection
@@ -484,11 +490,10 @@ public class EventListener implements Listener {
 	/**
 	 * Called when a player interacts with an object or air
 	 */
+	public Map<String, Object> sitting = new HashMap<String, Object>();
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerInteract(PlayerInteractEvent event) {
-		if (!event.hasBlock()) return;
-		int ID = event.getClickedBlock().getTypeId();
-		Player player = event.getPlayer();
+		final Player player = event.getPlayer();
 		/*
 		 * TODO: Add ledgit way to obtain wands
 		if (player.getItemInHand().getTypeId() == 280 && player.getName().equals("EvilPeanut")) {
@@ -502,6 +507,49 @@ public class EventListener implements Listener {
 			plugin.getProfile(player).addSpell(Spell.InstantGrow);
 		}
 		*/
+		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			final Block block = event.getClickedBlock();
+			if (player.getItemInHand().getType() != Material.AIR) return;
+			if (sitting.containsKey(player.getName().toLowerCase())) {
+				Arrow arrow = (Arrow)sitting.get(player.getName().toLowerCase());
+				arrow.remove();
+				sitting.remove(player.getName().toLowerCase());
+				return;
+			}
+			if ((block.getType() == Material.WOOD_STAIRS) || (block.getType() == Material.BIRCH_WOOD_STAIRS) || (block.getType() == Material.SPRUCE_WOOD_STAIRS) || (block.getType() == Material.JUNGLE_WOOD_STAIRS) || (block.getType() == Material.SANDSTONE_STAIRS) || (block.getType() == Material.BRICK_STAIRS) || (block.getType() == Material.COBBLESTONE_STAIRS) || (block.getType() == Material.SMOOTH_STAIRS) || (block.getType() == Material.QUARTZ_STAIRS))
+			{
+				if (!player.isSneaking()) return;
+				World world = player.getWorld();
+				Stairs stairs = (Stairs)block.getState().getData();
+				final Arrow arrow = world.spawnArrow(new Location(world, block.getLocation().getX() + 0.6D, block.getLocation().getY(), block.getLocation().getZ() + 0.6D), new Vector(block.getLocation().getX(), block.getLocation().getY() - 1.0D, block.getLocation().getZ()), 0.0F, 0.0F);
+				switch (stairs.getDescendingDirection().ordinal()) {
+				case 1:
+					player.getLocation().setYaw(90.0F);
+					break;
+				case 2:
+					player.getLocation().setYaw(180.0F);
+					break;
+				case 3:
+					player.getLocation().setYaw(270.0F);
+					break;
+				case 4:
+					player.getLocation().setYaw(0.0F);
+				}
+				player.teleport(player.getLocation());
+				sitting.put(player.getName().toLowerCase(), arrow);
+				plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
+				{
+					public void run()
+					{
+						arrow.setPassenger(player);
+					}
+				}
+				, 1L);
+				return;
+			}
+		}
+		if (!event.hasBlock()) return;
+		int ID = event.getClickedBlock().getTypeId();
 		if (plugin.isInSurvival(player)) {
 			if (ID == 130 && plugin.getProfile(player.getName()).rank != Rank.ServerOwner) {
 				player.sendMessage("§7Ender chests are blocked in survival");
@@ -568,10 +616,10 @@ public class EventListener implements Listener {
 					plugin.getProfile(player).actionLocationB = block.getLocation();
 					player.sendMessage("§7Second point selected (" + block.getX() + ", " + block.getY() + ", " + block.getZ() + ")");
 					event.setCancelled(true);
+					return;
 				}
 			}
 		}
-		
 	}
 	
 	/**
@@ -806,6 +854,16 @@ public class EventListener implements Listener {
 			plugin.unprotectContainer(event.getBlock().getLocation());
 			//TODO: Display the container type eg. Furnace, Chest ect...
 			player.sendMessage(ChatColor.GRAY + "Container protection removed");
+		}
+		//
+		// Sitting on stairs
+		//
+		for (int i = 0; i < sitting.size(); i++) {
+			if (((Arrow)sitting.values().toArray()[i]).getLocation().getBlock().getLocation().equals(block.getLocation())) {
+				((Arrow)sitting.values().toArray()[i]).setPassenger(null);
+				((Arrow)sitting.values().toArray()[i]).remove();
+				sitting.remove(sitting.keySet().toArray()[i]);
+			}
 		}
 	}
 	

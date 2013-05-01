@@ -38,8 +38,14 @@ public enum Rank {
 	/**
 	 * @return The prefix of the rank
 	 */
-	String getPrefix(){ return prefix; }
-	
+	String getPrefix(PlayerProfile player) { 
+		if (player.rank == Rank.Custom) {
+			return player.customRankPrefix;
+		} else {
+			return prefix; 
+		}
+	}
+
 	/**
 	 * @param prefix The prefix of the rank
 	 */
@@ -48,7 +54,13 @@ public enum Rank {
 	/**
 	 * @return The color of the rank
 	 */
-	String getColor(){ return color; }
+	String getColor(PlayerProfile player) {
+		if (player.rank == Rank.Custom) {
+			return player.customRankColor;
+		} else {
+			return color; 
+		}
+	}
 	
 	/**
 	 * @param color The color of the rank

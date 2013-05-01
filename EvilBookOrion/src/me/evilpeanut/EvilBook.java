@@ -598,6 +598,7 @@ public class EvilBook extends JavaPlugin {
 		// TODO: Add more sign commands
 		// TODO: Add projectile protection
 		// TODO: Improve speed of region checking (Per world region hashmaps?)	
+		// TODO: Fix kick bug when the stair a player is sitting on is broken
 		//
 		// Clean Database Command
 		//
@@ -836,7 +837,7 @@ public class EvilBook extends JavaPlugin {
 				if (isProfileExistant(args[0])) {
 					if (getPlayer(args[0]) != null) {
 						getProfile(args[0]).rank = Rank.Admin;
-						getPlayer(args[0]).setPlayerListName("§" + getProfile(args[0]).rank.getColor() + ((getProfile(args[0]).nameAlias == null || getProfile(args[0]).nameAlias.equals("null")) ? (getPlayer(args[0]).getName().length() > 14 ? getPlayer(args[0]).getName().substring(0, 14) : getPlayer(args[0]).getName()) : (getProfile(args[0]).nameAlias.length() > 14 ? getProfile(args[0]).nameAlias.substring(0, 14) : getProfile(args[0]).nameAlias)));
+						getPlayer(args[0]).setPlayerListName("§" + getProfile(args[0]).rank.getColor(getProfile(args[0])) + ((getProfile(args[0]).nameAlias == null || getProfile(args[0]).nameAlias.equals("null")) ? (getPlayer(args[0]).getName().length() > 14 ? getPlayer(args[0]).getName().substring(0, 14) : getPlayer(args[0]).getName()) : (getProfile(args[0]).nameAlias.length() > 14 ? getProfile(args[0]).nameAlias.substring(0, 14) : getProfile(args[0]).nameAlias)));
 						getPlayer(args[0]).sendMessage("§7You have been promoted to admin");
 					} else {
 						setOfflineProperty(args[0], "Rank", "Admin");
@@ -914,7 +915,7 @@ public class EvilBook extends JavaPlugin {
 				if (isProfileExistant(args[0])) {
 					if (getPlayer(args[0]) != null) {
 						getProfile(args[0]).rank = Rank.getPreviousRank(getProfile(args[0]).rank);
-						getPlayer(args[0]).setPlayerListName("§" + getProfile(args[0]).rank.getColor() + ((getProfile(args[0]).nameAlias == null || getProfile(args[0]).nameAlias.equals("null")) ? (getPlayer(args[0]).getName().length() > 14 ? getPlayer(args[0]).getName().substring(0, 14) : getPlayer(args[0]).getName()) : (getProfile(args[0]).nameAlias.length() > 14 ? getProfile(args[0]).nameAlias.substring(0, 14) : getProfile(args[0]).nameAlias)));
+						getPlayer(args[0]).setPlayerListName("§" + getProfile(args[0]).rank.getColor(getProfile(args[0])) + ((getProfile(args[0]).nameAlias == null || getProfile(args[0]).nameAlias.equals("null")) ? (getPlayer(args[0]).getName().length() > 14 ? getPlayer(args[0]).getName().substring(0, 14) : getPlayer(args[0]).getName()) : (getProfile(args[0]).nameAlias.length() > 14 ? getProfile(args[0]).nameAlias.substring(0, 14) : getProfile(args[0]).nameAlias)));
 						getPlayer(args[0]).sendMessage("§7You have been demoted");
 						sender.sendMessage("§7" + getPlayer(args[0]).getDisplayName() + " has been demoted");
 					} else {
@@ -946,7 +947,7 @@ public class EvilBook extends JavaPlugin {
 							return true;
 						}
 						getProfile(args[0]).rank = Rank.getNextRank(getProfile(args[0]).rank);
-						getPlayer(args[0]).setPlayerListName("§" + getProfile(args[0]).rank.getColor() + ((getProfile(args[0]).nameAlias == null || getProfile(args[0]).nameAlias.equals("null")) ? (getPlayer(args[0]).getName().length() > 14 ? getPlayer(args[0]).getName().substring(0, 14) : getPlayer(args[0]).getName()) : (getProfile(args[0]).nameAlias.length() > 14 ? getProfile(args[0]).nameAlias.substring(0, 14) : getProfile(args[0]).nameAlias)));
+						getPlayer(args[0]).setPlayerListName("§" + getProfile(args[0]).rank.getColor(getProfile(args[0])) + ((getProfile(args[0]).nameAlias == null || getProfile(args[0]).nameAlias.equals("null")) ? (getPlayer(args[0]).getName().length() > 14 ? getPlayer(args[0]).getName().substring(0, 14) : getPlayer(args[0]).getName()) : (getProfile(args[0]).nameAlias.length() > 14 ? getProfile(args[0]).nameAlias.substring(0, 14) : getProfile(args[0]).nameAlias)));
 						getPlayer(args[0]).sendMessage("§7You have been promoted");
 						sender.sendMessage("§7" + getPlayer(args[0]).getDisplayName() + " has been promoted");
 					} else {
@@ -1144,8 +1145,8 @@ public class EvilBook extends JavaPlugin {
 		//
 		if (command.getName().equalsIgnoreCase("setrank")) {
 			if (args.length == 1) {
-				if (args[0].toLowerCase().contains("serverhost")) {
-					sender.sendMessage("§7This rank is blocked");
+				if (args[0].toLowerCase().contains("serverhost") || args[0].toLowerCase().contains("&k")) {
+					sender.sendMessage("§7This rank name is blocked");
 					return true;
 				}
 				try {
@@ -1158,8 +1159,8 @@ public class EvilBook extends JavaPlugin {
 					FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/Players/" + sender.getName() + ".properties");
 					playerProp.store(outputStream, null);
 					outputStream.close();
-					getProfile(sender).rank.setColor(prefix.substring(1, 2));
-					getProfile(sender).rank.setPrefix("§0[" + prefix.replaceAll("&", "§") + "§0]");
+					getProfile(sender).customRankColor = prefix.substring(1, 2);
+					getProfile(sender).customRankPrefix = "§0[" + prefix.replaceAll("&", "§") + "§0]";
 				} catch (Exception e) {
 					logSevere("Failed to set rank in player profile 'plugins/EvilBook/Players/" + sender.getName() + ".properties'");
 					e.printStackTrace();
