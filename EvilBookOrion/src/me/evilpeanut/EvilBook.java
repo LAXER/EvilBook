@@ -1144,7 +1144,7 @@ public class EvilBook extends JavaPlugin {
 		//
 		if (command.getName().equalsIgnoreCase("setrank")) {
 			if (args.length == 1) {
-				if (args[0].toLowerCase().contains("ServerHost")) {
+				if (args[0].toLowerCase().contains("serverhost")) {
 					sender.sendMessage("§7This rank is blocked");
 					return true;
 				}
