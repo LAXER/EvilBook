@@ -770,6 +770,29 @@ public class EventListener implements Listener {
 			event.setCancelled(true);
 			return;
 		}
+		//
+		// Block logging
+		//
+		if (plugin.getProfile(player).isLogging) {
+			List<String> info = plugin.getLogBlockInformation(event.getBlock());
+			if (info.size() != 0) {
+				player.sendMessage("§b" + Integer.toString(info.size()) + " edits on this block");
+				for (int i = 0; i < info.size(); i++) player.sendMessage(info.get(i));
+			} else {
+				player.sendMessage("§7No edits on this block");
+			}
+			event.setCancelled(true);
+			return;
+		} else {
+			if (block.getTypeId() == 63 || block.getTypeId() == 68) {
+				plugin.logSignBreak((Sign) block.getState(), block, player.getName());
+			} else {
+				if (block.getTypeId() != 0) plugin.logBlockBreak(block, player.getName());
+			}
+		}
+		//
+		// Action location selection
+		//
 		if (player.isOp()) {
 			if (plugin.isInSurvival(player.getWorld().getName()) == false || plugin.getProfile(player).rank == Rank.ServerOwner) {
 				if (player.getItemInHand().getTypeId() == 284) {
@@ -787,6 +810,20 @@ public class EventListener implements Listener {
 			player.sendMessage("§cYou don't have permission to build here");
 			event.setCancelled(true);
 			return;
+		}
+		//
+		// Survival Container Protection
+		//
+		if (plugin.isInSurvival(player) && (block.getTypeId() == 23 || block.getTypeId() == 54 || block.getTypeId() == 58 || block.getTypeId() == 61 || block.getTypeId() == 62 || block.getTypeId() == 117 || block.getTypeId() == 146 || block.getTypeId() == 158)) {
+			if (plugin.isContainerProtected(block.getLocation(), player)) {
+				player.sendMessage(ChatColor.GRAY + "You don't have permission to break the chest");
+				event.setCancelled(true);
+				return;
+			} else {
+				plugin.unprotectContainer(event.getBlock().getLocation());
+				//TODO: Display the container type eg. Furnace, Chest ect...
+				player.sendMessage(ChatColor.GRAY + "Container protection removed");
+			}
 		}
 		//
 		// Dynamic Sign Removal
@@ -807,38 +844,6 @@ public class EventListener implements Listener {
 			return;
 		}
 		*/
-		//
-		// Block logging
-		//
-		if (plugin.getProfile(player).isLogging) {
-			List<String> info = plugin.getLogBlockInformation(event.getBlock());
-			if (info.size() != 0) {
-				player.sendMessage("§b" + Integer.toString(info.size()) + " edits on this block");
-				for (int i = 0; i < info.size(); i++) player.sendMessage(info.get(i));
-			} else {
-				player.sendMessage("§7No edits on this block");
-			}
-		} else {
-			if (block.getTypeId() == 63 || block.getTypeId() == 68) {
-				plugin.logSignBreak((Sign) block.getState(), block, player.getName());
-			} else {
-				if (block.getTypeId() != 0) plugin.logBlockBreak(block, player.getName());
-			}
-		}
-		//
-		// Survival Container Protection
-		//
-		if (plugin.isInSurvival(player) && (block.getTypeId() == 23 || block.getTypeId() == 54 || block.getTypeId() == 58 || block.getTypeId() == 61 || block.getTypeId() == 62 || block.getTypeId() == 117 || block.getTypeId() == 146 || block.getTypeId() == 158)) {
-			if (plugin.isContainerProtected(block.getLocation(), player)) {
-				player.sendMessage(ChatColor.GRAY + "You don't have permission to break the chest");
-				event.setCancelled(true);
-				return;
-			} else {
-				plugin.unprotectContainer(event.getBlock().getLocation());
-				//TODO: Display the container type eg. Furnace, Chest ect...
-				player.sendMessage(ChatColor.GRAY + "Container protection removed");
-			}
-		}
 		//
 		// Sitting on stairs
 		//
