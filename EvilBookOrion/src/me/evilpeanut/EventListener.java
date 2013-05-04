@@ -651,18 +651,17 @@ public class EventListener implements Listener {
 			event.setCancelled(true);
 			return;
 		}
-		if (plugin.isInSurvival(event.getTo().getWorld().getName()) && plugin.getProfile(player).rank.getID() >= Rank.Architect.getID()) {
-			player.sendMessage("§7Welcome to the survival world");
-		} else if (plugin.isInSurvival(event.getTo().getWorld().getName()) && plugin.getProfile(player).rank.getID() < Rank.Architect.getID()) {
-			player.sendMessage("§7The survival world requires architect rank");
-			event.setCancelled(true);
-			return;
-		}
-		if (!plugin.isInSurvival(event.getTo().getWorld().getName()) && plugin.isInSurvival(event.getFrom().getWorld().getName())) {
+		if (plugin.isInSurvival(event.getTo().getWorld().getName())) {
+			if (plugin.getProfile(player).rank.getID() >= Rank.Architect.getID()) {
+				player.sendMessage("§7Welcome to the survival world");
+			} else {
+				player.sendMessage("§7The survival world requires architect rank");
+				event.setCancelled(true);
+				return;
+			}
+			if (!plugin.isInSurvival(event.getFrom().getWorld().getName())) plugin.getProfile(player).creativeLocation = event.getFrom();
+		} else if (plugin.isInSurvival(event.getFrom().getWorld().getName())) {
 			plugin.getProfile(player).survivalLocation = event.getFrom();
-		}
-		if (plugin.isInSurvival(event.getTo().getWorld().getName()) && !plugin.isInSurvival(event.getFrom().getWorld().getName())) {
-			plugin.getProfile(player).creativeLocation = event.getFrom();
 		}
 		try {
 			if (event.getTo().getWorld().getName().equals("FlatLand")) {
