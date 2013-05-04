@@ -1033,7 +1033,7 @@ public class EventListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntityChangeBlock(EntityChangeBlockEvent event) {
-		if (event.getEntityType() == EntityType.ENDERMAN) event.setCancelled(true);
+		if (event.getEntityType() == EntityType.ENDERMAN || event.getEntityType() == EntityType.SILVERFISH) event.setCancelled(true);
 	}
 	
 	/**
