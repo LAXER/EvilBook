@@ -710,26 +710,22 @@ public class EventListener implements Listener {
 			event.getPlayer().setScoreboard(plugin.survivalStatsScoreboard);
 			ExperienceManager exp = new ExperienceManager(event.getPlayer());
 			exp.setExp(plugin.getProfile(event.getPlayer()).survivalXP);
-		}
-		if (plugin.isInAdventure(event.getPlayer())) {
-			ExperienceManager exp = new ExperienceManager(event.getPlayer());
-			event.getPlayer().setGameMode(GameMode.ADVENTURE);
-			event.getPlayer().getInventory().clear();
+		} else {
 			if (plugin.isInSurvival(event.getFrom().getName())) {
 				plugin.setSurvivalInventory(event.getPlayer());
+				plugin.getCreativeInventory(event.getPlayer());
+				event.getPlayer().setGameMode(GameMode.CREATIVE);
 				event.getPlayer().setScoreboard(plugin.scoreboardManager.getNewScoreboard());
+				ExperienceManager exp = new ExperienceManager(event.getPlayer());
 				plugin.getProfile(event.getPlayer()).survivalXP = exp.getCurrentExp();
+				exp.setExp(0);
 			}
-			exp.setExp(0);
-		}
-		if (!plugin.isInSurvival(event.getPlayer()) && plugin.isInSurvival(event.getFrom().getName())) {
-			plugin.setSurvivalInventory(event.getPlayer());
-			plugin.getCreativeInventory(event.getPlayer());
-			event.getPlayer().setGameMode(GameMode.CREATIVE);
-			event.getPlayer().setScoreboard(plugin.scoreboardManager.getNewScoreboard());
-			ExperienceManager exp = new ExperienceManager(event.getPlayer());
-			plugin.getProfile(event.getPlayer()).survivalXP = exp.getCurrentExp();
-			exp.setExp(0);
+			if (plugin.isInAdventure(event.getPlayer())) {
+				ExperienceManager exp = new ExperienceManager(event.getPlayer());
+				event.getPlayer().setGameMode(GameMode.ADVENTURE);
+				event.getPlayer().getInventory().clear();
+				exp.setExp(0);
+			}
 		}
 	}
 	
