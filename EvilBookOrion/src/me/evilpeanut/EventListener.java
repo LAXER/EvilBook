@@ -62,6 +62,8 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.hanging.HangingBreakEvent;
+import org.bukkit.event.hanging.HangingBreakEvent.RemoveCause;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -1002,6 +1004,14 @@ public class EventListener implements Listener {
 	}
 	
 	/**
+	 * Called when a hanging entity is removed
+	 */
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onHangingBreak(HangingBreakEvent event) {
+		if (!plugin.isInSurvival(event.getEntity()) && event.getCause() == RemoveCause.EXPLOSION) event.setCancelled(true);
+	}
+	
+	/**
 	 * Called when a hanging entity is removed by an entity
 	 */
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -1044,8 +1054,8 @@ public class EventListener implements Listener {
 		if (!plugin.isInSurvival(event.getEntity())) {
 			if (event.getEntityType() == EntityType.SHEEP) {
 				((Sheep)event.getEntity()).setColor(DyeColor.values()[new Random().nextInt(DyeColor.values().length)]);
-			} else if (event.getEntityType() == EntityType.SNOWMAN) { //TODO: Unban snowmen
-				event.setCancelled(true);
+			//} else if (event.getEntityType() == EntityType.SNOWMAN) { //TODO: Unban snowmen
+				//event.setCancelled(true);
 			}
 		}
 	}
