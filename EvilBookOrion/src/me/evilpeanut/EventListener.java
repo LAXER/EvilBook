@@ -137,8 +137,7 @@ public class EventListener implements Listener {
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPotionSplash(PotionSplashEvent event) {
 		Entity entity = event.getEntity().getShooter();
-		if (entity instanceof Player == false) return;
-		if (plugin.isInSurvival(entity)) return;
+		if (entity instanceof Player == false || plugin.isInSurvival(entity)) return;
 		Player shooter = (Player) entity;
 		if (plugin.getProfile(shooter).rank.getID() >= Rank.Admin.getID()) return;
 		if (Potion.fromItemStack(event.getPotion().getItem()).getType() == PotionType.INVISIBILITY) {
@@ -152,15 +151,10 @@ public class EventListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerDrinkPotion(PlayerItemConsumeEvent event) {
-		if (plugin.getProfile(event.getPlayer()).rank.getID() >= Rank.Admin.getID()) return;
-		if (plugin.isInSurvival(event.getPlayer())) return;
-		if (event.getItem().getType() == Material.POTION) {
-			if (event.getItem().getDurability() != 0) {
-				if (Potion.fromItemStack(event.getItem()).getType() == PotionType.INVISIBILITY) {
-					event.getPlayer().sendMessage("§7Only admins can use invisibility potions");
-					event.setCancelled(true);
-				}
-			}
+		if (plugin.isInSurvival(event.getPlayer()) || plugin.getProfile(event.getPlayer()).rank.getID() >= Rank.Admin.getID()) return;
+		if (event.getItem().getType() == Material.POTION && event.getItem().getDurability() != 0 && Potion.fromItemStack(event.getItem()).getType() == PotionType.INVISIBILITY) {
+			event.getPlayer().sendMessage("§7Only admins can use invisibility potions");
+			event.setCancelled(true);
 		}
 	}
 	
@@ -215,6 +209,7 @@ public class EventListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDropItem(PlayerDropItemEvent event) {
+		if (plugin.isInSurvival(event.getPlayer())) return;
 		int dropCount = 0;
 		for (Entity e : event.getPlayer().getLocation().getWorld().getEntities()) {
 			if (e.getType() == EntityType.DROPPED_ITEM) dropCount++;
@@ -430,7 +425,7 @@ public class EventListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
-		if (plugin.isInSurvival(event.getPlayer().getWorld().getName())) {
+		if (plugin.isInSurvival(event.getPlayer())) {
 			event.getPlayer().getInventory().clear();
 			plugin.setSurvivalInventory(event.getPlayer());
 			if (plugin.isInSurvival(event.getPlayer().getWorld().getName())) event.setRespawnLocation(plugin.getServer().getWorld("SurvivalLand").getSpawnLocation());
@@ -448,7 +443,7 @@ public class EventListener implements Listener {
 		//
 		plugin.getProfile(event.getPlayer()).saveProfile();
 		plugin.playerProfiles.remove(event.getPlayer().getName().toLowerCase());
-		event.setQuitMessage("§7" + event.getPlayer().getName() + " has left the game");
+		event.setQuitMessage(ChatColor.GRAY + event.getPlayer().getName() + " has left the game");
 		//
 		// Update playerStats.htm
 		//
@@ -460,7 +455,7 @@ public class EventListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerKick(PlayerKickEvent event) {
-		event.setLeaveMessage("§7" + event.getPlayer().getName() + " has left the game");
+		event.setLeaveMessage(ChatColor.GRAY + event.getPlayer().getName() + " has left the game");
 	}
 	
 	/**
@@ -476,15 +471,6 @@ public class EventListener implements Listener {
 				p.sendMessage(plugin.getProfile(player).rank.getPrefix(plugin.getProfile(player)) + " §" + plugin.getProfile(player).rank.getColor(plugin.getProfile(player)) + "<" + player.getDisplayName() + "§" + plugin.getProfile(player).rank.getColor(plugin.getProfile(player)) + "> §f" + plugin.toFormattedString(e.getMessage()));
 			}
 		}
-		// Anti-Spam Hack Protection
-		//if (plugin.getProfile(player).rank == Rank.ServerOwner) return;
-		//if (System.currentTimeMillis() - plugin.getProfile(player).lastMessageTime <= 250 && e.getMessage().equals(plugin.getProfile(player).lastMessage)) {
-			// TODO: Fix this, spigot disallows this API call from an Async thread to prevent crashing (Re-add spam blocking)
-			//player.kickPlayer("§cSpam is not tollerated");
-			//return;
-		//}
-		//plugin.getProfile(player).lastMessage = e.getMessage();
-		//plugin.getProfile(player).lastMessageTime = System.currentTimeMillis();
 	}
 	
 	/**
@@ -624,8 +610,13 @@ public class EventListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+		System.out.println(event.getMessage());
+		if (event.getMessage().equalsIgnoreCase("/evilbook:stop")) {
+			event.setCancelled(true); 
+			return;
+		}
 		Player player = event.getPlayer();
-		if (plugin.getProfile(player).rank == Rank.ServerOwner) return; //ERROR? ?
+		if (plugin.getProfile(player).rank == Rank.ServerOwner) return;
 		// Anti-Spam Hack Protection
 		if (System.currentTimeMillis() - plugin.getProfile(player).lastMessageTime <= 250 && event.getMessage().equals(plugin.getProfile(player).lastMessage)) {
 			player.kickPlayer("§cSpam is not tollerated");
@@ -921,7 +912,7 @@ public class EventListener implements Listener {
 		if (plugin.getProfile(player).isLogging) {
 			List<String> info = plugin.getLogBlockInformation(event.getBlock());
 			if (info.size() != 0) player.sendMessage("§b" + Integer.toString(info.size()) + " edits on this block");
-			if (info.size() == 0) player.sendMessage("§7" + "No edits on this block");
+			if (info.size() == 0) player.sendMessage(ChatColor.GRAY + "No edits on this block");
 			for (int i = 0; i < info.size(); i++) player.sendMessage(info.get(i));
 			event.setCancelled(true);
 			return;

@@ -165,12 +165,12 @@ public class EvilBook extends JavaPlugin {
 				FileInputStream inputStream = new FileInputStream(check);
 				prop.load(inputStream);
 				inputStream.close();
+				prop.setProperty("/restart", Byte.toString(Rank.ServerOwner.getID()));
 				prop.setProperty("/setall", Byte.toString(Rank.ServerOwner.getID()));
 				prop.setProperty("/cleandatabase", Byte.toString(Rank.ServerOwner.getID()));
 				prop.setProperty("/rollback", Byte.toString(Rank.ServerOwner.getID()));
 				prop.setProperty("/spam", Byte.toString(Rank.ServerOwner.getID()));
 				prop.setProperty("/toggleredstone", Byte.toString(Rank.ServerOwner.getID()));
-				prop.setProperty("/evilbook", Byte.toString(Rank.ServerOwner.getID()));
 				prop.setProperty("/stop", Byte.toString(Rank.ServerOwner.getID()));
 				prop.setProperty("/op", Byte.toString(Rank.ServerOwner.getID()));
 				prop.setProperty("/deop", Byte.toString(Rank.ServerOwner.getID()));
@@ -856,7 +856,6 @@ public class EvilBook extends JavaPlugin {
 		// Stop Command
 		//
 		if (command.getName().equalsIgnoreCase("stop")) {
-			for (PlayerProfile p : playerProfiles.values()) p.saveProfile();
 			String message = "§a";
 			for (String msg : args) message += " " + msg;
 			for (Player p : getServer().getOnlinePlayers()) {
