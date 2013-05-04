@@ -494,8 +494,118 @@ public class EventListener implements Listener {
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		final Player player = event.getPlayer();
-		/*
-		 * TODO: Add ledgit way to obtain wands
+		Block block = event.getClickedBlock();
+		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			if (plugin.isInSurvival(player) && plugin.getProfile(player.getName()).rank != Rank.ServerOwner) {
+				if (block.getTypeId() == 130) {
+					player.sendMessage("§7Ender chests are blocked in survival");
+					event.setCancelled(true);
+					return;
+				}
+				if ((block.getTypeId() == 23 || block.getTypeId() == 54 || block.getTypeId() == 58 || block.getTypeId() == 61 || block.getTypeId() == 62 || block.getTypeId() == 117 || block.getTypeId() == 146 || block.getTypeId() == 158) && plugin.isContainerProtected(event.getClickedBlock().getLocation(), player)) {
+					player.sendMessage(ChatColor.GRAY + "You don't have permission to open the chest");
+					event.setCancelled(true);
+					return;
+				}
+			}
+			if (event.hasItem()) {
+				if (plugin.getProfile(player).rank.getID() >= Rank.Admin.getID() && (plugin.isInSurvival(player.getName()) == false || plugin.getProfile(player).rank == Rank.ServerOwner)) {
+					if (event.getItem().getTypeId() == 284) {
+						plugin.getProfile(player).actionLocationB = block.getLocation();
+						player.sendMessage("§7Second point selected (" + block.getX() + ", " + block.getY() + ", " + block.getZ() + ")");
+						event.setCancelled(true);
+						return;
+					}
+				}
+				if ((block.getTypeId() == 63 || block.getTypeId() == 68) && event.getItem().getTypeId() == 351) {
+					ChatColor dyeTextColor;
+					switch (event.getItem().getData().getData()) {
+					case 1: dyeTextColor = ChatColor.RED; break;
+					case 2: dyeTextColor = ChatColor.DARK_GREEN; break;
+					case 4: dyeTextColor = ChatColor.BLUE; break;
+					case 5: dyeTextColor = ChatColor.DARK_PURPLE; break;
+					case 6: dyeTextColor = ChatColor.DARK_AQUA; break;
+					case 7: dyeTextColor = ChatColor.GRAY; break;
+					case 8: dyeTextColor = ChatColor.DARK_GRAY; break;
+					case 9: dyeTextColor = ChatColor.LIGHT_PURPLE; break;
+					case 10: dyeTextColor = ChatColor.GREEN; break;
+					case 11: dyeTextColor = ChatColor.YELLOW; break;
+					case 12: dyeTextColor = ChatColor.AQUA; break;
+					case 13: dyeTextColor = ChatColor.LIGHT_PURPLE; break;
+					case 14: dyeTextColor = ChatColor.GOLD; break;
+					case 15: dyeTextColor = ChatColor.WHITE; break;
+					default: dyeTextColor = ChatColor.BLACK; break;
+					}
+					Sign s = (Sign) event.getClickedBlock().getState();
+					if (s.getLine(0).length() != 0) s.setLine(0, dyeTextColor + (s.getLine(0).startsWith("§") && !s.getLine(0).startsWith("§l") && !s.getLine(0).startsWith("§k") && !s.getLine(0).startsWith("§n") && !s.getLine(0).startsWith("§m") && !s.getLine(0).startsWith("§o") && !s.getLine(0).startsWith("§r") ? s.getLine(0).substring(2, s.getLine(0).length()) : s.getLine(0)));
+					if (s.getLine(1).length() != 0) s.setLine(1, dyeTextColor + (s.getLine(1).startsWith("§") && !s.getLine(1).startsWith("§l") && !s.getLine(1).startsWith("§k") && !s.getLine(1).startsWith("§n") && !s.getLine(1).startsWith("§m") && !s.getLine(1).startsWith("§o") && !s.getLine(1).startsWith("§r") ? s.getLine(1).substring(2, s.getLine(1).length()) : s.getLine(1)));
+					if (s.getLine(2).length() != 0) s.setLine(2, dyeTextColor + (s.getLine(2).startsWith("§") && !s.getLine(2).startsWith("§l") && !s.getLine(2).startsWith("§k") && !s.getLine(2).startsWith("§n") && !s.getLine(2).startsWith("§m") && !s.getLine(2).startsWith("§o") && !s.getLine(2).startsWith("§r") ? s.getLine(2).substring(2, s.getLine(2).length()) : s.getLine(2)));
+					if (s.getLine(3).length() != 0) s.setLine(3, dyeTextColor + (s.getLine(3).startsWith("§") && !s.getLine(3).startsWith("§l") && !s.getLine(3).startsWith("§k") && !s.getLine(3).startsWith("§n") && !s.getLine(3).startsWith("§m") && !s.getLine(3).startsWith("§o") && !s.getLine(3).startsWith("§r") ? s.getLine(3).substring(2, s.getLine(3).length()) : s.getLine(3)));
+					s.update();
+				}
+			} else {
+				if (sitting.containsKey(player.getName().toLowerCase())) {
+					Arrow arrow = (Arrow)sitting.get(player.getName().toLowerCase());
+					arrow.remove();
+					sitting.remove(player.getName().toLowerCase());
+					return;
+				}
+				if ((block.getType() == Material.WOOD_STAIRS) || (block.getType() == Material.BIRCH_WOOD_STAIRS) || (block.getType() == Material.SPRUCE_WOOD_STAIRS) || (block.getType() == Material.JUNGLE_WOOD_STAIRS) || (block.getType() == Material.SANDSTONE_STAIRS) || (block.getType() == Material.BRICK_STAIRS) || (block.getType() == Material.COBBLESTONE_STAIRS) || (block.getType() == Material.SMOOTH_STAIRS) || (block.getType() == Material.QUARTZ_STAIRS))
+				{
+					if (!player.isSneaking()) return;
+					World world = player.getWorld();
+					Stairs stairs = (Stairs)block.getState().getData();
+					final Arrow arrow = world.spawnArrow(new Location(world, block.getLocation().getX() + 0.6D, block.getLocation().getY(), block.getLocation().getZ() + 0.6D), new Vector(block.getLocation().getX(), block.getLocation().getY() - 1.0D, block.getLocation().getZ()), 0.0F, 0.0F);
+					switch (stairs.getDescendingDirection().ordinal()) {
+					case 1:
+						player.getLocation().setYaw(90.0F);
+						break;
+					case 2:
+						player.getLocation().setYaw(180.0F);
+						break;
+					case 3:
+						player.getLocation().setYaw(270.0F);
+						break;
+					case 4:
+						player.getLocation().setYaw(0.0F);
+					}
+					player.teleport(player.getLocation());
+					sitting.put(player.getName().toLowerCase(), arrow);
+					plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
+					{
+						public void run()
+						{
+							arrow.setPassenger(player);
+						}
+					}
+					, 1L);
+					return;
+				}
+			}
+		} else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+			if (event.hasItem() && event.getItem().getTypeId() == 280 && event.getItem().getItemMeta() != null && event.getItem().getItemMeta().getLore().get(0).equals("Preforms ancient magical arts")) {
+				if (plugin.getProfile(player).spellBook.size() == 0) {
+					player.sendMessage("§7You don't have any spells in your spellbook");
+					return;
+				}
+				plugin.getProfile(player).selectedSpell.preformSpell(event);
+			}
+		} else if (event.getAction() == Action.RIGHT_CLICK_AIR) {
+			if (event.hasItem() && event.getItem().getTypeId() == 280 && event.getItem().getItemMeta() != null && event.getItem().getItemMeta().getLore().get(0).equals("Preforms ancient magical arts")) {
+				if (plugin.getProfile(player).spellBook.size() == 0) {
+					player.sendMessage("§7You don't have any spells in your spellbook");
+					return;
+				}
+				if (plugin.getProfile(player).selectedSpell == plugin.getProfile(player).spellBook.get(plugin.getProfile(player).spellBook.size() - 1)) {
+					plugin.getProfile(player).selectedSpell = plugin.getProfile(player).spellBook.get(0);
+					player.sendMessage("§5Changed spell to §d" + plugin.getProfile(player).selectedSpell.name);
+				} else {
+					plugin.getProfile(player).selectedSpell = plugin.getProfile(player).spellBook.get(plugin.getProfile(player).spellBook.indexOf(plugin.getProfile(player).selectedSpell) + 1);
+					player.sendMessage("§5Changed spell to §d" + plugin.getProfile(player).selectedSpell.name);
+				}
+			}
+		}
+		/* TODO: Add ledgit way to obtain wands
 		if (player.getItemInHand().getTypeId() == 280 && player.getName().equals("EvilPeanut")) {
 			ItemMeta meta = player.getItemInHand().getItemMeta();
 			meta.setLore(Arrays.asList("Preforms ancient magical arts"));
@@ -507,119 +617,6 @@ public class EventListener implements Listener {
 			plugin.getProfile(player).addSpell(Spell.InstantGrow);
 		}
 		*/
-		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			final Block block = event.getClickedBlock();
-			if (player.getItemInHand().getType() != Material.AIR) return;
-			if (sitting.containsKey(player.getName().toLowerCase())) {
-				Arrow arrow = (Arrow)sitting.get(player.getName().toLowerCase());
-				arrow.remove();
-				sitting.remove(player.getName().toLowerCase());
-				return;
-			}
-			if ((block.getType() == Material.WOOD_STAIRS) || (block.getType() == Material.BIRCH_WOOD_STAIRS) || (block.getType() == Material.SPRUCE_WOOD_STAIRS) || (block.getType() == Material.JUNGLE_WOOD_STAIRS) || (block.getType() == Material.SANDSTONE_STAIRS) || (block.getType() == Material.BRICK_STAIRS) || (block.getType() == Material.COBBLESTONE_STAIRS) || (block.getType() == Material.SMOOTH_STAIRS) || (block.getType() == Material.QUARTZ_STAIRS))
-			{
-				if (!player.isSneaking()) return;
-				World world = player.getWorld();
-				Stairs stairs = (Stairs)block.getState().getData();
-				final Arrow arrow = world.spawnArrow(new Location(world, block.getLocation().getX() + 0.6D, block.getLocation().getY(), block.getLocation().getZ() + 0.6D), new Vector(block.getLocation().getX(), block.getLocation().getY() - 1.0D, block.getLocation().getZ()), 0.0F, 0.0F);
-				switch (stairs.getDescendingDirection().ordinal()) {
-				case 1:
-					player.getLocation().setYaw(90.0F);
-					break;
-				case 2:
-					player.getLocation().setYaw(180.0F);
-					break;
-				case 3:
-					player.getLocation().setYaw(270.0F);
-					break;
-				case 4:
-					player.getLocation().setYaw(0.0F);
-				}
-				player.teleport(player.getLocation());
-				sitting.put(player.getName().toLowerCase(), arrow);
-				plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
-				{
-					public void run()
-					{
-						arrow.setPassenger(player);
-					}
-				}
-				, 1L);
-				return;
-			}
-		}
-		if (!event.hasBlock()) return;
-		int ID = event.getClickedBlock().getTypeId();
-		if (plugin.isInSurvival(player)) {
-			if (ID == 130 && plugin.getProfile(player.getName()).rank != Rank.ServerOwner) {
-				player.sendMessage("§7Ender chests are blocked in survival");
-				event.setCancelled(true);
-				return;
-			}
-			if ((ID == 23 || ID == 54 || ID == 58 || ID == 61 || ID == 62 || ID == 117 || ID == 146 || ID == 158) && plugin.getProfile(player.getName()).rank != Rank.ServerOwner && plugin.isContainerProtected(event.getClickedBlock().getLocation(), player)) {
-				player.sendMessage("§7This container is protected");
-				event.setCancelled(true);
-				return;
-			}
-			if (!event.hasItem()) return;
-			if (event.getItem().getTypeId() == 280 && event.getItem().getItemMeta() != null && event.getItem().getItemMeta().getLore().get(0).equals("Preforms ancient magical arts")) {
-				if (plugin.getProfile(player).spellBook.size() == 0) {
-					player.sendMessage("§7You don't have any spells in your spellbook");
-					return;
-				}
-				if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-					// Preform magic
-					plugin.getProfile(player).selectedSpell.preformSpell(event);
-				} else if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-					// Change spell
-					if (plugin.getProfile(player).selectedSpell == plugin.getProfile(player).spellBook.get(plugin.getProfile(player).spellBook.size() - 1)) {
-						plugin.getProfile(player).selectedSpell = plugin.getProfile(player).spellBook.get(0);
-						player.sendMessage("§5Changed spell to §d" + plugin.getProfile(player).selectedSpell.name);
-					} else {
-						plugin.getProfile(player).selectedSpell = plugin.getProfile(player).spellBook.get(plugin.getProfile(player).spellBook.indexOf(plugin.getProfile(player).selectedSpell) + 1);
-						player.sendMessage("§5Changed spell to §d" + plugin.getProfile(player).selectedSpell.name);
-					}
-				}
-			}
-		}	
-		if (!event.hasItem()) return;
-		if ((ID == 63 || ID == 68) && event.getItem().getTypeId() == 351) {
-			ChatColor dyeTextColor;
-			switch (event.getItem().getData().getData()) {
-				case 1: dyeTextColor = ChatColor.RED; break;
-				case 2: dyeTextColor = ChatColor.DARK_GREEN; break;
-				case 4: dyeTextColor = ChatColor.BLUE; break;
-				case 5: dyeTextColor = ChatColor.DARK_PURPLE; break;
-				case 6: dyeTextColor = ChatColor.DARK_AQUA; break;
-				case 7: dyeTextColor = ChatColor.GRAY; break;
-				case 8: dyeTextColor = ChatColor.DARK_GRAY; break;
-				case 9: dyeTextColor = ChatColor.LIGHT_PURPLE; break;
-				case 10: dyeTextColor = ChatColor.GREEN; break;
-				case 11: dyeTextColor = ChatColor.YELLOW; break;
-				case 12: dyeTextColor = ChatColor.AQUA; break;
-				case 13: dyeTextColor = ChatColor.LIGHT_PURPLE; break;
-				case 14: dyeTextColor = ChatColor.GOLD; break;
-				case 15: dyeTextColor = ChatColor.WHITE; break;
-				default: dyeTextColor = ChatColor.BLACK; break;
-			}
-			Sign s = (Sign) event.getClickedBlock().getState();
-			if (s.getLine(0).length() != 0) s.setLine(0, dyeTextColor + (s.getLine(0).startsWith("§") && !s.getLine(0).startsWith("§l") && !s.getLine(0).startsWith("§k") && !s.getLine(0).startsWith("§n") && !s.getLine(0).startsWith("§m") && !s.getLine(0).startsWith("§o") && !s.getLine(0).startsWith("§r") ? s.getLine(0).substring(2, s.getLine(0).length()) : s.getLine(0)));
-			if (s.getLine(1).length() != 0) s.setLine(1, dyeTextColor + (s.getLine(1).startsWith("§") && !s.getLine(1).startsWith("§l") && !s.getLine(1).startsWith("§k") && !s.getLine(1).startsWith("§n") && !s.getLine(1).startsWith("§m") && !s.getLine(1).startsWith("§o") && !s.getLine(1).startsWith("§r") ? s.getLine(1).substring(2, s.getLine(1).length()) : s.getLine(1)));
-			if (s.getLine(2).length() != 0) s.setLine(2, dyeTextColor + (s.getLine(2).startsWith("§") && !s.getLine(2).startsWith("§l") && !s.getLine(2).startsWith("§k") && !s.getLine(2).startsWith("§n") && !s.getLine(2).startsWith("§m") && !s.getLine(2).startsWith("§o") && !s.getLine(2).startsWith("§r") ? s.getLine(2).substring(2, s.getLine(2).length()) : s.getLine(2)));
-			if (s.getLine(3).length() != 0) s.setLine(3, dyeTextColor + (s.getLine(3).startsWith("§") && !s.getLine(3).startsWith("§l") && !s.getLine(3).startsWith("§k") && !s.getLine(3).startsWith("§n") && !s.getLine(3).startsWith("§m") && !s.getLine(3).startsWith("§o") && !s.getLine(3).startsWith("§r") ? s.getLine(3).substring(2, s.getLine(3).length()) : s.getLine(3)));
-			s.update();
-		}
-		if (player.isOp()) {
-			if (plugin.isInSurvival(player.getWorld().getName()) == false || plugin.getProfile(player).rank == Rank.ServerOwner) {
-				if (event.hasBlock() && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem().getTypeId() == 284) {
-					Block block = event.getClickedBlock();
-					plugin.getProfile(player).actionLocationB = block.getLocation();
-					player.sendMessage("§7Second point selected (" + block.getX() + ", " + block.getY() + ", " + block.getZ() + ")");
-					event.setCancelled(true);
-					return;
-				}
-			}
-		}
 	}
 	
 	/**
@@ -628,7 +625,7 @@ public class EventListener implements Listener {
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		Player player = event.getPlayer();
-		if (plugin.getProfile(player).rank == Rank.ServerOwner) return;
+		if (plugin.getProfile(player).rank == Rank.ServerOwner) return; //ERROR? ?
 		// Anti-Spam Hack Protection
 		if (System.currentTimeMillis() - plugin.getProfile(player).lastMessageTime <= 250 && event.getMessage().equals(plugin.getProfile(player).lastMessage)) {
 			player.kickPlayer("§cSpam is not tollerated");
@@ -838,8 +835,6 @@ public class EventListener implements Listener {
 			} else {
 				player.sendMessage("§7No edits on this block");
 			}
-			event.setCancelled(true);
-			return;
 		} else {
 			if (block.getTypeId() == 63 || block.getTypeId() == 68) {
 				plugin.logSignBreak((Sign) block.getState(), block, player.getName());
@@ -850,10 +845,16 @@ public class EventListener implements Listener {
 		//
 		// Survival Container Protection
 		//
-		if (plugin.isInSurvival(player) && (ID == 23 || ID == 54 || ID == 58 || ID == 61 || ID == 62 || ID == 117 || ID == 146 || ID == 158) && !plugin.isContainerProtected(block.getLocation(), player)) {
-			plugin.unprotectContainer(event.getBlock().getLocation());
-			//TODO: Display the container type eg. Furnace, Chest ect...
-			player.sendMessage(ChatColor.GRAY + "Container protection removed");
+		if (plugin.isInSurvival(player) && (ID == 23 || ID == 54 || ID == 58 || ID == 61 || ID == 62 || ID == 117 || ID == 146 || ID == 158)) {
+			if (plugin.isContainerProtected(block.getLocation(), player)) {
+				player.sendMessage(ChatColor.GRAY + "You don't have permission to break the chest");
+				event.setCancelled(true);
+				return;
+			} else {
+				plugin.unprotectContainer(event.getBlock().getLocation());
+				//TODO: Display the container type eg. Furnace, Chest ect...
+				player.sendMessage(ChatColor.GRAY + "Container protection removed");
+			}
 		}
 		//
 		// Sitting on stairs
