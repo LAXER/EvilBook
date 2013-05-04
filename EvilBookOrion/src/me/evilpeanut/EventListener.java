@@ -52,6 +52,7 @@ import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
@@ -1004,6 +1005,14 @@ public class EventListener implements Listener {
 	}
 	
 	/**
+	 * Called when an entity forms a block
+	 */
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onEntityBlockForm(EntityBlockFormEvent event) {
+		if (!plugin.isInSurvival(event.getEntity()) && event.getEntity().getType() == EntityType.SNOWMAN) event.setCancelled(true);
+	}
+	
+	/**
 	 * Called when a hanging entity is removed
 	 */
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -1051,15 +1060,9 @@ public class EventListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.LOW)
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
-		if (!plugin.isInSurvival(event.getEntity())) {
-			if (event.getEntityType() == EntityType.SHEEP) {
-				((Sheep)event.getEntity()).setColor(DyeColor.values()[new Random().nextInt(DyeColor.values().length)]);
-			//} else if (event.getEntityType() == EntityType.SNOWMAN) { //TODO: Unban snowmen
-				//event.setCancelled(true);
-			}
-		}
+		if (!plugin.isInSurvival(event.getEntity()) && event.getEntityType() == EntityType.SHEEP) ((Sheep)event.getEntity()).setColor(DyeColor.values()[new Random().nextInt(DyeColor.values().length)]);
 	}
-	
+
 	/**
 	 * Called when a vehicle is created
 	 */
