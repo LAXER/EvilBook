@@ -610,7 +610,6 @@ public class EventListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-		System.out.println(event.getMessage());
 		if (event.getMessage().equalsIgnoreCase("/evilbook:stop")) {
 			event.setCancelled(true); 
 			return;
