@@ -762,7 +762,6 @@ public class EventListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockBreak(BlockBreakEvent event) {
 		Block block = event.getBlock();
-		int ID = block.getTypeId();
 		Player player = event.getPlayer();
 		if (plugin.isInSurvival(event.getPlayer()) && event.getPlayer().getItemInHand().getTypeId() == 280 && event.getPlayer().getItemInHand().getItemMeta() != null && event.getPlayer().getItemInHand().getItemMeta().getLore().get(0).equals("Preforms ancient magical arts")) {
 			event.setCancelled(true);
@@ -786,11 +785,6 @@ public class EventListener implements Listener {
 			event.setCancelled(true);
 			return;
 		}
-		//
-		// Block logging
-		//
-		//TODO: Re-add
-		//plugin.blockLog.addEvent(event.getBlock().getLocation(), new EditEvent(new Date(), (byte) 0, player.getName(), block));
 		//
 		// Dynamic Sign Removal
 		//
@@ -831,7 +825,7 @@ public class EventListener implements Listener {
 		//
 		// Survival Container Protection
 		//
-		if (plugin.isInSurvival(player) && (ID == 23 || ID == 54 || ID == 58 || ID == 61 || ID == 62 || ID == 117 || ID == 146 || ID == 158)) {
+		if (plugin.isInSurvival(player) && (block.getTypeId() == 23 || block.getTypeId() == 54 || block.getTypeId() == 58 || block.getTypeId() == 61 || block.getTypeId() == 62 || block.getTypeId() == 117 || block.getTypeId() == 146 || block.getTypeId() == 158)) {
 			if (plugin.isContainerProtected(block.getLocation(), player)) {
 				player.sendMessage(ChatColor.GRAY + "You don't have permission to break the chest");
 				event.setCancelled(true);
@@ -884,11 +878,6 @@ public class EventListener implements Listener {
 			return;
 		}
 		//
-		// Block logging
-		//
-		//TODO: Re-add
-		//plugin.blockLog.addEvent(event.getBlock().getLocation(), new EditEvent(new Date(), (byte) 1, player.getName(), event.getBlock()));
-		//
 		//
 		// Anti-build hack Protection
 		//
@@ -933,9 +922,7 @@ public class EventListener implements Listener {
 		//
 		// Sign Colors
 		//
-		for (int i = 0; i < 4; i++) {
-			e.setLine(i, plugin.toFormattedString(e.getLine(i)));
-		}
+		for (int i = 0; i < 4; i++) e.setLine(i, plugin.toFormattedString(e.getLine(i)));
 		plugin.alertOwner(e.getPlayer().getPlayer().getName() + " placed a sign [" + e.getLine(0) + "|" + e.getLine(1) + "|" + e.getLine(2) + "|" + e.getLine(3) + "]");
 		//
 		// Dynamic Signs
@@ -1054,12 +1041,10 @@ public class EventListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.LOW)
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
-		if (event.getEntityType() == EntityType.SHEEP && !plugin.isInSurvival(event.getEntity())) {
-			((Sheep)event.getEntity()).setColor(DyeColor.values()[new Random().nextInt(DyeColor.values().length)]);
-			return;
-		}
-		if (plugin.isInSurvival(event.getEntity().getWorld().getName()) == false) {
-			if (event.getEntityType() == EntityType.SNOWMAN) {
+		if (!plugin.isInSurvival(event.getEntity())) {
+			if (event.getEntityType() == EntityType.SHEEP) {
+				((Sheep)event.getEntity()).setColor(DyeColor.values()[new Random().nextInt(DyeColor.values().length)]);
+			} else if (event.getEntityType() == EntityType.SNOWMAN) { //TODO: Unban snowmen
 				event.setCancelled(true);
 			}
 		}
