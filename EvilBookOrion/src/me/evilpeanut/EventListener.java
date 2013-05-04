@@ -693,8 +693,9 @@ public class EventListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
-		if (event.getNewGameMode() != GameMode.SURVIVAL && plugin.isInSurvival(event.getPlayer()) && plugin.getProfile(event.getPlayer()).rank != Rank.ServerOwner) event.setCancelled(true);
-		if (event.getNewGameMode() != GameMode.ADVENTURE && plugin.isInAdventure(event.getPlayer()) && plugin.getProfile(event.getPlayer()).rank != Rank.ServerOwner) event.setCancelled(true);
+		if (plugin.getProfile(event.getPlayer()).rank == Rank.ServerOwner) return;
+		if (event.getNewGameMode() != GameMode.SURVIVAL && plugin.isInSurvival(event.getPlayer())) event.setCancelled(true);
+		if (event.getNewGameMode() != GameMode.ADVENTURE && plugin.isInAdventure(event.getPlayer())) event.setCancelled(true);
 	}
 	
 	/**
