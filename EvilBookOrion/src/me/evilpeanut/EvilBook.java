@@ -21,6 +21,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -289,6 +290,10 @@ public class EvilBook extends JavaPlugin {
 		// Adventure Generator
 		//
 		getServer().createWorld(new WorldCreator("AdventureLand"));
+		//
+		// Nazi Zombies - Nacht Der Untoten Generator
+		//
+		getServer().createWorld(new WorldCreator("NachtDerUntoten"));
 		//
 		// Load regions
 		//
@@ -915,11 +920,11 @@ public class EvilBook extends JavaPlugin {
 					if (getPlayer(args[0]) != null) {
 						getProfile(args[0]).rank = Rank.getPreviousRank(getProfile(args[0]).rank);
 						getPlayer(args[0]).setPlayerListName("§" + getProfile(args[0]).rank.getColor(getProfile(args[0])) + ((getProfile(args[0]).nameAlias == null || getProfile(args[0]).nameAlias.equals("null")) ? (getPlayer(args[0]).getName().length() > 14 ? getPlayer(args[0]).getName().substring(0, 14) : getPlayer(args[0]).getName()) : (getProfile(args[0]).nameAlias.length() > 14 ? getProfile(args[0]).nameAlias.substring(0, 14) : getProfile(args[0]).nameAlias)));
-						getPlayer(args[0]).sendMessage("§7You have been demoted");
-						sender.sendMessage("§7" + getPlayer(args[0]).getDisplayName() + " has been demoted");
+						getPlayer(args[0]).sendMessage("§7You have been demoted to " + getProfile(args[0]).rank);
+						sender.sendMessage("§7" + getPlayer(args[0]).getDisplayName() + " has been demoted to " + getProfile(args[0]).rank);
 					} else {
 						setOfflineProperty(args[0], "Rank", Rank.getPreviousRank(Rank.valueOf(getOfflineProperty(args[0], "Rank"))).toString());
-						sender.sendMessage("§7" + getServer().getOfflinePlayer(args[0]).getName() + " has been demoted");
+						sender.sendMessage("§7" + getServer().getOfflinePlayer(args[0]).getName() + " has been demoted to " + Rank.valueOf(getOfflineProperty(args[0], "Rank")).getName());
 					}
 				} else {
 					sender.sendMessage("§7You can't demote a player who doesn't exist");
@@ -947,15 +952,15 @@ public class EvilBook extends JavaPlugin {
 						}
 						getProfile(args[0]).rank = Rank.getNextRank(getProfile(args[0]).rank);
 						getPlayer(args[0]).setPlayerListName("§" + getProfile(args[0]).rank.getColor(getProfile(args[0])) + ((getProfile(args[0]).nameAlias == null || getProfile(args[0]).nameAlias.equals("null")) ? (getPlayer(args[0]).getName().length() > 14 ? getPlayer(args[0]).getName().substring(0, 14) : getPlayer(args[0]).getName()) : (getProfile(args[0]).nameAlias.length() > 14 ? getProfile(args[0]).nameAlias.substring(0, 14) : getProfile(args[0]).nameAlias)));
-						getPlayer(args[0]).sendMessage("§7You have been promoted");
-						sender.sendMessage("§7" + getPlayer(args[0]).getDisplayName() + " has been promoted");
+						getPlayer(args[0]).sendMessage("§7You have been promoted to " + getProfile(args[0]).rank.getName());
+						sender.sendMessage("§7" + getPlayer(args[0]).getDisplayName() + " has been promoted to " + getProfile(args[0]).rank.getName());
 					} else {
 						if (sender instanceof Player && getProfile(sender).rank != Rank.ServerOwner) {
 							sender.sendMessage("§7You can't promote offline players");
 							return true;
 						}
 						setOfflineProperty(args[0], "Rank", Rank.getNextRank(Rank.valueOf(getOfflineProperty(args[0], "Rank"))).toString());
-						sender.sendMessage("§7" + getServer().getOfflinePlayer(args[0]).getName() + " has been promoted");
+						sender.sendMessage("§7" + getServer().getOfflinePlayer(args[0]).getName() + " has been promoted to " + Rank.valueOf(getOfflineProperty(args[0], "Rank")).getName());
 					}
 				} else {
 					sender.sendMessage("§7You can't promoted a player who doesn't exist");
@@ -1137,6 +1142,19 @@ public class EvilBook extends JavaPlugin {
 		//
 		if (sender instanceof Player == false) {
 			logInfo("This command is not supported by the console");
+			return true;
+		}
+		//
+		// Zombies Command
+		//
+		if (command.getName().equalsIgnoreCase("zombies")) {
+			if (args.length == 1 && args[0].equalsIgnoreCase("NachtDerUntoten")) {
+				((Player) sender).teleport(getServer().getWorld("NachtDerUntoten").getSpawnLocation());
+				((Player) sender).setTexturePack("https://dl.dropboxusercontent.com/s/zspplijmzhdxkg0/Textures.zip");//"https://dl.dropboxusercontent.com/s/vxdgswz9vd0kfzf/ZombiesTexture.zip");
+				sender.sendMessage(ChatColor.RED + "Welcome to Nazi Zombies - Nacht Der Untoten");
+			} else {
+				sender.sendMessage("");
+			}
 			return true;
 		}
 		//
@@ -3416,7 +3434,7 @@ public class EvilBook extends JavaPlugin {
 	 * @return If the entity is in an adventure world or not
 	 */
 	public Boolean isInAdventure(Entity entity) {
-		return entity.getWorld().getName() == "AdventureLand" ? true : false;
+		return entity.getWorld().getName() == "AdventureLand" || entity.getWorld().getName() == "NachtDerUntoten" ? true : false;
 	}
 	
 	/**

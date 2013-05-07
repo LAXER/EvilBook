@@ -1022,6 +1022,10 @@ public class EventListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onHangingBreak(HangingBreakEvent event) {
+		if (plugin.isInAdventure(event.getEntity())) {
+			event.setCancelled(true);
+			return;
+		}
 		if (!plugin.isInSurvival(event.getEntity()) && event.getCause() == RemoveCause.EXPLOSION) event.setCancelled(true);
 	}
 	

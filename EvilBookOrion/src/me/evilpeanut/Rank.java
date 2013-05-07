@@ -4,25 +4,24 @@ package me.evilpeanut;
  * @author Reece Aaron Lecrivain
  */
 public enum Rank {
-	Visitor((byte)0, "§0[§7Visitor§0]", "7", 0),
-	Builder((byte)1, "§0[§EBuilder§0]", "E", 0),
-	AdvancedBuilder((byte)2, "§0[§5Adv.Builder§0]", "5", 0),
-	Architect((byte)3, "§0[§DArchitect§0]", "D", 0),
-	Moderator((byte)4, "§0[§9Moderator§0]", "9", 0),
-	Police((byte)5, "§0[§3Police§0]", "3", 0),
-	Admin((byte)6, "§0[§4Admin§0]", "4", 5000),
-	SpecialAdmin((byte)7, "§0[§4SpecAdmin§0]", "4", 10000),
-	Councillor((byte)8, "§0[§ACouncillor§0]", "A", 15000),
-	Elite((byte)9, "§0[§CElite§0]", "C", 20000),
-	CoOwner((byte)10, "§0[§6Co-Owner§0]", "6", 22000),
-	Owner((byte)11, "§0[§BOwner§0]", "B", 25000),
-	RainbowOwner((byte)12, "§0[§AO§Bw§Cn§De§Er§0]", "A", 50000),
-	Custom((byte)13, "§0[§6Custom§0]", "6", 75000),
-	ServerOwner((byte)14, "§0[§BServerHost§0]", "B", 1000000);
+	Visitor((byte)0, "Visitor", "§0[§7Visitor§0]", "7", 0),
+	Builder((byte)1, "Builder", "§0[§EBuilder§0]", "E", 0),
+	AdvancedBuilder((byte)2, "Advanced Builder", "§0[§5Adv.Builder§0]", "5", 0),
+	Architect((byte)3, "Architect", "§0[§DArchitect§0]", "D", 0),
+	Moderator((byte)4, "Moderator", "§0[§9Moderator§0]", "9", 0),
+	Police((byte)5, "Police", "§0[§3Police§0]", "3", 0),
+	Admin((byte)6, "Admin", "§0[§4Admin§0]", "4", 5000),
+	SpecialAdmin((byte)7, "Special Admin", "§0[§4SpecAdmin§0]", "4", 10000),
+	Councillor((byte)8, "Councillor", "§0[§ACouncillor§0]", "A", 15000),
+	Elite((byte)9, "Elite", "§0[§CElite§0]", "C", 20000),
+	CoOwner((byte)10, "Co-Owner", "§0[§6Co-Owner§0]", "6", 22000),
+	Owner((byte)11, "Owner", "§0[§BOwner§0]", "B", 25000),
+	RainbowOwner((byte)12, "Rainbow Owner", "§0[§AO§Bw§Cn§De§Er§0]", "A", 50000),
+	Custom((byte)13, "Custom Rank", "§0[§6Custom§0]", "6", 75000),
+	ServerOwner((byte)14, "Server Owner", "§0[§BServerHost§0]", "B", 1000000);
 	
 	private Byte ID;
-	private String prefix;
-	private String color;
+	private String prefix, color, name;
 	private Integer evilEditAreaLimit;
 	
 	/**
@@ -34,6 +33,16 @@ public enum Rank {
 	 * @param ID The ID of the rank
 	 */
 	void setID(Byte ID){ this.ID = ID; }
+	
+	/**
+	 * @return The name of the rank
+	 */
+	String getName(){ return name; }
+	
+	/**
+	 * @param name The name of the rank
+	 */
+	void setName(String name){ this.name = name; }
 	
 	/**
 	 * @return The prefix of the rank
@@ -80,12 +89,14 @@ public enum Rank {
 	/**
 	 * Define a new rank
 	 * @param ID The ID of the rank
+	 * @param name The name of the rank
 	 * @param prefix The prefix of the rank
 	 * @param color The color of the rank
 	 * @param evilEditAreaLimit The evil edit area limit of the rank
 	 */
-	Rank (Byte ID, String prefix, String color, Integer evilEditAreaLimit) {
+	Rank (Byte ID, String name, String prefix, String color, Integer evilEditAreaLimit) {
 		this.ID = ID;
+		this.name = name;
 		this.prefix = prefix;
 		this.color = color;
 		this.evilEditAreaLimit = evilEditAreaLimit;
