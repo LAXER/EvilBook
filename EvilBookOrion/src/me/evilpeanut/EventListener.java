@@ -583,14 +583,14 @@ public class EventListener implements Listener {
 			if (event.hasItem() && event.getItem().getTypeId() == 280 && event.getItem().getItemMeta() != null && event.getItem().getItemMeta().getLore().get(0).equals("Preforms ancient magical arts")) {
 				if (plugin.getProfile(player).spellBook.size() == 0) {
 					player.sendMessage("§7You don't have any spells in your spellbook");
-					return;
-				}
-				if (plugin.getProfile(player).selectedSpell == plugin.getProfile(player).spellBook.get(plugin.getProfile(player).spellBook.size() - 1)) {
-					plugin.getProfile(player).selectedSpell = plugin.getProfile(player).spellBook.get(0);
-					player.sendMessage("§5Changed spell to §d" + plugin.getProfile(player).selectedSpell.name);
 				} else {
-					plugin.getProfile(player).selectedSpell = plugin.getProfile(player).spellBook.get(plugin.getProfile(player).spellBook.indexOf(plugin.getProfile(player).selectedSpell) + 1);
-					player.sendMessage("§5Changed spell to §d" + plugin.getProfile(player).selectedSpell.name);
+					if (plugin.getProfile(player).selectedSpell == plugin.getProfile(player).spellBook.get(plugin.getProfile(player).spellBook.size() - 1)) {
+						plugin.getProfile(player).selectedSpell = plugin.getProfile(player).spellBook.get(0);
+						player.sendMessage("§5Changed spell to §d" + plugin.getProfile(player).selectedSpell.name);
+					} else {
+						plugin.getProfile(player).selectedSpell = plugin.getProfile(player).spellBook.get(plugin.getProfile(player).spellBook.indexOf(plugin.getProfile(player).selectedSpell) + 1);
+						player.sendMessage("§5Changed spell to §d" + plugin.getProfile(player).selectedSpell.name);
+					}
 				}
 			}
 		}
