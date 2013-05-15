@@ -537,11 +537,7 @@ public class EventListener implements Listener {
 					Arrow arrow = (Arrow)sitting.get(player.getName().toLowerCase());
 					arrow.remove();
 					sitting.remove(player.getName().toLowerCase());
-					return;
-				}
-				if ((block.getType() == Material.WOOD_STAIRS) || (block.getType() == Material.BIRCH_WOOD_STAIRS) || (block.getType() == Material.SPRUCE_WOOD_STAIRS) || (block.getType() == Material.JUNGLE_WOOD_STAIRS) || (block.getType() == Material.SANDSTONE_STAIRS) || (block.getType() == Material.BRICK_STAIRS) || (block.getType() == Material.COBBLESTONE_STAIRS) || (block.getType() == Material.SMOOTH_STAIRS) || (block.getType() == Material.QUARTZ_STAIRS))
-				{
-					if (!player.isSneaking()) return;
+				} else if (player.isSneaking() && ((block.getType() == Material.WOOD_STAIRS) || (block.getType() == Material.BIRCH_WOOD_STAIRS) || (block.getType() == Material.SPRUCE_WOOD_STAIRS) || (block.getType() == Material.JUNGLE_WOOD_STAIRS) || (block.getType() == Material.SANDSTONE_STAIRS) || (block.getType() == Material.BRICK_STAIRS) || (block.getType() == Material.COBBLESTONE_STAIRS) || (block.getType() == Material.SMOOTH_STAIRS) || (block.getType() == Material.QUARTZ_STAIRS))) {
 					World world = player.getWorld();
 					Stairs stairs = (Stairs)block.getState().getData();
 					final Arrow arrow = world.spawnArrow(new Location(world, block.getLocation().getX() + 0.6D, block.getLocation().getY(), block.getLocation().getZ() + 0.6D), new Vector(block.getLocation().getX(), block.getLocation().getY() - 1.0D, block.getLocation().getZ()), 0.0F, 0.0F);
@@ -568,7 +564,6 @@ public class EventListener implements Listener {
 						}
 					}
 					, 1L);
-					return;
 				}
 			}
 		} else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
