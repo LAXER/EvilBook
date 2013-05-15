@@ -2768,17 +2768,16 @@ public class EvilBook extends JavaPlugin {
 					if (getEntity(args[0]) != null) {
 						if ((getEntity(args[0]) != EntityType.ENDER_DRAGON && getEntity(args[0]) != EntityType.WITHER && getEntity(args[0]) != EntityType.ENDER_CRYSTAL) || getProfile(sender).rank == Rank.ServerOwner) {
 							if (args.length == 1) {
-								if (((Player) sender).getWorld().getEntities().size() >= 100 && getProfile(sender).rank != Rank.ServerOwner) {
+								if (((Player) sender).getNearbyEntities(64, 64, 64).size() >= 400 && getProfile(sender).rank != Rank.ServerOwner) {
 									sender.sendMessage("§7Entity limit reached");
 								} else {
 									((Player) sender).getWorld().spawnEntity(((Player) sender).getLocation(), getEntity(args[0]));
 									sender.sendMessage("§7Spawned creature");
 									alertOwner(sender.getName() + " spawned a " + args[0]);
 								}
-							}
-							if (args.length == 2) {
+							} else if (args.length == 2) {
 								if (isInteger(args[1])) {
-									if (((Player) sender).getWorld().getEntities().size() + Integer.valueOf(args[1]) >= 1000 && getProfile(sender).rank != Rank.ServerOwner) {
+									if (((Player) sender).getNearbyEntities(64, 64, 64).size() + Integer.valueOf(args[1]) >= 400 && getProfile(sender).rank != Rank.ServerOwner) {
 										sender.sendMessage("§7Entity limit reached");
 									} else {
 										int amount = Integer.valueOf(args[1]);
