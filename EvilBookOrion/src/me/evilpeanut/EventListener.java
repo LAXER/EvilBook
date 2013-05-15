@@ -575,9 +575,9 @@ public class EventListener implements Listener {
 			if (event.hasItem() && event.getItem().getTypeId() == 280 && event.getItem().getItemMeta() != null && event.getItem().getItemMeta().getLore().get(0).equals("Preforms ancient magical arts")) {
 				if (plugin.getProfile(player).spellBook.size() == 0) {
 					player.sendMessage("§7You don't have any spells in your spellbook");
-					return;
+				} else {
+					plugin.getProfile(player).selectedSpell.preformSpell(event);
 				}
-				plugin.getProfile(player).selectedSpell.preformSpell(event);
 			}
 		} else if (event.getAction() == Action.RIGHT_CLICK_AIR) {
 			if (event.hasItem() && event.getItem().getTypeId() == 280 && event.getItem().getItemMeta() != null && event.getItem().getItemMeta().getLore().get(0).equals("Preforms ancient magical arts")) {

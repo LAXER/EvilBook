@@ -603,7 +603,8 @@ public class EvilBook extends JavaPlugin {
 		// TODO: Add more sign commands
 		// TODO: Add projectile protection
 		// TODO: Improve speed of region checking (Per world region hashmaps?)	
-		// TODO: Fix kick bug when the stair a player is sitting on is broken
+		// TODO: Fix kick bug when the stair a player is sitting on is broken]
+		// TODO: Disallow entities (including from /cspawn) to spawn when near by entity count is above 400? (Test number vs lag)
 		//
 		// Clean Database Command
 		//
