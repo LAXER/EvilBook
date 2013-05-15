@@ -2765,28 +2765,29 @@ public class EvilBook extends JavaPlugin {
 		if (command.getName().equalsIgnoreCase("spawncreature") || command.getName().equalsIgnoreCase("cspawn")) {
 			if (isInSurvival(((Player) sender)) == false || getProfile(sender).rank == Rank.ServerOwner) {
 				if (args.length >= 1) {
-					if (getEntity(args[0]) != null) {
-						if ((getEntity(args[0]) != EntityType.ENDER_DRAGON && getEntity(args[0]) != EntityType.WITHER && getEntity(args[0]) != EntityType.ENDER_CRYSTAL) || getProfile(sender).rank == Rank.ServerOwner) {
+					EntityType entityType = getEntity(args[0]);
+					if (entityType != null) {
+						if ((entityType != EntityType.ENDER_DRAGON && entityType != EntityType.WITHER && entityType != EntityType.ENDER_CRYSTAL) || getProfile(sender).rank == Rank.ServerOwner) {
 							if (args.length == 1) {
-								if (((Player) sender).getNearbyEntities(64, 64, 64).size() >= 400 && getProfile(sender).rank != Rank.ServerOwner) {
-									sender.sendMessage("§7Entity limit reached");
+								if (((Player) sender).getNearbyEntities(64, 64, 64).size() + 1 >= 400 && getProfile(sender).rank != Rank.ServerOwner) {
+									sender.sendMessage("§7Nearby entity limit reached");
 								} else {
-									((Player) sender).getWorld().spawnEntity(((Player) sender).getLocation(), getEntity(args[0]));
-									sender.sendMessage("§7Spawned creature");
-									alertOwner(sender.getName() + " spawned a " + args[0]);
+									((Player) sender).getWorld().spawnEntity(((Player) sender).getLocation(), entityType);
+									sender.sendMessage("§7Spawned a " + args[0].toLowerCase());
+									alertOwner(sender.getName() + " spawned a " + args[0].toLowerCase());
 								}
 							} else if (args.length == 2) {
 								if (isInteger(args[1])) {
 									if (((Player) sender).getNearbyEntities(64, 64, 64).size() + Integer.valueOf(args[1]) >= 400 && getProfile(sender).rank != Rank.ServerOwner) {
-										sender.sendMessage("§7Entity limit reached");
+										sender.sendMessage("§7Nearby entity limit reached");
 									} else {
 										int amount = Integer.valueOf(args[1]);
-										for (int i = 0; i < amount; i++) ((Player) sender).getWorld().spawnEntity(((Player) sender).getLocation(), getEntity(args[0]));
-										sender.sendMessage("§7Spawned creatures");
-										alertOwner(sender.getName() + " spawned " + args[1] + " " + args[0] + "'s");
+										for (int i = 0; i < amount; i++) ((Player) sender).getWorld().spawnEntity(((Player) sender).getLocation(), entityType);
+										sender.sendMessage("§7Spawned " + args[1] + " " + args[0].toLowerCase() + "'s");
+										alertOwner(sender.getName() + " spawned " + args[1] + " " + args[0].toLowerCase() + "'s");
 									}
 								} else {
-									sender.sendMessage("§7Please enter a valid amount of creatures to spawn");
+									sender.sendMessage("§7Please enter a valid number of creatures to spawn");
 								}
 							}
 						} else {
