@@ -861,7 +861,7 @@ public class EventListener implements Listener {
 		//
 		// Block Protection
 		//
-		if (plugin.getProfile(player).rank.getID() < Rank.AdvancedBuilder.getID() && (ID == 6 || ID == 12 || ID == 13 || ID == 31 || ID == 32 || ID == 39 || ID == 40 || ID == 106)) {
+		if (plugin.getProfile(player).rank.getID() < Rank.AdvancedBuilder.getID() && (ID == Material.ANVIL.getId() || ID == 6 || ID == 12 || ID == 13 || ID == 31 || ID == 32 || ID == 39 || ID == 40 || ID == 106)) {
 			player.sendMessage("§dThis block requires §5Advanced Builder §drank or higher");
 			event.setCancelled(true);
 			return;
