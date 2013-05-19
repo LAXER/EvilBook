@@ -4312,6 +4312,16 @@ public class EvilBook extends JavaPlugin {
     	}
     }
     
+    /**
+     * Return the number of blocks in an area
+     * @param topBlockX The top X block
+     * @param bottomBlockX The bottom X block
+     * @param topBlockY The top Y block
+     * @param bottomBlockY The bottom Y block
+     * @param topBlockZ The top Z block
+     * @param bottomBlockZ The bottom Z block
+     * @return
+     */
     public int getNumberOfBlocksInArea(int topBlockX, int bottomBlockX, int topBlockY, int bottomBlockY, int topBlockZ, int bottomBlockZ) {
     	return (((topBlockX - bottomBlockX) + 1) * ((topBlockY - bottomBlockY) + 1) * ((topBlockZ - bottomBlockZ) + 1));
     }
