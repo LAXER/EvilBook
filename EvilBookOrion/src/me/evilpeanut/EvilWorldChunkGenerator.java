@@ -12,7 +12,7 @@ import org.bukkit.util.noise.SimplexOctaveGenerator;
 /**
  * @author Reece Aaron Lecrivain
  */
-public class EvilWorldChunkGenerator extends ChunkGenerator{
+public class EvilWorldChunkGenerator extends ChunkGenerator {
 
 	int HILL_HEIGHT = 64;
 	int SCALE = 64;
@@ -122,6 +122,4 @@ public class EvilWorldChunkGenerator extends ChunkGenerator{
 		//pop.add(new com.EvilWorld.EvilWorldBlockPopulators.CobblestoneTowers());
 		return pop;
 	}	
-
-
 }

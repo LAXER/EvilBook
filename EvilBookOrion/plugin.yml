@@ -1,6 +1,6 @@
 name: EvilBook
 main: me.evilpeanut.EvilBook
-version: 1.8
+version: 1.9
 commands:
   zombies:
     description: Zombies mini-game
