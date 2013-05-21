@@ -65,12 +65,16 @@ public class Scheduler {
 						plugin.dynamicSignList.remove(i);
 					}
 				}
-				for (int i = 0; i < 15; i++) {
-					if (plugin.EvilEdit.size() == 0) return;
+				if (plugin.EvilEdit.size() == 0) return;
+				for (int i = 0; i < (plugin.EvilEdit.size() < 15 ? plugin.EvilEdit.size() : 15); i++) {
 					EvilEditBlock block = (EvilEditBlock) plugin.EvilEdit.get(0);
-					block.getLocation().getWorld().getBlockAt(block.getLocation()).setTypeIdAndData(block.getTypeID(), block.getData(), true);
-					//plugin.getProfile(block.getPlayer()).evilEditProgress.setScore(plugin.getProfile(block.getPlayer()).evilEditProgress.getScore() - 1);
-					// TODO: Add log support
+					if (block.getTypeID() == 0) {
+						plugin.logBlockBreak(block.getLocation().getWorld().getBlockAt(block.getLocation()), block.getPlayer());
+						block.getLocation().getWorld().getBlockAt(block.getLocation()).setTypeIdAndData(0, (byte) 0, true);
+					} else {
+						block.getLocation().getWorld().getBlockAt(block.getLocation()).setTypeIdAndData(block.getTypeID(), block.getData(), true);
+						plugin.logBlockPlace(block.getLocation().getWorld().getBlockAt(block.getLocation()), block.getPlayer());
+					}
 					plugin.EvilEdit.remove(0);
 				}
 			}
