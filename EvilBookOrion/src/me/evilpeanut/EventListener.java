@@ -957,7 +957,19 @@ public class EventListener implements Listener {
 		//
 		// Block logging
 		//
-		//TODO: Re-add
+		if (plugin.getProfile(event.getPlayer()).isLogging) {
+			List<String> info = plugin.getLogBlockInformation(event.getBlock());
+			if (info.size() != 0) {
+				event.getPlayer().sendMessage("§b" + Integer.toString(info.size()) + " edits on this block");
+				for (int i = 0; i < info.size(); i++) event.getPlayer().sendMessage(info.get(i));
+			} else {
+				event.getPlayer().sendMessage("§7No edits on this block");
+			}
+			event.setCancelled(true);
+			return;
+		} else {
+			plugin.logHangingEntityPlace(event.getEntity(), event.getPlayer().getName());
+		}
 	}
 	
 	/**
@@ -1005,18 +1017,31 @@ public class EventListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onHangingBreakByEntity(HangingBreakByEntityEvent event) {
+		if (event.getRemover() instanceof Player == false) return;
 		//
 		// Region Protection
 		//
-		if (event.getRemover() instanceof Player && plugin.isInProtectedRegion(event.getEntity().getLocation(), ((Player) event.getRemover()).getPlayer()) == true) {
-			((Player) event.getRemover()).getPlayer().sendMessage("§cYou don't have permission to build here");
+		if (plugin.isInProtectedRegion(event.getEntity().getLocation(), ((Player) event.getRemover()).getPlayer()) == true) {
+			((Player) event.getRemover()).sendMessage("§cYou don't have permission to build here");
 			event.setCancelled(true);
 			return;
 		}
 		//
 		// Block logging
 		//
-		//TODO: Re-add
+		if (plugin.getProfile(((Player) event.getRemover())).isLogging) {
+			List<String> info = plugin.getLogBlockInformation(event.getEntity().getLocation().getBlock());
+			if (info.size() != 0) {
+				((Player) event.getRemover()).sendMessage("§b" + Integer.toString(info.size()) + " edits on this block");
+				for (int i = 0; i < info.size(); i++) ((Player) event.getRemover()).sendMessage(info.get(i));
+			} else {
+				((Player) event.getRemover()).sendMessage("§7No edits on this block");
+			}
+			event.setCancelled(true);
+			return;
+		} else {
+			plugin.logHangingEntityBreak(event.getEntity(), ((Player) event.getRemover()).getPlayer().getName());
+		}
 	}
 	
 	/**

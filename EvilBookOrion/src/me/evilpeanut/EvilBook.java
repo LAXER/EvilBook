@@ -79,6 +79,7 @@ import org.bukkit.util.Vector;
 public class EvilBook extends JavaPlugin {
 	public Map<String, PlayerProfile> playerProfiles = new HashMap<String, PlayerProfile>();
 	public Map<Short, List<String>> blockList = new HashMap<Short, List<String>>();
+	public Map<Byte, String> hangingEntityList = new HashMap<Byte, String>();
 	public List<DynamicSign> dynamicSignList = new ArrayList<DynamicSign>();
 	public Map<String, Location> warpList = new HashMap<String, Location>();
 	public Map<String, Byte> commandBlacklist = new HashMap<String, Byte>();
@@ -605,6 +606,11 @@ public class EvilBook extends JavaPlugin {
 		blockList.put((short)156, Arrays.asList("QuartzStairs", "QuartzStair"));
 		blockList.put((short)157, Arrays.asList("ActivatorRail"));
 		blockList.put((short)158, Arrays.asList("Dropper"));
+		//
+		// Load Hanging Entity List
+		//
+		hangingEntityList.put((byte)9, "Painting");
+		hangingEntityList.put((byte)18, "Item Frame");
 		//
 		// Scheduler
 		//
@@ -3866,6 +3872,28 @@ public class EvilBook extends JavaPlugin {
 	}
 	
 	/**
+	 * Log a hanging entity break
+	 * @param entity The hanging entity to log
+	 * @param playerName The player's name who broke the block
+	 */
+	public void logHangingEntityBreak(Entity entity, String playerName) {
+		// X,Y,Z¶PlayerName¶WorldName¶EditID¶EntityTypeID¶EntityDirection
+		writeFileNewLine("plugins/EvilBook/Protection/" + entity.getWorld().getName() + "," + entity.getLocation().getBlockX() + "," + entity.getLocation().getBlockY() + "," + entity.getLocation().getBlockZ() + ".txt", entity.getLocation().getBlockX() + "," + entity.getLocation().getBlockY() + "," + entity.getLocation().getBlockZ() + "¶" + playerName + "¶" + entity.getWorld().getName() + "¶4¶" + entity.getType().getTypeId() + "¶" + entity.getLocation().getDirection());
+		writeFileNewLine("plugins/EvilBook/Protection/" + playerName + ".txt", entity.getLocation().getBlockX() + "," + entity.getLocation().getBlockY() + "," + entity.getLocation().getBlockZ() + "¶" + playerName + "¶" + entity.getWorld().getName() + "¶4¶" + entity.getType().getTypeId() + "¶" + entity.getLocation().getDirection());
+	}
+	
+	/**
+	 * Log a hanging entity place
+	 * @param entity The hanging entity to log
+	 * @param playerName The player's name who placed the block
+	 */
+	public void logHangingEntityPlace(Entity entity, String playerName) {
+		// X,Y,Z¶PlayerName¶WorldName¶EditID¶EntityTypeID¶EntityDirection
+		writeFileNewLine("plugins/EvilBook/Protection/" + entity.getWorld().getName() + "," + entity.getLocation().getBlockX() + "," + entity.getLocation().getBlockY() + "," + entity.getLocation().getBlockZ() + ".txt", entity.getLocation().getBlockX() + "," + entity.getLocation().getBlockY() + "," + entity.getLocation().getBlockZ() + "¶" + playerName + "¶" + entity.getWorld().getName() + "¶5¶" + entity.getType().getTypeId() + "¶" + entity.getLocation().getDirection());
+		writeFileNewLine("plugins/EvilBook/Protection/" + playerName + ".txt", entity.getLocation().getBlockX() + "," + entity.getLocation().getBlockY() + "," + entity.getLocation().getBlockZ() + "¶" + playerName + "¶" + entity.getWorld().getName() + "¶5¶" + entity.getType().getTypeId() + "¶" + entity.getLocation().getDirection());	
+	}
+	
+	/**
 	 * Log a block break
 	 * @param block The block to log
 	 * @param playerName The player's name who broke the block
@@ -4033,10 +4061,12 @@ public class EvilBook extends JavaPlugin {
 			BufferedReader br = new BufferedReader(new FileReader("plugins/EvilBook/Protection/" + block.getWorld().getName() + "," + block.getX() + "," + block.getY() + "," + block.getZ() + ".txt"));
 			String strLine = null;
 			while ((strLine = br.readLine()) != null) {
+				if (getLogBlockEditID(strLine) == 5) info.add("§e" + getLogBlockEditor(strLine) + " §fplaced entity " + hangingEntityList.get((byte)getLogBlockTypeID(strLine)).toLowerCase());
+				if (getLogBlockEditID(strLine) == 4) info.add("§e" + getLogBlockEditor(strLine) + " §fbroke entity " + hangingEntityList.get((byte)getLogBlockTypeID(strLine)).toLowerCase());
 				if (getLogBlockEditID(strLine) == 3) info.add("§e" + getLogBlockEditor(strLine) + " §fbroke sign");
-				if (getLogBlockEditID(strLine) == 2) info.add("§e" + getLogBlockEditor(strLine) + " §fplaced liquid " + blockList.get(getLogBlockTypeID(strLine)).get(0));
-				if (getLogBlockEditID(strLine) == 1) info.add("§e" + getLogBlockEditor(strLine) + " §fplaced block " + blockList.get(getLogBlockTypeID(strLine)).get(0));
-				if (getLogBlockEditID(strLine) == 0) info.add("§e" + getLogBlockEditor(strLine) + " §fbroke block " + blockList.get(getLogBlockTypeID(strLine)).get(0));
+				if (getLogBlockEditID(strLine) == 2) info.add("§e" + getLogBlockEditor(strLine) + " §fplaced liquid " + blockList.get(getLogBlockTypeID(strLine)).get(0).toLowerCase());
+				if (getLogBlockEditID(strLine) == 1) info.add("§e" + getLogBlockEditor(strLine) + " §fplaced block " + blockList.get(getLogBlockTypeID(strLine)).get(0).toLowerCase());
+				if (getLogBlockEditID(strLine) == 0) info.add("§e" + getLogBlockEditor(strLine) + " §fbroke block " + blockList.get(getLogBlockTypeID(strLine)).get(0).toLowerCase());
 			}
 			br.close();
 		} catch (Exception e) {}
