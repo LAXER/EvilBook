@@ -504,7 +504,7 @@ public class EvilBook extends JavaPlugin {
 		blockList.put((short)55, Arrays.asList("RedstoneWire", "Wire"));
 		blockList.put((short)56, Arrays.asList("Diamond", "DiamondOre"));
 		blockList.put((short)57, Arrays.asList("DiamondBlock", "BlockOfDiamond"));
-		blockList.put((short)58, Arrays.asList("CraftingTable", "CraftingBench"));
+		blockList.put((short)58, Arrays.asList("Crafting table", "CraftingTable", "CraftingBench"));
 		blockList.put((short)59, Arrays.asList("WheatSeed", "WheatSeeds"));
 		blockList.put((short)60, Arrays.asList("Farmland", "PlowedLand"));
 		blockList.put((short)61, Arrays.asList("Furnace", "Oven"));
@@ -563,7 +563,7 @@ public class EvilBook extends JavaPlugin {
 		blockList.put((short)114, Arrays.asList("NetherBrickStairs", "NetherBrickStair"));
 		blockList.put((short)115, Arrays.asList("NetherWart"));
 		blockList.put((short)116, Arrays.asList("EnchantingTable", "EnchantmentTable"));
-		blockList.put((short)117, Arrays.asList("BrewingStand"));
+		blockList.put((short)117, Arrays.asList("Brewing stand", "BrewingStand"));
 		blockList.put((short)118, Arrays.asList("Cauldron"));
 		blockList.put((short)119, Arrays.asList("EndPortal"));
 		blockList.put((short)120, Arrays.asList("EndPortalFrame"));
@@ -592,7 +592,7 @@ public class EvilBook extends JavaPlugin {
 		blockList.put((short)143, Arrays.asList("WoodButton", "WoodenButton"));
 		blockList.put((short)144, Arrays.asList("Head", "MobHead"));
 		blockList.put((short)145, Arrays.asList("Anvil"));
-		blockList.put((short)146, Arrays.asList("TrappedChest", "TrapChest", "ChestTrap", "RedstoneChest"));
+		blockList.put((short)146, Arrays.asList("Trapped chest", "TrappedChest", "TrapChest", "ChestTrap", "RedstoneChest"));
 		blockList.put((short)147, Arrays.asList("LightWeightedPressurePlate", "LightPressurePlate"));
 		blockList.put((short)148, Arrays.asList("HeavyWeightedPressurePlate", "HeavyPressurePlate"));
 		blockList.put((short)149, Arrays.asList("InactiveRedstoneComparator", "RedstoneComparator", "Comparator"));

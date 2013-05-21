@@ -492,7 +492,7 @@ public class EventListener implements Listener {
 					return;
 				}
 				if ((block.getTypeId() == 23 || block.getTypeId() == 54 || block.getTypeId() == 58 || block.getTypeId() == 61 || block.getTypeId() == 62 || block.getTypeId() == 117 || block.getTypeId() == 146 || block.getTypeId() == 158) && plugin.isContainerProtected(event.getClickedBlock().getLocation(), player)) {
-					player.sendMessage(ChatColor.GRAY + "You don't have permission to open the chest");
+					player.sendMessage(ChatColor.GRAY + "You don't have permission to open the " + plugin.blockList.get((short)block.getTypeId()).get(0).toLowerCase());
 					event.setCancelled(true);
 					return;
 				}
@@ -811,13 +811,12 @@ public class EventListener implements Listener {
 		//
 		if (plugin.isInSurvival(player) && (block.getTypeId() == 23 || block.getTypeId() == 54 || block.getTypeId() == 58 || block.getTypeId() == 61 || block.getTypeId() == 62 || block.getTypeId() == 117 || block.getTypeId() == 146 || block.getTypeId() == 158)) {
 			if (plugin.isContainerProtected(block.getLocation(), player)) {
-				player.sendMessage(ChatColor.GRAY + "You don't have permission to break the chest");
+				player.sendMessage(ChatColor.GRAY + "You don't have permission to break the " + plugin.blockList.get((short)block.getTypeId()).get(0).toLowerCase());
 				event.setCancelled(true);
 				return;
 			} else {
 				plugin.unprotectContainer(event.getBlock().getLocation());
-				//TODO: Display the container type eg. Furnace, Chest ect...
-				player.sendMessage(ChatColor.GRAY + "Container protection removed");
+				player.sendMessage(ChatColor.GRAY + plugin.blockList.get((short)block.getTypeId()).get(0) + " protection removed");
 			}
 		}
 		//
