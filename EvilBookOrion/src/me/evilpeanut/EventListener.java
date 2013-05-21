@@ -567,7 +567,7 @@ public class EventListener implements Listener {
 				}
 			}
 		} else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-			if (event.hasItem() && event.getItem().getTypeId() == 280 && event.getItem().getItemMeta() != null && event.getItem().getItemMeta().getLore().get(0).equals("Preforms ancient magical arts")) {
+			if (event.hasItem() && event.getItem().getTypeId() == 280 && event.getItem().getItemMeta().getLore() != null && event.getItem().getItemMeta().getLore().get(0).equals("Preforms ancient magical arts")) {
 				if (plugin.getProfile(player).spellBook.size() == 0) {
 					player.sendMessage("§7You don't have any spells in your spellbook");
 				} else {
@@ -761,7 +761,7 @@ public class EventListener implements Listener {
 	public void onBlockBreak(BlockBreakEvent event) {
 		Block block = event.getBlock();
 		Player player = event.getPlayer();
-		if (plugin.isInSurvival(event.getPlayer()) && event.getPlayer().getItemInHand().getTypeId() == 280 && event.getPlayer().getItemInHand().getItemMeta() != null && event.getPlayer().getItemInHand().getItemMeta().getLore().get(0).equals("Preforms ancient magical arts")) {
+		if (plugin.isInSurvival(event.getPlayer()) && event.getPlayer().getItemInHand().getTypeId() == 280 && event.getPlayer().getItemInHand().getItemMeta().getLore() != null && event.getPlayer().getItemInHand().getItemMeta().getLore().get(0).equals("Preforms ancient magical arts")) {
 			event.setCancelled(true);
 			return;
 		}

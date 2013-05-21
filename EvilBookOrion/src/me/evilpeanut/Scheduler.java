@@ -69,6 +69,7 @@ public class Scheduler {
 					if (plugin.EvilEdit.size() == 0) return;
 					EvilEditBlock block = (EvilEditBlock) plugin.EvilEdit.get(0);
 					block.getLocation().getWorld().getBlockAt(block.getLocation()).setTypeIdAndData(block.getTypeID(), block.getData(), true);
+					//plugin.getProfile(block.getPlayer()).evilEditProgress.setScore(plugin.getProfile(block.getPlayer()).evilEditProgress.getScore() - 1);
 					// TODO: Add log support
 					plugin.EvilEdit.remove(0);
 				}
