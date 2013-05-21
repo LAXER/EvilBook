@@ -94,12 +94,6 @@ public class EvilBook extends JavaPlugin {
 	public Scoreboard survivalStatsScoreboard;
 	public Team survivalTeam;
 	
-	//
-	// EvilEdit Scoreboard
-	//
-	//public Scoreboard evilEditStatsScoreboard;
-	//public Team evilEditTeam;
-	
 	/**
 	 * Called when the plugin is enabled
 	 */
@@ -153,13 +147,6 @@ public class EvilBook extends JavaPlugin {
 		miningScore.setScore(1);
 		Score fishingScore = objective.getScore(Bukkit.getOfflinePlayer("§aFishing"));
 		fishingScore.setScore(1);
-		//
-		// Evil Edit Scoreboard
-		//
-		//evilEditStatsScoreboard = scoreboardManager.getNewScoreboard();
-		//evilEditTeam = survivalStatsScoreboard.registerNewTeam("EvilEdit");
-		//Objective evilEditObjective = evilEditStatsScoreboard.registerNewObjective("EvilEditStats", "Evil Edit");
-		//evilEditObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
 		//
 		// Load the command blacklist
 		//
@@ -1920,29 +1907,29 @@ public class EvilBook extends JavaPlugin {
 							break forZ;
 						}
 
-						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(x, y, z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(x, y, z)).getData(), ((Player)sender).getLocation().add(x, y, z), sender.getName()));
-						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, y, z), sender.getName()));
+						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(x, y, z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(x, y, z)).getData(), ((Player)sender).getLocation().add(x, y, z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, y, z)));
 
-						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(-x, y, z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(-x, y, z)).getData(), ((Player)sender).getLocation().add(-x, y, z), sender.getName()));
-						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, y, z), sender.getName()));
+						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(-x, y, z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(-x, y, z)).getData(), ((Player)sender).getLocation().add(-x, y, z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, y, z)));
 
-						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(x, -y, z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(x, -y, z)).getData(), ((Player)sender).getLocation().add(x, -y, z), sender.getName()));
-						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, -y, z), sender.getName()));
+						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(x, -y, z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(x, -y, z)).getData(), ((Player)sender).getLocation().add(x, -y, z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, -y, z)));
 
-						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(x, y, -z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(x, y, -z)).getData(), ((Player)sender).getLocation().add(x, y, -z), sender.getName()));
-						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, y, -z), sender.getName()));
+						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(x, y, -z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(x, y, -z)).getData(), ((Player)sender).getLocation().add(x, y, -z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, y, -z)));
 
-						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(-x, -y, z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(-x, -y, z)).getData(), ((Player)sender).getLocation().add(-x, -y, z), sender.getName()));
-						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, -y, z), sender.getName()));
+						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(-x, -y, z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(-x, -y, z)).getData(), ((Player)sender).getLocation().add(-x, -y, z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, -y, z)));
 
-						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(x, -y, -z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(x, -y, -z)).getData(), ((Player)sender).getLocation().add(x, -y, -z), sender.getName()));
-						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, -y, -z), sender.getName()));
+						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(x, -y, -z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(x, -y, -z)).getData(), ((Player)sender).getLocation().add(x, -y, -z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, -y, -z)));
 
-						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(-x, y, -z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(-x, y, -z)).getData(), ((Player)sender).getLocation().add(-x, y, -z), sender.getName()));
-						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, y, -z), sender.getName()));
+						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(-x, y, -z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(-x, y, -z)).getData(), ((Player)sender).getLocation().add(-x, y, -z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, y, -z)));
 
-						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(-x, -y, -z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(-x, -y, -z)).getData(), ((Player)sender).getLocation().add(-x, -y, -z), sender.getName()));
-						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, -y, -z), sender.getName()));
+						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(-x, -y, -z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(-x, -y, -z)).getData(), ((Player)sender).getLocation().add(-x, -y, -z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, -y, -z)));
 					}
 				}
 			}
@@ -2023,29 +2010,29 @@ public class EvilBook extends JavaPlugin {
 							continue;
 						}
 
-						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(x, y, z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(x, y, z)).getData(), ((Player)sender).getLocation().add(x, y, z), sender.getName()));
-						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, y, z), sender.getName()));
+						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(x, y, z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(x, y, z)).getData(), ((Player)sender).getLocation().add(x, y, z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, y, z)));
 
-						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(-x, y, z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(-x, y, z)).getData(), ((Player)sender).getLocation().add(-x, y, z), sender.getName()));
-						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, y, z), sender.getName()));
+						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(-x, y, z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(-x, y, z)).getData(), ((Player)sender).getLocation().add(-x, y, z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, y, z)));
 
-						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(x, -y, z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(x, -y, z)).getData(), ((Player)sender).getLocation().add(x, -y, z), sender.getName()));
-						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, -y, z), sender.getName()));
+						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(x, -y, z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(x, -y, z)).getData(), ((Player)sender).getLocation().add(x, -y, z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, -y, z)));
 
-						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(x, y, -z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(x, y, -z)).getData(), ((Player)sender).getLocation().add(x, y, -z), sender.getName()));
-						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, y, -z), sender.getName()));
+						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(x, y, -z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(x, y, -z)).getData(), ((Player)sender).getLocation().add(x, y, -z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, y, -z)));
 
-						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(-x, -y, z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(-x, -y, z)).getData(), ((Player)sender).getLocation().add(-x, -y, z), sender.getName()));
-						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, -y, z), sender.getName()));
+						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(-x, -y, z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(-x, -y, z)).getData(), ((Player)sender).getLocation().add(-x, -y, z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, -y, z)));
 
-						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(x, -y, -z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(x, -y, -z)).getData(), ((Player)sender).getLocation().add(x, -y, -z), sender.getName()));
-						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, -y, -z), sender.getName()));
+						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(x, -y, -z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(x, -y, -z)).getData(), ((Player)sender).getLocation().add(x, -y, -z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(x, -y, -z)));
 
-						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(-x, y, -z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(-x, y, -z)).getData(), ((Player)sender).getLocation().add(-x, y, -z), sender.getName()));
-						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, y, -z), sender.getName()));
+						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(-x, y, -z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(-x, y, -z)).getData(), ((Player)sender).getLocation().add(-x, y, -z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, y, -z)));
 
-						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(-x, -y, -z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(-x, -y, -z)).getData(), ((Player)sender).getLocation().add(-x, -y, -z), sender.getName()));
-						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, -y, -z), sender.getName()));
+						getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(((Player)sender).getLocation().add(-x, -y, -z)), ((Player)sender).getWorld().getBlockAt(((Player)sender).getLocation().add(-x, -y, -z)).getData(), ((Player)sender).getLocation().add(-x, -y, -z)));
+						EvilEdit.add(new EvilEditBlock(blockID, blockData, ((Player)sender).getLocation().add(-x, -y, -z)));
 					}
 				}
 			}
@@ -2098,12 +2085,12 @@ public class EvilBook extends JavaPlugin {
 		                {
 		                	if (args.length == 4) {
 			                	if ((((Player)sender).getWorld().getBlockTypeIdAt(x, y, z) == blockID && ((Player)sender).getWorld().getBlockAt(x, y, z).getData() != Byte.valueOf(args[1])) || ((Player)sender).getWorld().getBlockTypeIdAt(x, y, z) != blockIDReplace) continue;
-		                		getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(x, y, z), ((Player)sender).getWorld().getBlockAt(x, y, z).getData(), new Location(((Player)sender).getWorld(), x, y, z), sender.getName()));
-		                		EvilEdit.add(new EvilEditBlock(blockID, Byte.valueOf(args[3]), new Location(((Player)sender).getWorld(), x, y, z), sender.getName()));
+		                		getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(x, y, z), ((Player)sender).getWorld().getBlockAt(x, y, z).getData(), new Location(((Player)sender).getWorld(), x, y, z)));
+		                		EvilEdit.add(new EvilEditBlock(blockID, Byte.valueOf(args[3]), new Location(((Player)sender).getWorld(), x, y, z)));
 		                	} else {
 			                	if (((Player)sender).getWorld().getBlockTypeIdAt(x, y, z) == blockID || ((Player)sender).getWorld().getBlockTypeIdAt(x, y, z) != blockIDReplace) continue;
-		                		getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(x, y, z), ((Player)sender).getWorld().getBlockAt(x, y, z).getData(), new Location(((Player)sender).getWorld(), x, y, z), sender.getName()));
-		                		EvilEdit.add(new EvilEditBlock(blockID, new Location(((Player)sender).getWorld(), x, y, z), sender.getName()));
+		                		getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(x, y, z), ((Player)sender).getWorld().getBlockAt(x, y, z).getData(), new Location(((Player)sender).getWorld(), x, y, z)));
+		                		EvilEdit.add(new EvilEditBlock(blockID, new Location(((Player)sender).getWorld(), x, y, z)));
 		                	}
 		                }
 		            }
@@ -2154,9 +2141,6 @@ public class EvilBook extends JavaPlugin {
 		        }
 		        alertOwner(sender.getName() + " filled an area of blocks with " + args[0]);
 		        getProfile(sender).EvilEditUndo = new ArrayList<EvilEditBlock>();
-		        //((Player)sender).setScoreboard(evilEditStatsScoreboard);
-		        //getProfile(sender).evilEditProgress = evilEditStatsScoreboard.getObjective("EvilEditStats").getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + sender.getName()));
-		        //getProfile(sender).evilEditProgress.setScore(getNumberOfBlocksInArea(topBlockX, bottomBlockX, topBlockY, bottomBlockY, topBlockZ, bottomBlockZ));
 		        int blockID = Integer.valueOf(args[0]);
 		        for (int x = bottomBlockX; x <= topBlockX; x++)
 		        {
@@ -2165,11 +2149,11 @@ public class EvilBook extends JavaPlugin {
 		                for (int y = bottomBlockY; y <= topBlockY; y++)
 		                {
 		                	if ((args.length == 1 && ((Player)sender).getWorld().getBlockTypeIdAt(x, y, z) == blockID && ((Player)sender).getWorld().getBlockAt(x, y, z).getData() == 0) || (args.length == 2 && ((Player)sender).getWorld().getBlockTypeIdAt(x, y, z) == blockID && ((Player)sender).getWorld().getBlockAt(x, y, z).getData() == Byte.valueOf(args[1]))) continue;
-		                	getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(x, y, z), ((Player)sender).getWorld().getBlockAt(x, y, z).getData(), new Location(((Player)sender).getWorld(), x, y, z), sender.getName()));
+		                	getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(x, y, z), ((Player)sender).getWorld().getBlockAt(x, y, z).getData(), new Location(((Player)sender).getWorld(), x, y, z)));
 		                	if (args.length == 2) {
-		                		EvilEdit.add(new EvilEditBlock(blockID, Byte.valueOf(args[1]), new Location(((Player)sender).getWorld(), x, y, z), sender.getName()));
+		                		EvilEdit.add(new EvilEditBlock(blockID, Byte.valueOf(args[1]), new Location(((Player)sender).getWorld(), x, y, z)));
 		                	} else {
-		                		EvilEdit.add(new EvilEditBlock(blockID, new Location(((Player)sender).getWorld(), x, y, z), sender.getName()));
+		                		EvilEdit.add(new EvilEditBlock(blockID, new Location(((Player)sender).getWorld(), x, y, z)));
 		                	}
 		                }
 		            }
@@ -2237,8 +2221,8 @@ public class EvilBook extends JavaPlugin {
 		                for (int y = bottomBlockY; y <= topBlockY; y++)
 		                {
 		                	if (((Player)sender).getWorld().getBlockTypeIdAt(x, y, z) == 0 || (args.length == 1 && ((Player)sender).getWorld().getBlockTypeIdAt(x, y, z) != Integer.valueOf(args[0])) || (args.length == 2 && (((Player)sender).getWorld().getBlockTypeIdAt(x, y, z) != Integer.valueOf(args[0]) || ((Player)sender).getWorld().getBlockAt(x, y, z).getData() != Byte.valueOf(args[1])))) continue;
-		                	getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(x, y, z), ((Player)sender).getWorld().getBlockAt(x, y, z).getData(), new Location(((Player)sender).getWorld(), x, y, z), sender.getName()));
-		                	EvilEdit.add(new EvilEditBlock(0, new Location(((Player)sender).getWorld(), x, y, z), sender.getName()));
+		                	getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(x, y, z), ((Player)sender).getWorld().getBlockAt(x, y, z).getData(), new Location(((Player)sender).getWorld(), x, y, z)));
+		                	EvilEdit.add(new EvilEditBlock(0, new Location(((Player)sender).getWorld(), x, y, z)));
 		                }
 		            }
 		        }
@@ -2280,7 +2264,7 @@ public class EvilBook extends JavaPlugin {
 		            {
 		                for (int y = bottomBlockY; y <= topBlockY; y++)
 		                { 
-		                	getProfile(sender).EvilEditCopy.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(x, y, z), ((Player)sender).getWorld().getBlockAt(x, y, z).getData(), new Location(((Player)sender).getWorld(), bottomBlockX - x, bottomBlockY - y, bottomBlockZ - z), sender.getName()));
+		                	getProfile(sender).EvilEditCopy.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(x, y, z), ((Player)sender).getWorld().getBlockAt(x, y, z).getData(), new Location(((Player)sender).getWorld(), bottomBlockX - x, bottomBlockY - y, bottomBlockZ - z)));
 		                }
 		            }
 		        }
@@ -2326,8 +2310,8 @@ public class EvilBook extends JavaPlugin {
 		        for (int i = 0; i != getProfile(sender).EvilEditCopy.size(); i++) {
 		        	Location loc = new Location(((Player)sender).getLocation().getWorld(), ((Player)sender).getLocation().getBlockX() - getProfile(sender).EvilEditCopy.get(i).getLocation().getBlockX(), ((Player)sender).getLocation().getBlockY() - getProfile(sender).EvilEditCopy.get(i).getLocation().getBlockY(), ((Player)sender).getLocation().getBlockZ() - getProfile(sender).EvilEditCopy.get(i).getLocation().getBlockZ());
 		        	if (((Player)sender).getWorld().getBlockAt(loc).getTypeId() == getProfile(sender).EvilEditCopy.get(i).getTypeID() && ((Player)sender).getWorld().getBlockAt(loc).getData() == getProfile(sender).EvilEditCopy.get(i).getData()) continue;
-		        	getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(loc), ((Player)sender).getWorld().getBlockAt(loc).getData(), loc, sender.getName()));
-                	EvilEdit.add(new EvilEditBlock(getProfile(sender).EvilEditCopy.get(i).getTypeID(), getProfile(sender).EvilEditCopy.get(i).getData(), loc, sender.getName()));
+		        	getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(loc), ((Player)sender).getWorld().getBlockAt(loc).getData(), loc));
+                	EvilEdit.add(new EvilEditBlock(getProfile(sender).EvilEditCopy.get(i).getTypeID(), getProfile(sender).EvilEditCopy.get(i).getData(), loc));
 		        }
 	        } catch (Exception e) {
 	        	sender.sendMessage("§7Evil Edit action failed");
@@ -2382,11 +2366,11 @@ public class EvilBook extends JavaPlugin {
 		            {
 		            	int highestY = ((Player)sender).getWorld().getHighestBlockYAt(x, z);
 		            	if ((args.length == 1 && ((Player)sender).getWorld().getBlockTypeIdAt(x, highestY, z) == blockID && ((Player)sender).getWorld().getBlockAt(x, highestY, z).getData() == 0) || (args.length == 2 && ((Player)sender).getWorld().getBlockTypeIdAt(x, highestY, z) == blockID && ((Player)sender).getWorld().getBlockAt(x, highestY, z).getData() == Byte.valueOf(args[1]))) continue;
-		            	getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(x, highestY, z), ((Player)sender).getWorld().getBlockAt(x, highestY, z).getData(), new Location(((Player)sender).getWorld(), x, highestY, z), sender.getName()));
+		            	getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(x, highestY, z), ((Player)sender).getWorld().getBlockAt(x, highestY, z).getData(), new Location(((Player)sender).getWorld(), x, highestY, z)));
 		            	if (args.length == 2) {
-		            		EvilEdit.add(new EvilEditBlock(blockID, Byte.valueOf(args[1]), new Location(((Player)sender).getWorld(), x, highestY, z), sender.getName()));
+		            		EvilEdit.add(new EvilEditBlock(blockID, Byte.valueOf(args[1]), new Location(((Player)sender).getWorld(), x, highestY, z)));
 		            	} else {
-		            		EvilEdit.add(new EvilEditBlock(blockID, new Location(((Player)sender).getWorld(), x, highestY, z), sender.getName()));
+		            		EvilEdit.add(new EvilEditBlock(blockID, new Location(((Player)sender).getWorld(), x, highestY, z)));
 		            	}
 		            }
 		        }
@@ -2445,11 +2429,11 @@ public class EvilBook extends JavaPlugin {
 		                {
 		                	if (x == bottomBlockX || x == topBlockX || z == bottomBlockZ || z == topBlockZ) {
 			                	if ((args.length == 1 && ((Player)sender).getWorld().getBlockTypeIdAt(x, y, z) == blockID && ((Player)sender).getWorld().getBlockAt(x, y, z).getData() == 0) || (args.length == 2 && ((Player)sender).getWorld().getBlockTypeIdAt(x, y, z) == blockID && ((Player)sender).getWorld().getBlockAt(x, y, z).getData() == Byte.valueOf(args[1]))) continue;
-			                	getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(x, y, z), ((Player)sender).getWorld().getBlockAt(x, y, z).getData(), new Location(((Player)sender).getWorld(), x, y, z), sender.getName()));
+			                	getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(x, y, z), ((Player)sender).getWorld().getBlockAt(x, y, z).getData(), new Location(((Player)sender).getWorld(), x, y, z)));
 			                	if (args.length == 2) {
-			                		EvilEdit.add(new EvilEditBlock(blockID, Byte.valueOf(args[1]), new Location(((Player)sender).getWorld(), x, y, z), sender.getName()));
+			                		EvilEdit.add(new EvilEditBlock(blockID, Byte.valueOf(args[1]), new Location(((Player)sender).getWorld(), x, y, z)));
 			                	} else {
-			                		EvilEdit.add(new EvilEditBlock(blockID, new Location(((Player)sender).getWorld(), x, y, z), sender.getName()));
+			                		EvilEdit.add(new EvilEditBlock(blockID, new Location(((Player)sender).getWorld(), x, y, z)));
 			                	}
 		                	}
 		                }
@@ -2510,11 +2494,11 @@ public class EvilBook extends JavaPlugin {
 		                {
 		                	if (x == bottomBlockX || x == topBlockX || z == bottomBlockZ || z == topBlockZ || y == bottomBlockY || y == topBlockY) {
 			                	if ((args.length == 1 && ((Player)sender).getWorld().getBlockTypeIdAt(x, y, z) == blockID && ((Player)sender).getWorld().getBlockAt(x, y, z).getData() == 0) || (args.length == 2 && ((Player)sender).getWorld().getBlockTypeIdAt(x, y, z) == blockID && ((Player)sender).getWorld().getBlockAt(x, y, z).getData() == Byte.valueOf(args[1]))) continue;
-			                	getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(x, y, z), ((Player)sender).getWorld().getBlockAt(x, y, z).getData(), new Location(((Player)sender).getWorld(), x, y, z), sender.getName()));
+			                	getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(x, y, z), ((Player)sender).getWorld().getBlockAt(x, y, z).getData(), new Location(((Player)sender).getWorld(), x, y, z)));
 			                	if (args.length == 2) {
-			                		EvilEdit.add(new EvilEditBlock(blockID, Byte.valueOf(args[1]), new Location(((Player)sender).getWorld(), x, y, z), sender.getName()));
+			                		EvilEdit.add(new EvilEditBlock(blockID, Byte.valueOf(args[1]), new Location(((Player)sender).getWorld(), x, y, z)));
 			                	} else {
-			                		EvilEdit.add(new EvilEditBlock(blockID, new Location(((Player)sender).getWorld(), x, y, z), sender.getName()));
+			                		EvilEdit.add(new EvilEditBlock(blockID, new Location(((Player)sender).getWorld(), x, y, z)));
 			                	}
 		                	}
 		                }
@@ -2561,8 +2545,8 @@ public class EvilBook extends JavaPlugin {
 		                {
 		                	if (x != bottomBlockX && x != topBlockX && z != bottomBlockZ && z != topBlockZ && y != bottomBlockY && y != topBlockY) {
 			                	if (((Player)sender).getWorld().getBlockTypeIdAt(x, y, z) == 0) continue;
-			                	getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(x, y, z), ((Player)sender).getWorld().getBlockAt(x, y, z).getData(), new Location(((Player)sender).getWorld(), x, y, z), sender.getName()));
-			                	EvilEdit.add(new EvilEditBlock(0, new Location(((Player)sender).getWorld(), x, y, z), sender.getName()));
+			                	getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(x, y, z), ((Player)sender).getWorld().getBlockAt(x, y, z).getData(), new Location(((Player)sender).getWorld(), x, y, z)));
+			                	EvilEdit.add(new EvilEditBlock(0, new Location(((Player)sender).getWorld(), x, y, z)));
 		                	}
 		                }
 		            }
@@ -2586,7 +2570,7 @@ public class EvilBook extends JavaPlugin {
 	                {
 	                	int realX = ((((Player)sender).getLocation().getBlockX() / 16) * 16) + x;
 	                	int realZ = ((((Player)sender).getLocation().getBlockZ() / 16) * 16) + z;
-		                getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(realX, y, realZ), ((Player)sender).getWorld().getBlockAt(realX, y, realZ).getData(), new Location(((Player)sender).getWorld(), realX, y, realZ), sender.getName()));
+		                getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(realX, y, realZ), ((Player)sender).getWorld().getBlockAt(realX, y, realZ).getData(), new Location(((Player)sender).getWorld(), realX, y, realZ)));
 	                }
 	            }
 	        }
@@ -2632,8 +2616,8 @@ public class EvilBook extends JavaPlugin {
 		                for (int y = bottomBlockY; y <= topBlockY; y++)
 		                {
 		                	if (((Player)sender).getWorld().getBlockTypeIdAt(x, y, z) != 8 && ((Player)sender).getWorld().getBlockTypeIdAt(x, y, z) != 9 && ((Player)sender).getWorld().getBlockTypeIdAt(x, y, z) != 10 && ((Player)sender).getWorld().getBlockTypeIdAt(x, y, z) != 11) continue;
-		                	getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(x, y, z), ((Player)sender).getWorld().getBlockAt(x, y, z).getData(), new Location(((Player)sender).getWorld(), x, y, z), sender.getName()));
-		                	EvilEdit.add(new EvilEditBlock(0, new Location(((Player)sender).getWorld(), x, y, z), sender.getName()));
+		                	getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(x, y, z), ((Player)sender).getWorld().getBlockAt(x, y, z).getData(), new Location(((Player)sender).getWorld(), x, y, z)));
+		                	EvilEdit.add(new EvilEditBlock(0, new Location(((Player)sender).getWorld(), x, y, z)));
 		                }
 		            }
 		        }

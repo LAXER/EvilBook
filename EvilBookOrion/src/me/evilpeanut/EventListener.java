@@ -1067,7 +1067,7 @@ public class EventListener implements Listener {
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
 		if (!plugin.isInSurvival(event.getEntity()) && event.getEntityType() == EntityType.SHEEP) ((Sheep)event.getEntity()).setColor(DyeColor.values()[new Random().nextInt(DyeColor.values().length)]);
 	}
-
+	
 	/**
 	 * Called when a vehicle is created
 	 */

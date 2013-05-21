@@ -13,7 +13,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Score;
 
 /**
  * @author Reece Aaron Lecrivain
@@ -30,7 +29,6 @@ public class PlayerProfile {
 	public Rank rank = Rank.Visitor;
 	public Spell selectedSpell;
 	public List<Spell> spellBook = new ArrayList<Spell>();
-	public Score evilEditProgress;
 	private EvilBook plugin;
 	
 	/**
