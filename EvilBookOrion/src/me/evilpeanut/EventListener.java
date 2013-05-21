@@ -830,18 +830,6 @@ public class EventListener implements Listener {
 			if (timeSignFile.exists()) timeSignFile.delete();
 		}
 		//
-		// Anti-nuke Protection
-		//
-		//TODO: Re-add
-		/*
-		plugin.blockProtection.put(player.getName(), plugin.blockProtection.get(player.getName()) + 1);
-		if (plugin.blockProtection.get(player.getName()) > 4) {
-			player.kickPlayer("§cKicked by nuke hack protection");
-			event.setCancelled(true);
-			return;
-		}
-		*/
-		//
 		// Sitting on stairs
 		//
 		for (int i = 0; i < sitting.size(); i++) {
@@ -882,19 +870,6 @@ public class EventListener implements Listener {
 			event.setCancelled(true);
 			return;
 		}
-		//
-		//
-		// Anti-build hack Protection
-		//
-		//TODO: Re-add
-		/*
-		plugin.blockProtection.put(player.getName(), plugin.blockProtection.get(player.getName()) + 1);
-		if (plugin.blockProtection.get(player.getName()) > 4) {
-			player.kickPlayer("§cKicked by build hack protection");
-			event.setCancelled(true);
-			return;
-		}
-		*/
 		//
 		// Block logging
 		//
