@@ -125,9 +125,9 @@ public class EventListener implements Listener {
 		}
 		for (Region region : plugin.regionList) {
 			if (region.leaveMessage != null && plugin.isInRegion(region, event.getFrom()) && plugin.isInRegion(region, event.getTo()) == false) {
-				event.getPlayer().sendMessage(region.leaveMessage.replace("&", "§"));
+				event.getPlayer().sendMessage(plugin.toFormattedString(region.leaveMessage));
 			} else if (region.welcomeMessage != null && plugin.isInRegion(region, event.getFrom()) == false && plugin.isInRegion(region, event.getTo())) {
-				event.getPlayer().sendMessage(region.welcomeMessage.replace("&", "§"));
+				event.getPlayer().sendMessage(plugin.toFormattedString(region.welcomeMessage));
 			}
 			if (region.warpName != null && plugin.isInRegion(region, event.getFrom()) == false && plugin.isInRegion(region, event.getTo())) event.getPlayer().teleport(plugin.warpList.get(region.warpName));
 		}
