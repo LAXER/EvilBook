@@ -2895,37 +2895,41 @@ public class EvilBook extends JavaPlugin {
 			if (args.length == 1) {
 				if (getProfile(sender).money >= 20 || getProfile(sender).rank.getID() >= Rank.Admin.getID()) {
 					if (args[0].length() <= 16) {
-						try {
-							Properties warpFile = new Properties();
-							File file = new File("plugins/EvilBook/Warps.db");
-							FileInputStream inputStream = new FileInputStream(file);
-							warpFile.load(inputStream);
-							inputStream.close();
-							if (warpFile.getProperty(args[0].toLowerCase()) == null) {
-								Location loc = ((Player) sender).getLocation();
-								warpFile.setProperty(args[0].toLowerCase(), loc.getWorld().getName() + ":" + loc.getX() + ":" + loc.getY() + ":" + loc.getZ() + ":" + loc.getYaw() + ":" + loc.getPitch());
-								FileOutputStream outputStream = new FileOutputStream(file);
-								warpFile.store(outputStream, null);
-								outputStream.close();
-								warpList.put(args[0].toLowerCase(), loc);
-								if (getProfile(sender).rank.getID() >= Rank.Admin.getID()) {
-									sender.sendMessage("§7Created warp §d" + args[0]);
+						Location loc = ((Player) sender).getLocation();
+						if (loc.getY() < 1) {
+							sender.sendMessage("§7You can't create a warp below bedrock");
+						} else {
+							try {
+								Properties warpFile = new Properties();
+								File file = new File("plugins/EvilBook/Warps.db");
+								FileInputStream inputStream = new FileInputStream(file);
+								warpFile.load(inputStream);
+								inputStream.close();
+								if (warpFile.getProperty(args[0].toLowerCase()) == null) {
+									warpFile.setProperty(args[0].toLowerCase(), loc.getWorld().getName() + ":" + loc.getX() + ":" + loc.getY() + ":" + loc.getZ() + ":" + loc.getYaw() + ":" + loc.getPitch());
+									FileOutputStream outputStream = new FileOutputStream(file);
+									warpFile.store(outputStream, null);
+									outputStream.close();
+									warpList.put(args[0].toLowerCase(), loc);
+									if (getProfile(sender).rank.getID() >= Rank.Admin.getID()) {
+										sender.sendMessage("§7Created warp §d" + args[0]);
+									} else {
+										getProfile(sender).money -= 20;
+										sender.sendMessage("§7Created warp §d" + args[0] + " §c-$20");
+									}
+									if (getProfile(sender).warps != null) {
+										getProfile(sender).warps += ", " + args[0];
+									} else {
+										getProfile(sender).warps = args[0];
+									}
 								} else {
-									getProfile(sender).money -= 20;
-									sender.sendMessage("§7Created warp §d" + args[0] + " §c-$20");
+									sender.sendMessage("§7A warp named §d" + args[0] + " §7already exists");
 								}
-								if (getProfile(sender).warps != null) {
-									getProfile(sender).warps += ", " + args[0];
-								} else {
-									getProfile(sender).warps = args[0];
-								}
-							} else {
-								sender.sendMessage("§7A warp named §d" + args[0] + " §7already exists");
+							} catch (Exception e) {
+								sender.sendMessage("§7Warp creation failed");
+								alertOwner(sender.getName() + " encountered an error whilst trying to set a warp");
+								e.printStackTrace();
 							}
-						} catch (Exception e) {
-							sender.sendMessage("§7Warp creation failed");
-							alertOwner(sender.getName() + " encountered an error whilst trying to set a warp");
-							e.printStackTrace();
 						}
 					} else {
 						sender.sendMessage("§7The maximum warp name length is 16 characters");
