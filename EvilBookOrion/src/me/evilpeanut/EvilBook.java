@@ -357,6 +357,14 @@ public class EvilBook extends JavaPlugin {
 					logInfo("Warp " + (String)key + " removed: World " + warpFile.getProperty((String) key).split(":")[0] + " is unavailable");
 					warpFile.remove(key);
 					removedCorruptWarps++;
+				} else if (Double.valueOf(warpFile.getProperty((String) key).split(":")[2]) < 1) {
+					logInfo("Warp " + (String)key + " removed: The Y location " + Double.valueOf(warpFile.getProperty((String) key).split(":")[2])  + " is below one");
+					warpFile.remove(key);
+					removedCorruptWarps++;
+				} else if (Double.valueOf(warpFile.getProperty((String) key).split(":")[1]) < -12550820 || Double.valueOf(warpFile.getProperty((String) key).split(":")[1]) > 12550820 || Double.valueOf(warpFile.getProperty((String) key).split(":")[3]) < -12550820 || Double.valueOf(warpFile.getProperty((String) key).split(":")[3]) > 12550820) {
+					logInfo("Warp " + (String)key + " removed: The location is in the Far Lands");
+					warpFile.remove(key);
+					removedCorruptWarps++;
 				} else {
 					warpList.put((String)key, new Location(getServer().getWorld(warpFile.getProperty((String) key).split(":")[0]), 
 							Double.valueOf(warpFile.getProperty((String) key).split(":")[1]),
