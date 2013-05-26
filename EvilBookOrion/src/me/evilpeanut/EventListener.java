@@ -3,7 +3,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
@@ -116,7 +115,7 @@ public class EventListener implements Listener {
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerMove(PlayerMoveEvent event) {
 		if (event.getTo().getBlockX() > 12550820 || event.getTo().getBlockX() < -12550820 || event.getTo().getBlockZ() > 12550820 || event.getTo().getBlockZ() < -12550820) {
-			event.getPlayer().sendMessage("§7The far-lands are blocked");
+			event.getPlayer().sendMessage("§7The Far Lands are blocked");
 			event.setCancelled(true);
 			return;
 		}
@@ -234,7 +233,7 @@ public class EventListener implements Listener {
 			player.sendMessage("§dPlease type §6/admin §dto learn how to become admin");
 			event.setCancelled(true);
 			return;
-		} else {
+		} /*else { TODO: Re-implement
 			if (event.getBlockFace() == BlockFace.NORTH) {
 				if (event.getBucket().getId() == 326) plugin.logLiquidPlace(player.getWorld().getBlockAt(event.getBlockClicked().getX() - 1, event.getBlockClicked().getY(), event.getBlockClicked().getZ()), 8, player.getName());
 				if (event.getBucket().getId() == 327) plugin.logLiquidPlace(player.getWorld().getBlockAt(event.getBlockClicked().getX() - 1, event.getBlockClicked().getY(), event.getBlockClicked().getZ()), 10, player.getName());
@@ -265,7 +264,7 @@ public class EventListener implements Listener {
 				if (event.getBucket().getId() == 327) plugin.logLiquidPlace(player.getWorld().getBlockAt(event.getBlockClicked().getX(), event.getBlockClicked().getY() - 1, event.getBlockClicked().getZ()), 10, player.getName());
 				return;
 			}
-		}
+		}*/
 	}
 	
 	/**
@@ -771,6 +770,8 @@ public class EventListener implements Listener {
 		//
 		// Block logging
 		//
+		//TODO: Re-implement
+		/*
 		if (plugin.getProfile(player).isLogging) {
 			List<String> info = plugin.getLogBlockInformation(event.getBlock());
 			if (info.size() != 0) {
@@ -788,6 +789,7 @@ public class EventListener implements Listener {
 				if (block.getTypeId() != 0) plugin.logBlockBreak(block, player.getName());
 			}
 		}
+		*/
 		//
 		// Action location selection
 		//
@@ -873,6 +875,8 @@ public class EventListener implements Listener {
 		//
 		// Block logging
 		//
+		//TODO: Re-implement
+		/*
 		if (plugin.getProfile(player).isLogging) {
 			List<String> info = plugin.getLogBlockInformation(event.getBlock());
 			if (info.size() != 0) player.sendMessage("§b" + Integer.toString(info.size()) + " edits on this block");
@@ -883,6 +887,7 @@ public class EventListener implements Listener {
 		} else {
 			plugin.logBlockPlace(event.getBlock(), player.getName());
 		}
+		*/
 		//
 		// Survival Container Protection
 		//
@@ -957,6 +962,8 @@ public class EventListener implements Listener {
 		//
 		// Block logging
 		//
+		//TODO: Re-implement
+		/*
 		if (plugin.getProfile(event.getPlayer()).isLogging) {
 			List<String> info = plugin.getLogBlockInformation(event.getBlock());
 			if (info.size() != 0) {
@@ -970,6 +977,7 @@ public class EventListener implements Listener {
 		} else {
 			plugin.logHangingEntityPlace(event.getEntity(), event.getPlayer().getName());
 		}
+		*/
 	}
 	
 	/**
@@ -1029,6 +1037,8 @@ public class EventListener implements Listener {
 		//
 		// Block logging
 		//
+		//TODO: Re-implement
+		/*
 		if (plugin.getProfile(((Player) event.getRemover())).isLogging) {
 			List<String> info = plugin.getLogBlockInformation(event.getEntity().getLocation().getBlock());
 			if (info.size() != 0) {
@@ -1042,6 +1052,7 @@ public class EventListener implements Listener {
 		} else {
 			plugin.logHangingEntityBreak(event.getEntity(), ((Player) event.getRemover()).getPlayer().getName());
 		}
+		*/
 	}
 	
 	/**

@@ -23,7 +23,7 @@ public class Scheduler {
 	 * Autosave the player profiles and display a tip
 	 */
 	public void TipsAutosave() {
-		plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
+		plugin.getServer().getScheduler().runTaskTimer(plugin, new Runnable() {
 			public void run() {
 				Server server = plugin.getServer();
 				for (Player p : server.getOnlinePlayers()) {
@@ -68,12 +68,13 @@ public class Scheduler {
 				if (plugin.EvilEdit.size() == 0) return;
 				for (int i = 0; i < (plugin.EvilEdit.size() < 15 ? plugin.EvilEdit.size() : 15); i++) {
 					EvilEditBlock block = (EvilEditBlock) plugin.EvilEdit.get(0);
+					// TODO: Re-add logging
 					if (block.getTypeID() == 0) {
-						plugin.logBlockBreak(block.getLocation().getWorld().getBlockAt(block.getLocation()), block.getPlayer());
+						//plugin.logBlockBreak(block.getLocation().getWorld().getBlockAt(block.getLocation()), block.getPlayer());
 						block.getLocation().getWorld().getBlockAt(block.getLocation()).setTypeIdAndData(0, (byte) 0, true);
 					} else {
 						block.getLocation().getWorld().getBlockAt(block.getLocation()).setTypeIdAndData(block.getTypeID(), block.getData(), true);
-						plugin.logBlockPlace(block.getLocation().getWorld().getBlockAt(block.getLocation()), block.getPlayer());
+						//plugin.logBlockPlace(block.getLocation().getWorld().getBlockAt(block.getLocation()), block.getPlayer());
 					}
 					plugin.EvilEdit.remove(0);
 				}

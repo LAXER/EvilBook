@@ -1,12 +1,10 @@
 package me.evilpeanut;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -33,8 +31,6 @@ import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
@@ -61,7 +57,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.material.Directional;
 import org.bukkit.material.MaterialData;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -89,6 +84,12 @@ public class EvilBook extends JavaPlugin {
 	public ScoreboardManager scoreboardManager;
 	
 	//
+	// MySQL
+	//
+	//MySQL MySQL = new MySQL("localhost", "3306", "EvilBook", "user", "pass");
+	//Connection connection = null;
+	
+	//
 	// Survival Scoreboard
 	//
 	public Scoreboard survivalStatsScoreboard;
@@ -103,6 +104,10 @@ public class EvilBook extends JavaPlugin {
 		//
 		PluginManager pluginManager = getServer().getPluginManager();
 		pluginManager.registerEvents(new EventListener(this), this);
+		//
+		// Open the MySQL connection
+		//
+		//connection = MySQL.open();
 		//
 		// Check the plugin folders and files exist
 		//
@@ -628,6 +633,7 @@ public class EvilBook extends JavaPlugin {
 		// TODO: Improve speed of region checking (Per world region hashmaps?)	
 		// TODO: Fix kick bug when the stair a player is sitting on is broken
 		// TODO: Fix evil edit place block rollback (Rollback asumes the block used to be air)
+		// TODO: Switch MySQL to H2
 		//
 		// Clean Database Command
 		//
@@ -966,11 +972,15 @@ public class EvilBook extends JavaPlugin {
 			if (args.length == 1) {
 				if (isProfileExistant(args[0])) {
 					if (getPlayer(args[0]) != null) {
-						if (Rank.getNextRank(getProfile(args[0]).rank).getID() > Rank.Moderator.getID() && sender instanceof Player && getProfile(sender).rank.getID() == Rank.Custom.getID()) {
+						if (Rank.getNextRank(getProfile(args[0]).rank).getID() > Rank.Police.getID() && sender.getName().equals("ShaunBottomley")) {
+							sender.sendMessage("§7You can't promote a player to above police");
+							return true;
+						}
+						if (Rank.getNextRank(getProfile(args[0]).rank).getID() > Rank.Moderator.getID() && sender instanceof Player && getProfile(sender).rank.getID() == Rank.Custom.getID() && sender.getName().equals("ShaunBottomley") == false) {
 							sender.sendMessage("§7You can't promote a player to above moderator");
 							return true;
 						}
-						if (Rank.getNextRank(getProfile(args[0]).rank).getID() > Rank.Architect.getID() && sender instanceof Player && getProfile(sender).rank.getID() < Rank.Custom.getID()) {
+						if (Rank.getNextRank(getProfile(args[0]).rank).getID() > Rank.Architect.getID() && sender instanceof Player && getProfile(sender).rank.getID() < Rank.Custom.getID() && sender.getName().equals("ShaunBottomley") == false) {
 							sender.sendMessage("§7You can't promote a player to above architect");
 							return true;
 						}
@@ -1344,7 +1354,8 @@ public class EvilBook extends JavaPlugin {
 				if (args[0].equalsIgnoreCase("EvilPeanut")) {
 					sender.sendMessage("§7This user is protected from rollback");
 				} else {
-					rollbackEdits(((Player) sender), args[0]);
+					// TODO: Re-implement
+					//rollbackEdits(((Player) sender), args[0]);
 				}
 			} else {
 				sender.sendMessage("§5Incorrect command usage");
@@ -1356,6 +1367,11 @@ public class EvilBook extends JavaPlugin {
 		// Log Command
 		//
 		if (command.getName().equalsIgnoreCase("log")) {
+			sender.sendMessage("§cWe are now using log-block temporarily");
+			sender.sendMessage("§7To spawn the tool do /lb tool");
+			sender.sendMessage("§7and then use /lb tool <on|off>");
+			//TODO: Re-implement
+			/*
 			if (getProfile(sender).isLogging) {
 				getProfile(sender).isLogging = false;
 				sender.sendMessage("§7Logging mode disabled");
@@ -1363,6 +1379,7 @@ public class EvilBook extends JavaPlugin {
 				getProfile(sender).isLogging = true;
 				sender.sendMessage("§7Logging mode enabled");
 			}
+			*/
 			return true;
 		}
 		//
@@ -3855,49 +3872,50 @@ public class EvilBook extends JavaPlugin {
 		return "Sunny";
 	}
 	
+	//TODO: Implement H2 version of this
 	/**
 	 * Log a hanging entity break
 	 * @param entity The hanging entity to log
 	 * @param playerName The player's name who broke the block
 	 */
-	public void logHangingEntityBreak(Entity entity, String playerName) {
+	//public void logHangingEntityBreak(Entity entity, String playerName) {
 		// X,Y,Z¶PlayerName¶WorldName¶EditID¶EntityTypeID¶EntityDirection
-		writeFileNewLine("plugins/EvilBook/Protection/" + entity.getWorld().getName() + "," + entity.getLocation().getBlockX() + "," + entity.getLocation().getBlockY() + "," + entity.getLocation().getBlockZ() + ".txt", entity.getLocation().getBlockX() + "," + entity.getLocation().getBlockY() + "," + entity.getLocation().getBlockZ() + "¶" + playerName + "¶" + entity.getWorld().getName() + "¶4¶" + entity.getType().getTypeId() + "¶" + entity.getLocation().getDirection());
-		writeFileNewLine("plugins/EvilBook/Protection/" + playerName + ".txt", entity.getLocation().getBlockX() + "," + entity.getLocation().getBlockY() + "," + entity.getLocation().getBlockZ() + "¶" + playerName + "¶" + entity.getWorld().getName() + "¶4¶" + entity.getType().getTypeId() + "¶" + entity.getLocation().getDirection());
-	}
+		//writeFileNewLine("plugins/EvilBook/Protection/" + entity.getWorld().getName() + "," + entity.getLocation().getBlockX() + "," + entity.getLocation().getBlockY() + "," + entity.getLocation().getBlockZ() + ".txt", entity.getLocation().getBlockX() + "," + entity.getLocation().getBlockY() + "," + entity.getLocation().getBlockZ() + "¶" + playerName + "¶" + entity.getWorld().getName() + "¶4¶" + entity.getType().getTypeId() + "¶" + entity.getLocation().getDirection());
+		//writeFileNewLine("plugins/EvilBook/Protection/" + playerName + ".txt", entity.getLocation().getBlockX() + "," + entity.getLocation().getBlockY() + "," + entity.getLocation().getBlockZ() + "¶" + playerName + "¶" + entity.getWorld().getName() + "¶4¶" + entity.getType().getTypeId() + "¶" + entity.getLocation().getDirection());
+	//}
 	
 	/**
 	 * Log a hanging entity place
 	 * @param entity The hanging entity to log
 	 * @param playerName The player's name who placed the block
 	 */
-	public void logHangingEntityPlace(Entity entity, String playerName) {
+	//public void logHangingEntityPlace(Entity entity, String playerName) {
 		// X,Y,Z¶PlayerName¶WorldName¶EditID¶EntityTypeID¶EntityDirection
-		writeFileNewLine("plugins/EvilBook/Protection/" + entity.getWorld().getName() + "," + entity.getLocation().getBlockX() + "," + entity.getLocation().getBlockY() + "," + entity.getLocation().getBlockZ() + ".txt", entity.getLocation().getBlockX() + "," + entity.getLocation().getBlockY() + "," + entity.getLocation().getBlockZ() + "¶" + playerName + "¶" + entity.getWorld().getName() + "¶5¶" + entity.getType().getTypeId() + "¶" + entity.getLocation().getDirection());
-		writeFileNewLine("plugins/EvilBook/Protection/" + playerName + ".txt", entity.getLocation().getBlockX() + "," + entity.getLocation().getBlockY() + "," + entity.getLocation().getBlockZ() + "¶" + playerName + "¶" + entity.getWorld().getName() + "¶5¶" + entity.getType().getTypeId() + "¶" + entity.getLocation().getDirection());	
-	}
+		//writeFileNewLine("plugins/EvilBook/Protection/" + entity.getWorld().getName() + "," + entity.getLocation().getBlockX() + "," + entity.getLocation().getBlockY() + "," + entity.getLocation().getBlockZ() + ".txt", entity.getLocation().getBlockX() + "," + entity.getLocation().getBlockY() + "," + entity.getLocation().getBlockZ() + "¶" + playerName + "¶" + entity.getWorld().getName() + "¶5¶" + entity.getType().getTypeId() + "¶" + entity.getLocation().getDirection());
+		//writeFileNewLine("plugins/EvilBook/Protection/" + playerName + ".txt", entity.getLocation().getBlockX() + "," + entity.getLocation().getBlockY() + "," + entity.getLocation().getBlockZ() + "¶" + playerName + "¶" + entity.getWorld().getName() + "¶5¶" + entity.getType().getTypeId() + "¶" + entity.getLocation().getDirection());	
+	//}
 	
 	/**
 	 * Log a block break
 	 * @param block The block to log
 	 * @param playerName The player's name who broke the block
 	 */
-	public void logBlockBreak(Block block, String playerName) {
+	//public void logBlockBreak(Block block, String playerName) {
 		// X,Y,Z¶PlayerName¶WorldName¶EditID¶BlockTypeID¶BlockData
-		writeFileNewLine("plugins/EvilBook/Protection/" + block.getWorld().getName() + "," + block.getX() + "," + block.getY() + "," + block.getZ() + ".txt", block.getX() + "," + block.getY() + "," + block.getZ() + "¶" + playerName + "¶" + block.getWorld().getName() + "¶0¶" + block.getTypeId() + "¶" + block.getData());
-		writeFileNewLine("plugins/EvilBook/Protection/" + playerName + ".txt", block.getX() + "," + block.getY() + "," + block.getZ() + "¶" + playerName + "¶" + block.getWorld().getName() + "¶0¶" + block.getTypeId() + "¶" + block.getData());
-	}
+		//writeFileNewLine("plugins/EvilBook/Protection/" + block.getWorld().getName() + "," + block.getX() + "," + block.getY() + "," + block.getZ() + ".txt", block.getX() + "," + block.getY() + "," + block.getZ() + "¶" + playerName + "¶" + block.getWorld().getName() + "¶0¶" + block.getTypeId() + "¶" + block.getData());
+		//writeFileNewLine("plugins/EvilBook/Protection/" + playerName + ".txt", block.getX() + "," + block.getY() + "," + block.getZ() + "¶" + playerName + "¶" + block.getWorld().getName() + "¶0¶" + block.getTypeId() + "¶" + block.getData());
+	//}
 	
 	/**
 	 * Log a block place
 	 * @param block The block to log
 	 * @param playerName The player's name who placed the block
 	 */
-	public void logBlockPlace(Block block, String playerName) {
+	//public void logBlockPlace(Block block, String playerName) {
 		// X,Y,Z¶PlayerName¶WorldName¶EditID¶BlockTypeID¶BlockData
-		writeFileNewLine("plugins/EvilBook/Protection/" + block.getWorld().getName() + "," + block.getX() + "," + block.getY() + "," + block.getZ() + ".txt", block.getX() + "," + block.getY() + "," + block.getZ() + "¶" + playerName + "¶" + block.getWorld().getName() + "¶1¶" + block.getTypeId() + "¶" + block.getData());
-		writeFileNewLine("plugins/EvilBook/Protection/" + playerName + ".txt", block.getX() + "," + block.getY() + "," + block.getZ() + "¶" + playerName + "¶" + block.getWorld().getName() + "¶1¶" + block.getTypeId() + "¶0");
-	}
+		//writeFileNewLine("plugins/EvilBook/Protection/" + block.getWorld().getName() + "," + block.getX() + "," + block.getY() + "," + block.getZ() + ".txt", block.getX() + "," + block.getY() + "," + block.getZ() + "¶" + playerName + "¶" + block.getWorld().getName() + "¶1¶" + block.getTypeId() + "¶" + block.getData());
+		//writeFileNewLine("plugins/EvilBook/Protection/" + playerName + ".txt", block.getX() + "," + block.getY() + "," + block.getZ() + "¶" + playerName + "¶" + block.getWorld().getName() + "¶1¶" + block.getTypeId() + "¶0");
+	//}
 	
 	/**
 	 * Log a liquid placement
@@ -3905,11 +3923,11 @@ public class EvilBook extends JavaPlugin {
 	 * @param liquidID The type ID of the liquid
 	 * @param playerName The player's name who placed the liquid
 	 */
-	public void logLiquidPlace(Block block, int liquidID, String playerName) {
+	//public void logLiquidPlace(Block block, int liquidID, String playerName) {
 		// X,Y,Z¶PlayerName¶WorldName¶EditID¶LiquidID¶BlockData
-		writeFileNewLine("plugins/EvilBook/Protection/" + block.getWorld().getName() + "," + block.getX() + "," + block.getY() + "," + block.getZ() + ".txt", block.getX() + "," + block.getY() + "," + block.getZ() + "¶" + playerName + "¶" + block.getWorld().getName() + "¶2¶" + liquidID + "¶0");
-		writeFileNewLine("plugins/EvilBook/Protection/" + playerName + ".txt", block.getX() + "," + block.getY() + "," + block.getZ() + "¶" + playerName + "¶" + block.getWorld().getName() + "¶2¶" + liquidID + "¶0");
-	}
+	//writeFileNewLine("plugins/EvilBook/Protection/" + block.getWorld().getName() + "," + block.getX() + "," + block.getY() + "," + block.getZ() + ".txt", block.getX() + "," + block.getY() + "," + block.getZ() + "¶" + playerName + "¶" + block.getWorld().getName() + "¶2¶" + liquidID + "¶0");
+	//writeFileNewLine("plugins/EvilBook/Protection/" + playerName + ".txt", block.getX() + "," + block.getY() + "," + block.getZ() + "¶" + playerName + "¶" + block.getWorld().getName() + "¶2¶" + liquidID + "¶0");
+	//}
 	
 	/**
 	 * Log a sign break
@@ -3917,178 +3935,178 @@ public class EvilBook extends JavaPlugin {
 	 * @param block The block to log
 	 * @param playerName The player's name who broke the block
 	 */
-	public void logSignBreak(Sign sign, Block block, String playerName) {
+	//public void logSignBreak(Sign sign, Block block, String playerName) {
 		// X,Y,Z¶PlayerName¶WorldName¶EditID¶BlockTypeID¶BlockData¶BlockDirection¶Line1¶Line2¶Line3¶Line4
-		String[] signLine = new String[4];
-		signLine[0] = sign.getLine(0);
-		signLine[1] = sign.getLine(1);
-		signLine[2] = sign.getLine(2);
-		signLine[3] = sign.getLine(3);
-		writeFileNewLine("plugins/EvilBook/Protection/" + playerName + ".txt", sign.getX() + "," + sign.getY() + "," + sign.getZ() + "¶" + playerName + "¶" + sign.getWorld().getName() + "¶3¶" + sign.getTypeId() + "¶0¶" + ((Directional) block.getType().getNewData(block.getData())).getFacing().toString() + "¶" + signLine[0] + "¶" + signLine[1] + "¶" + signLine[2] + "¶" + signLine[3]);
-		writeFileNewLine("plugins/EvilBook/Protection/" + sign.getWorld().getName() + "," + sign.getX() + "," + sign.getY() + "," + sign.getZ() + ".txt", sign.getX() + "," + sign.getY() + "," + sign.getZ() + "¶" + playerName + "¶" + sign.getWorld().getName() + "¶3¶" + sign.getTypeId() + "¶0¶" + ((Directional) block.getType().getNewData(block.getData())).getFacing().toString() + "¶" + signLine[0] + "¶" + signLine[1] + "¶" + signLine[2] + "¶" + signLine[3]);
-	}
+	//String[] signLine = new String[4];
+	//signLine[0] = sign.getLine(0);
+	//signLine[1] = sign.getLine(1);
+	//signLine[2] = sign.getLine(2);
+	//signLine[3] = sign.getLine(3);
+	//writeFileNewLine("plugins/EvilBook/Protection/" + playerName + ".txt", sign.getX() + "," + sign.getY() + "," + sign.getZ() + "¶" + playerName + "¶" + sign.getWorld().getName() + "¶3¶" + sign.getTypeId() + "¶0¶" + ((Directional) block.getType().getNewData(block.getData())).getFacing().toString() + "¶" + signLine[0] + "¶" + signLine[1] + "¶" + signLine[2] + "¶" + signLine[3]);
+	//writeFileNewLine("plugins/EvilBook/Protection/" + sign.getWorld().getName() + "," + sign.getX() + "," + sign.getY() + "," + sign.getZ() + ".txt", sign.getX() + "," + sign.getY() + "," + sign.getZ() + "¶" + playerName + "¶" + sign.getWorld().getName() + "¶3¶" + sign.getTypeId() + "¶0¶" + ((Directional) block.getType().getNewData(block.getData())).getFacing().toString() + "¶" + signLine[0] + "¶" + signLine[1] + "¶" + signLine[2] + "¶" + signLine[3]);
+	//}
 	
 	/**
 	 * Return the location of a logged block
 	 * @param line The logged line containing the block information
 	 * @return The location of the logged block
 	 */
-	public Location getLogBlockLocation(String line) {
-		return new Location(getServer().getWorld(line.split("¶")[2]), Double.valueOf(line.split(",")[0]), Double.valueOf(line.split(",")[1]), Double.valueOf(line.split(",")[2].split("¶")[0]));
-	}
+	//public Location getLogBlockLocation(String line) {
+	//return new Location(getServer().getWorld(line.split("¶")[2]), Double.valueOf(line.split(",")[0]), Double.valueOf(line.split(",")[1]), Double.valueOf(line.split(",")[2].split("¶")[0]));
+	//}
 	
 	/**
 	 * Return the editor's name of a logged block
 	 * @param line The logged line containing the block information
 	 * @return The editor's name of the logged block
 	 */
-	public String getLogBlockEditor(String line) {
-		return line.split("¶")[1];
-	}
+	//public String getLogBlockEditor(String line) {
+		//	return line.split("¶")[1];
+	//}
 	
 	/**
 	 * Return the edit ID of a logged block
 	 * @param line The logged line containing the block information
 	 * @return The edit ID of the logged block
 	 */
-	public byte getLogBlockEditID(String line) {
-		return Byte.valueOf(line.split("¶")[3]);
-	}
+	//public byte getLogBlockEditID(String line) {
+	//return Byte.valueOf(line.split("¶")[3]);
+	//}
 	
 	/**
 	 * Return the type ID of a logged block
 	 * @param line The logged line containing the block information
 	 * @return The type ID of the logged block
 	 */
-	public short getLogBlockTypeID(String line) {
-		return Short.valueOf(line.split("¶")[4]);
-	}
+	//public short getLogBlockTypeID(String line) {
+	//	return Short.valueOf(line.split("¶")[4]);
+	//}
 	
 	/**
 	 * Return the data of a logged block
 	 * @param line The logged line containing the block information
 	 * @return The data of the logged block
 	 */
-	public byte getLogBlockData(String line) {
-		return Byte.valueOf(line.split("¶")[5]);
-	}
+	//public byte getLogBlockData(String line) {
+	//return Byte.valueOf(line.split("¶")[5]);
+	//}
 	
 	/**
 	 * Return the direction of a logged block
 	 * @param line The logged line containing the block information
 	 * @return The direction of the logged block
 	 */
-	public BlockFace getLogBlockDirection(String line) {
-		return BlockFace.valueOf(line.split("¶")[6]);
-	}
+	//public BlockFace getLogBlockDirection(String line) {
+	//return BlockFace.valueOf(line.split("¶")[6]);
+	//}
 	
 	/**
 	 * Return the extra argument one of a logged block
 	 * @param line The logged line containing the block information
 	 * @return The extra argument one of the logged block
 	 */
-	public String getLogBlockArg1(String line) {
-		try {
-			return line.split("¶")[7];
-		} catch (Exception e) {
-			return "";
-		}
-	}
+	//public String getLogBlockArg1(String line) {
+	//try {
+	//return line.split("¶")[7];
+	//} catch (Exception e) {
+	//return "";
+	//}
+	//}
 	
 	/**
 	 * Return the extra argument two of a logged block
 	 * @param line The logged line containing the block information
 	 * @return The extra argument two of the logged block
 	 */
-	public String getLogBlockArg2(String line) {
-		try {
-			return line.split("¶")[8];
-		} catch (Exception e) {
-			return "";
-		}
-	}
+	//public String getLogBlockArg2(String line) {
+	//try {
+	//return line.split("¶")[8];
+	//} catch (Exception e) {
+	//return "";
+	//}
+	//}
 	
 	/**
 	 * Return the extra argument three of a logged block
 	 * @param line The logged line containing the block information
 	 * @return The extra argument three of the logged block
 	 */
-	public String getLogBlockArg3(String line) {
-		try {
-			return line.split("¶")[9];
-		} catch (Exception e) {
-			return "";
-		}
-	}
+	//public String getLogBlockArg3(String line) {
+	//try {
+	//return line.split("¶")[9];
+	//} catch (Exception e) {
+	//return "";
+	//}
+	//}
 	
 	/**
 	 * Return the extra argument four of a logged block
 	 * @param line The logged line containing the block information
 	 * @return The extra argument four of the logged block
 	 */
-	public String getLogBlockArg4(String line) {
-		try {
-			return line.split("¶")[10];
-		} catch (Exception e) {
-			return "";
-		}
-	}
+	//public String getLogBlockArg4(String line) {
+	//try {
+	//return line.split("¶")[10];
+	//} catch (Exception e) {
+	//return "";
+	//}
+	//}
 	
 	/**
 	 * Return an array of strings with the blocks edits
 	 * @param block The block to gather the logging information on
 	 * @return The logging information for the block
 	 */
-	public List<String> getLogBlockInformation(Block block) {
-		List<String> info = new ArrayList<String>();
-		try {
-			BufferedReader br = new BufferedReader(new FileReader("plugins/EvilBook/Protection/" + block.getWorld().getName() + "," + block.getX() + "," + block.getY() + "," + block.getZ() + ".txt"));
-			String strLine = null;
-			while ((strLine = br.readLine()) != null) {
-				if (getLogBlockEditID(strLine) == 5) info.add("§e" + getLogBlockEditor(strLine) + " §fplaced entity " + hangingEntityList.get((byte)getLogBlockTypeID(strLine)).toLowerCase());
-				if (getLogBlockEditID(strLine) == 4) info.add("§e" + getLogBlockEditor(strLine) + " §fbroke entity " + hangingEntityList.get((byte)getLogBlockTypeID(strLine)).toLowerCase());
-				if (getLogBlockEditID(strLine) == 3) info.add("§e" + getLogBlockEditor(strLine) + " §fbroke sign");
-				if (getLogBlockEditID(strLine) == 2) info.add("§e" + getLogBlockEditor(strLine) + " §fplaced liquid " + blockList.get(getLogBlockTypeID(strLine)).get(0).toLowerCase());
-				if (getLogBlockEditID(strLine) == 1) info.add("§e" + getLogBlockEditor(strLine) + " §fplaced block " + blockList.get(getLogBlockTypeID(strLine)).get(0).toLowerCase());
-				if (getLogBlockEditID(strLine) == 0) info.add("§e" + getLogBlockEditor(strLine) + " §fbroke block " + blockList.get(getLogBlockTypeID(strLine)).get(0).toLowerCase());
-			}
-			br.close();
-		} catch (Exception e) {}
-		return info;
-	}
+	//public List<String> getLogBlockInformation(Block block) {
+	//List<String> info = new ArrayList<String>();
+	//try {
+	//BufferedReader br = new BufferedReader(new FileReader("plugins/EvilBook/Protection/" + block.getWorld().getName() + "," + block.getX() + "," + block.getY() + "," + block.getZ() + ".txt"));
+	//String strLine = null;
+	//while ((strLine = br.readLine()) != null) {
+	//if (getLogBlockEditID(strLine) == 5) info.add("§e" + getLogBlockEditor(strLine) + " §fplaced entity " + hangingEntityList.get((byte)getLogBlockTypeID(strLine)).toLowerCase());
+	//if (getLogBlockEditID(strLine) == 4) info.add("§e" + getLogBlockEditor(strLine) + " §fbroke entity " + hangingEntityList.get((byte)getLogBlockTypeID(strLine)).toLowerCase());
+	//if (getLogBlockEditID(strLine) == 3) info.add("§e" + getLogBlockEditor(strLine) + " §fbroke sign");
+	//if (getLogBlockEditID(strLine) == 2) info.add("§e" + getLogBlockEditor(strLine) + " §fplaced liquid " + blockList.get(getLogBlockTypeID(strLine)).get(0).toLowerCase());
+	//if (getLogBlockEditID(strLine) == 1) info.add("§e" + getLogBlockEditor(strLine) + " §fplaced block " + blockList.get(getLogBlockTypeID(strLine)).get(0).toLowerCase());
+	//if (getLogBlockEditID(strLine) == 0) info.add("§e" + getLogBlockEditor(strLine) + " §fbroke block " + blockList.get(getLogBlockTypeID(strLine)).get(0).toLowerCase());
+	//}
+	//br.close();
+	//} catch (Exception e) {}
+	//return info;
+	//}
 	
 	/**
 	 * Rollback a player's edits
 	 * @param player The player executing the rollback
 	 * @param badPlayer The player to rollback
 	 */
-	public void rollbackEdits(Player player, String badPlayer) {
-		player.sendMessage("§7Rolling back " + badPlayer);
-		try {
-			BufferedReader br = new BufferedReader(new FileReader("plugins/EvilBook/Protection/" + badPlayer + ".txt"));
-			String brLine;
-			while ((brLine = br.readLine()) != null) {
-				if (getLogBlockEditID(brLine) == 0) if (getLogBlockTypeID(brLine) != 0) getLogBlockLocation(brLine).getBlock().setTypeIdAndData(getLogBlockTypeID(brLine), getLogBlockData(brLine), false);
-				if (getLogBlockEditID(brLine) == 1 || getLogBlockEditID(brLine) == 2) getLogBlockLocation(brLine).getBlock().setTypeId(0);
-				if (getLogBlockEditID(brLine) == 3) {
-					getLogBlockLocation(brLine).getBlock().setTypeIdAndData(getLogBlockTypeID(brLine), getLogBlockData(brLine), false);
-					Sign sign = (Sign) getLogBlockLocation(brLine).getBlock().getState();
-					org.bukkit.material.Sign matSign =  new org.bukkit.material.Sign();
-					matSign.setFacingDirection(getLogBlockDirection(brLine));
-					sign.setData(matSign);
-					sign.setLine(0, getLogBlockArg1(brLine));
-					sign.setLine(1, getLogBlockArg2(brLine));
-					sign.setLine(2, getLogBlockArg3(brLine));
-					sign.setLine(3, getLogBlockArg4(brLine));
-					sign.update(true);
-				}
-			}
-			br.close();
-			player.sendMessage("§7Rolled back " + badPlayer);
-		} catch (Exception e) {
-			player.sendMessage("§7Nothing to rollback");
-		}
-	}
+	//public void rollbackEdits(Player player, String badPlayer) {
+	//player.sendMessage("§7Rolling back " + badPlayer);
+	//try {
+	//BufferedReader br = new BufferedReader(new FileReader("plugins/EvilBook/Protection/" + badPlayer + ".txt"));
+	//String brLine;
+	//while ((brLine = br.readLine()) != null) {
+	//if (getLogBlockEditID(brLine) == 0) if (getLogBlockTypeID(brLine) != 0) getLogBlockLocation(brLine).getBlock().setTypeIdAndData(getLogBlockTypeID(brLine), getLogBlockData(brLine), false);
+	//if (getLogBlockEditID(brLine) == 1 || getLogBlockEditID(brLine) == 2) getLogBlockLocation(brLine).getBlock().setTypeId(0);
+	//if (getLogBlockEditID(brLine) == 3) {
+	//	getLogBlockLocation(brLine).getBlock().setTypeIdAndData(getLogBlockTypeID(brLine), getLogBlockData(brLine), false);
+					//	Sign sign = (Sign) getLogBlockLocation(brLine).getBlock().getState();
+	//		org.bukkit.material.Sign matSign =  new org.bukkit.material.Sign();
+	//		matSign.setFacingDirection(getLogBlockDirection(brLine));
+					//		sign.setData(matSign);
+	//		sign.setLine(0, getLogBlockArg1(brLine));
+	//		sign.setLine(1, getLogBlockArg2(brLine));
+	//		sign.setLine(2, getLogBlockArg3(brLine));
+	//		sign.setLine(3, getLogBlockArg4(brLine));
+	//		sign.update(true);
+	//		}
+	//	}
+	//	br.close();
+	//	player.sendMessage("§7Rolled back " + badPlayer);
+	//	} catch (Exception e) {
+	//		player.sendMessage("§7Nothing to rollback");
+	//	}
+	//	}
 	
 	/**
 	 * Append text to a file
