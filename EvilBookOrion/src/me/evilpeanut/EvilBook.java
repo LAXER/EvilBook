@@ -400,7 +400,7 @@ public class EvilBook extends JavaPlugin {
 				playerProp = new Properties();
 				playerProp.load(inputStream);
 				inputStream.close();
-				if (playerProp.getProperty("NameAlias").equals("null")) {
+				if (playerProp.getProperty("NameAlias") != null && playerProp.getProperty("NameAlias").equals("null")) {
 					playerProp.remove("NameAlias");
 					FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/Players/" + playerFiles[playerNo]);
 					playerProp.store(outputStream, null);
