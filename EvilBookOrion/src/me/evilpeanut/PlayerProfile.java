@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
  */
 public class PlayerProfile {
 	public Location deathLocation, homeLocation, actionLocationA, actionLocationB, creativeLocation, survivalLocation;
-	public String name, nameColor = "f", nameTitle, nameAlias, lastMessage, mutedPlayers, warps, teleportantName, customRankPrefix = "Custom", customRankColor = "6";
+	public String name, nameColor = "f", nameTitle, nameAlias = null, lastMessage, mutedPlayers, warps, teleportantName, customRankPrefix = "Custom", customRankColor = "6";
 	public List<EvilEditBlock> EvilEditUndo = new ArrayList<EvilEditBlock>();
 	public List<EvilEditBlock> EvilEditCopy = new ArrayList<EvilEditBlock>();
 	public Boolean isLogging = false;
@@ -82,7 +82,7 @@ public class PlayerProfile {
 					nameColor = prop.getProperty("NameColor");
 					nameTitle = prop.getProperty("NameTitle");
 					nameAlias = prop.getProperty("NameAlias");
-					if (nameAlias != null && !nameAlias.equals("null")) {
+					if (nameAlias != null) {
 						if (nameColor.equals("?")) {
 							if (nameTitle == null || nameTitle.equals("")) {
 								newPlayer.setDisplayName(plugin.colorizeString(nameAlias) + "§f");
@@ -138,8 +138,6 @@ public class PlayerProfile {
 				nameColor = "f";
 				prop.setProperty("MutedPlayers", "");
 				mutedPlayers = "";
-				prop.setProperty("NameAlias", "null");
-				nameAlias = "null";
 				newPlayer.setDisplayName("§f" + name);
 				prop.setProperty("ChallengeRankUp", "0");
 				FileOutputStream outputStream = new FileOutputStream(file);
@@ -182,7 +180,7 @@ public class PlayerProfile {
 			if (creativeLocation != null) prop.setProperty("CreativeLocation", creativeLocation.getX() + ">" + creativeLocation.getY() + ">" + creativeLocation.getZ() + ">" + creativeLocation.getWorld().getName());
 			prop.setProperty("NameColor", nameColor);
 			if (nameTitle != null) prop.setProperty("NameTitle", nameTitle);
-			prop.setProperty("NameAlias", nameAlias);
+			if (nameAlias != null) prop.setProperty("NameAlias", nameAlias);
 			if (mutedPlayers != null) prop.setProperty("MutedPlayers", mutedPlayers);
 			prop.setProperty("Rank", rank.toString());
 			prop.setProperty("Money", Integer.toString(money));
@@ -207,21 +205,7 @@ public class PlayerProfile {
 	public void setNameColor(String color, Player player) {
 		setProperty("NameColor", color);
 		nameColor = color;
-		if (nameAlias.equals("null") == false) {
-			if (nameColor.equals("?")) {
-				if (nameTitle == null) {
-					player.setDisplayName(plugin.colorizeString(nameAlias) + "§f");
-				} else {
-					player.setDisplayName("§d" + nameTitle + " " + plugin.colorizeString(nameAlias) + "§f");
-				}
-			} else {
-				if (nameTitle == null) {
-					player.setDisplayName("§" + nameColor + nameAlias + "§f");
-				} else {
-					player.setDisplayName("§d" + nameTitle + " §" + nameColor + nameAlias + "§f");
-				}
-			}
-		} else {
+		if (nameAlias == null) {
 			if (nameColor.equals("?")) {
 				if (nameTitle == null) {
 					player.setDisplayName(plugin.colorizeString(name) + "§f");
@@ -233,6 +217,20 @@ public class PlayerProfile {
 					player.setDisplayName("§" + nameColor + name + "§f");
 				} else {
 					player.setDisplayName("§d" + nameTitle + " §" + nameColor + name + "§f");
+				}
+			}
+		} else {
+			if (nameColor.equals("?")) {
+				if (nameTitle == null) {
+					player.setDisplayName(plugin.colorizeString(nameAlias) + "§f");
+				} else {
+					player.setDisplayName("§d" + nameTitle + " " + plugin.colorizeString(nameAlias) + "§f");
+				}
+			} else {
+				if (nameTitle == null) {
+					player.setDisplayName("§" + nameColor + nameAlias + "§f");
+				} else {
+					player.setDisplayName("§d" + nameTitle + " §" + nameColor + nameAlias + "§f");
 				}
 			}
 		}
@@ -246,21 +244,7 @@ public class PlayerProfile {
 	public void setNameTitle(String title, Player player) {
 		setProperty("NameTitle", title);
 		nameTitle = title;
-		if (nameAlias.equals("null") == false) {
-			if (nameColor.equals("?")) {
-				if (nameTitle == null) {
-					player.setDisplayName(plugin.colorizeString(nameAlias) + "§f");
-				} else {
-					player.setDisplayName("§d" + nameTitle + " " + plugin.colorizeString(nameAlias) + "§f");
-				}
-			} else {
-				if (nameTitle == null) {
-					player.setDisplayName("§" + nameColor + nameAlias + "§f");
-				} else {
-					player.setDisplayName("§d" + nameTitle + " §" + nameColor + nameAlias + "§f");
-				}
-			}
-		} else {
+		if (nameAlias == null) {
 			if (nameColor.equals("?")) {
 				if (nameTitle == null) {
 					player.setDisplayName(plugin.colorizeString(name) + "§f");
@@ -274,6 +258,20 @@ public class PlayerProfile {
 					player.setDisplayName("§d" + nameTitle + " §" + nameColor + name + "§f");
 				}
 			}
+		} else {
+			if (nameColor.equals("?")) {
+				if (nameTitle == null) {
+					player.setDisplayName(plugin.colorizeString(nameAlias) + "§f");
+				} else {
+					player.setDisplayName("§d" + nameTitle + " " + plugin.colorizeString(nameAlias) + "§f");
+				}
+			} else {
+				if (nameTitle == null) {
+					player.setDisplayName("§" + nameColor + nameAlias + "§f");
+				} else {
+					player.setDisplayName("§d" + nameTitle + " §" + nameColor + nameAlias + "§f");
+				}
+			}
 		}
 	}
 
@@ -284,8 +282,8 @@ public class PlayerProfile {
 	 */
 	public void setNameAlias(String alias, Player player) {
 		if (alias == null) {
-			setProperty("NameAlias", "null");
-			nameAlias = "null";
+			removeProperty("NameAlias");
+			nameAlias = null;
 			if (nameColor.equals("?")) {
 				if (nameTitle == null || nameTitle.equals("")) {
 					player.setDisplayName(plugin.colorizeString(name) + "§f");
@@ -334,6 +332,29 @@ public class PlayerProfile {
 				prop.load(inputStream);
 				inputStream.close();
 				prop.setProperty(property, value);
+				FileOutputStream outputStream = new FileOutputStream(file);
+				prop.store(outputStream, null);
+				outputStream.close();
+			} catch (Exception e) {
+				System.out.println("Failed to edit " + name + "'s player profile");
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/**
+	 * Remove a property on the player profile file
+	 * @param property The property to remove
+	 */
+	public void removeProperty(String property) {
+		File file = new File("plugins/EvilBook/Players/" + name + ".properties");
+		if (file.exists()) {
+			try {
+				Properties prop = new Properties();
+				FileInputStream inputStream = new FileInputStream(file);
+				prop.load(inputStream);
+				inputStream.close();
+				prop.remove(property);
 				FileOutputStream outputStream = new FileOutputStream(file);
 				prop.store(outputStream, null);
 				outputStream.close();

@@ -400,13 +400,19 @@ public class EvilBook extends JavaPlugin {
 				playerProp = new Properties();
 				playerProp.load(inputStream);
 				inputStream.close();
+				if (playerProp.getProperty("NameAlias").equals("null")) {
+					playerProp.remove("NameAlias");
+					FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/Players/" + playerFiles[playerNo]);
+					playerProp.store(outputStream, null);
+					outputStream.close();
+					logInfo("Repaired player profile name alias: " + playerFiles[playerNo]);
+				}
 				if (playerProp.getProperty("Rank") == null) {
 					playerProp.setProperty("Rank", "Visitor");
 					FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/Players/" + playerFiles[playerNo]);
 					playerProp.store(outputStream, null);
 					outputStream.close();
-					logInfo("Repaired player profile: " + playerFiles[playerNo]);
-					continue;
+					logInfo("Repaired player profile rank: " + playerFiles[playerNo]);
 				}
 			} catch (Exception e) {
 				logSevere("Failed to load player " + playerFiles[playerNo]);
@@ -880,7 +886,7 @@ public class EvilBook extends JavaPlugin {
 				if (isProfileExistant(args[0])) {
 					if (getPlayer(args[0]) != null) {
 						getProfile(args[0]).rank = Rank.Admin;
-						getPlayer(args[0]).setPlayerListName("§" + getProfile(args[0]).rank.getColor(getProfile(args[0])) + ((getProfile(args[0]).nameAlias == null || getProfile(args[0]).nameAlias.equals("null")) ? (getPlayer(args[0]).getName().length() > 14 ? getPlayer(args[0]).getName().substring(0, 14) : getPlayer(args[0]).getName()) : (getProfile(args[0]).nameAlias.length() > 14 ? getProfile(args[0]).nameAlias.substring(0, 14) : getProfile(args[0]).nameAlias)));
+						getPlayer(args[0]).setPlayerListName("§" + getProfile(args[0]).rank.getColor(getProfile(args[0])) + (getProfile(args[0]).nameAlias == null ? (getPlayer(args[0]).getName().length() > 14 ? getPlayer(args[0]).getName().substring(0, 14) : getPlayer(args[0]).getName()) : (getProfile(args[0]).nameAlias.length() > 14 ? getProfile(args[0]).nameAlias.substring(0, 14) : getProfile(args[0]).nameAlias)));
 						getPlayer(args[0]).sendMessage("§7You have been promoted to admin");
 					} else {
 						setOfflineProperty(args[0], "Rank", "Admin");
@@ -935,7 +941,7 @@ public class EvilBook extends JavaPlugin {
 		//
 		if (command.getName().equalsIgnoreCase("list")) {
 			sender.sendMessage("§6Online players §9[§6" + getServer().getOnlinePlayers().length + "/" + getServer().getMaxPlayers() + "§9]");
-			for (Player p : getServer().getOnlinePlayers()) sender.sendMessage((getProfile(p.getName()).nameAlias == null || !getProfile(p.getName()).nameAlias.equals("null")) ? p.getDisplayName() + " §7(" + p.getName() + ")" : p.getDisplayName());
+			for (Player p : getServer().getOnlinePlayers()) sender.sendMessage(getProfile(p.getName()).nameAlias == null ? p.getDisplayName() + " §7(" + p.getName() + ")" : p.getDisplayName());
 			return true;
 		}
 		//
@@ -957,7 +963,7 @@ public class EvilBook extends JavaPlugin {
 				if (isProfileExistant(args[0])) {
 					if (getPlayer(args[0]) != null) {
 						getProfile(args[0]).rank = Rank.getPreviousRank(getProfile(args[0]).rank);
-						getPlayer(args[0]).setPlayerListName("§" + getProfile(args[0]).rank.getColor(getProfile(args[0])) + ((getProfile(args[0]).nameAlias == null || getProfile(args[0]).nameAlias.equals("null")) ? (getPlayer(args[0]).getName().length() > 14 ? getPlayer(args[0]).getName().substring(0, 14) : getPlayer(args[0]).getName()) : (getProfile(args[0]).nameAlias.length() > 14 ? getProfile(args[0]).nameAlias.substring(0, 14) : getProfile(args[0]).nameAlias)));
+						getPlayer(args[0]).setPlayerListName("§" + getProfile(args[0]).rank.getColor(getProfile(args[0])) + (getProfile(args[0]).nameAlias == null ? (getPlayer(args[0]).getName().length() > 14 ? getPlayer(args[0]).getName().substring(0, 14) : getPlayer(args[0]).getName()) : (getProfile(args[0]).nameAlias.length() > 14 ? getProfile(args[0]).nameAlias.substring(0, 14) : getProfile(args[0]).nameAlias)));
 						getPlayer(args[0]).sendMessage("§7You have been demoted to " + getProfile(args[0]).rank);
 						sender.sendMessage("§7" + getPlayer(args[0]).getDisplayName() + " has been demoted to " + getProfile(args[0]).rank);
 					} else {
@@ -993,7 +999,7 @@ public class EvilBook extends JavaPlugin {
 							return true;
 						}
 						getProfile(args[0]).rank = Rank.getNextRank(getProfile(args[0]).rank);
-						getPlayer(args[0]).setPlayerListName("§" + getProfile(args[0]).rank.getColor(getProfile(args[0])) + ((getProfile(args[0]).nameAlias == null || getProfile(args[0]).nameAlias.equals("null")) ? (getPlayer(args[0]).getName().length() > 14 ? getPlayer(args[0]).getName().substring(0, 14) : getPlayer(args[0]).getName()) : (getProfile(args[0]).nameAlias.length() > 14 ? getProfile(args[0]).nameAlias.substring(0, 14) : getProfile(args[0]).nameAlias)));
+						getPlayer(args[0]).setPlayerListName("§" + getProfile(args[0]).rank.getColor(getProfile(args[0])) + (getProfile(args[0]).nameAlias == null ? (getPlayer(args[0]).getName().length() > 14 ? getPlayer(args[0]).getName().substring(0, 14) : getPlayer(args[0]).getName()) : (getProfile(args[0]).nameAlias.length() > 14 ? getProfile(args[0]).nameAlias.substring(0, 14) : getProfile(args[0]).nameAlias)));
 						getPlayer(args[0]).sendMessage("§7You have been promoted to " + getProfile(args[0]).rank.getName());
 						sender.sendMessage("§7" + getPlayer(args[0]).getDisplayName() + " has been promoted to " + getProfile(args[0]).rank.getName());
 					} else {
