@@ -1,16 +1,13 @@
 package me.evilpeanut;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -395,9 +392,9 @@ public class EvilBook extends JavaPlugin {
 		//
 		// Convert player profiles and preform checks
 		//
+		/*
 		String[] playerFiles = new File("plugins/EvilBook/Players").list();
 		Properties playerProp;
-		int dudLines = 0;
 		for (int playerNo = 0; playerNo < playerFiles.length; playerNo++) {
 			try {
 				FileInputStream inputStream = new FileInputStream("plugins/EvilBook/Players/" + playerFiles[playerNo]);
@@ -425,36 +422,12 @@ public class EvilBook extends JavaPlugin {
 					outputStream.close();
 					logInfo("Repaired player profile rank: " + playerFiles[playerNo]);
 				}
-				try {
-					File inFile = new File("plugins/EvilBook/Players/" + playerFiles[playerNo]);
-					File tempFile = new File(inFile.getAbsolutePath() + ".tmp");
-					BufferedReader br = new BufferedReader(new FileReader("plugins/EvilBook/Players/" + playerFiles[playerNo]));
-					PrintWriter pw = new PrintWriter(new FileWriter(tempFile));
-					String line = null;
-					while ((line = br.readLine()) != null) {
-						if (!line.trim().startsWith("/")) {
-							pw.println(line);
-							pw.flush();
-						} else {
-							dudLines++;
-						}
-					}
-					pw.close();
-					br.close();
-					inFile.delete();
-					tempFile.renameTo(inFile);
-				}
-				catch (Exception ex) {
-					ex.printStackTrace();
-				}
 			} catch (Exception exception) {
 				logSevere("Failed to load player " + playerFiles[playerNo]);
 				exception.printStackTrace();
 			}
 		}
-		if (dudLines != 0) {
-			logInfo("Removed " + dudLines + " dud lines from player profiles");
-		}
+		*/
 		//
 		// Load time signs
 		//
