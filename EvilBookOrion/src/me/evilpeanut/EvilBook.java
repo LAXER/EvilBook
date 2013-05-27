@@ -117,8 +117,6 @@ public class EvilBook extends JavaPlugin {
 		if (check.exists() == false && check.mkdir() == false) logSevere("Failed to create directory 'plugins/EvilBook/Players'");
 		check = new File("plugins/EvilBook/Regions");
 		if (check.exists() == false && check.mkdir() == false) logSevere("Failed to create directory 'plugins/EvilBook/Regions'");
-		check = new File("plugins/EvilBook/Protection");
-		if (check.exists() == false && check.mkdir() == false) logSevere("Failed to create directory 'plugins/EvilBook/Protection'");
 		check = new File("plugins/EvilBook/Dynamic Signs");
 		if (check.exists() == false && check.mkdir() == false) logSevere("Failed to create directory 'plugins/EvilBook/Dynamic Signs'");
 		check = new File("plugins/EvilBook/SpaceLand Systems");
