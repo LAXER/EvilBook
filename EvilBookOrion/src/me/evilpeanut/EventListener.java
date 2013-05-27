@@ -907,7 +907,7 @@ public class EventListener implements Listener {
 		// Sign Colors
 		//
 		for (int i = 0; i < 4; i++) e.setLine(i, plugin.toFormattedString(e.getLine(i)));
-		plugin.alertOwner(e.getPlayer().getPlayer().getName() + " placed a sign [" + e.getLine(0) + "|" + e.getLine(1) + "|" + e.getLine(2) + "|" + e.getLine(3) + "]");
+		plugin.alertOwner(e.getPlayer().getPlayer().getName() + " placed a sign [" + e.getLine(0).trim() + "§7|" + e.getLine(1).trim() + "§7|" + e.getLine(2).trim() + "§7|" + e.getLine(3).trim() + "§7]");
 		//
 		// Dynamic Signs
 		//
