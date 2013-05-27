@@ -149,6 +149,7 @@ public class PlayerProfile {
 				newPlayer.getInventory().addItem(plugin.getBook("Welcome to Amentrix", "EvilPeanut", Arrays.asList("Welcome to the Amentrix Server\n\nRules:\n§a[§b1§a] §6Dont Greif\n§a[§b2§a] §6Dont Advertise\n§a[§b3§a] §6Dont Spam\n\n§0Website:\n§7http://amentrix.no-ip.org\n\n§0Enjoy your stay!\n§7 - EvilPeanut")));
 			} catch (Exception e) {
 				Logger.getLogger("Minecraft").log(Level.SEVERE, "Failed to create player profile: " + name);
+				e.printStackTrace();
 			}
 			for (Player p : plugin.getServer().getOnlinePlayers()) {
 				if (p.getName() == name) continue;
@@ -181,7 +182,7 @@ public class PlayerProfile {
 			if (homeLocation != null) prop.setProperty("HomeLocation", homeLocation.getX() + ">" + homeLocation.getY() + ">" + homeLocation.getZ() + ">" + homeLocation.getWorld().getName());
 			if (survivalLocation != null) prop.setProperty("SurvivalLocation", survivalLocation.getX() + ">" + survivalLocation.getY() + ">" + survivalLocation.getZ() + ">" + survivalLocation.getWorld().getName());
 			if (creativeLocation != null) prop.setProperty("CreativeLocation", creativeLocation.getX() + ">" + creativeLocation.getY() + ">" + creativeLocation.getZ() + ">" + creativeLocation.getWorld().getName());
-			prop.setProperty("NameColor", nameColor);
+			if (nameColor != null) prop.setProperty("NameColor", nameColor);
 			if (nameTitle != null) prop.setProperty("NameTitle", nameTitle);
 			if (nameAlias != null) prop.setProperty("NameAlias", nameAlias);
 			if (mutedPlayers != null) prop.setProperty("MutedPlayers", mutedPlayers);
@@ -197,6 +198,7 @@ public class PlayerProfile {
 			outputStream.close();
 		} catch (Exception e) {
 			System.out.println("Failed to save " + name + "'s player profile");
+			e.printStackTrace();
 		}
 	}
 	
