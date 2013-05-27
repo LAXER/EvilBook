@@ -130,9 +130,9 @@ public class EvilBook extends JavaPlugin {
 		check = new File("plugins/EvilBook/Inventories/Survival");
 		if (check.exists() == false && check.mkdir() == false) logSevere("Failed to create directory 'plugins/EvilBook/Inventories/Survival'");
 		check = new File("plugins/EvilBook/Warps.db");
-		if (check.exists() == false) try {check.createNewFile();} catch (Exception e) {logSevere("Failed to create file 'plugins/EvilBook/Warps.db'");}
+		if (check.exists() == false) try {check.createNewFile();} catch (Exception exception) {logSevere("Failed to create file 'plugins/EvilBook/Warps.db'");}
 		check = new File("plugins/EvilBook/ContainerProtection.db");
-		if (check.exists() == false) try {check.createNewFile();} catch (Exception e) {logSevere("Failed to create file 'plugins/EvilBook/ContainerProtection.db'");}
+		if (check.exists() == false) try {check.createNewFile();} catch (Exception exception) {logSevere("Failed to create file 'plugins/EvilBook/ContainerProtection.db'");}
 		//
 		// Scoreboard
 		//
@@ -333,9 +333,9 @@ public class EvilBook extends JavaPlugin {
 						regionProp.getProperty("allowedPlayers")
 						);
 				regionList.add(region);
-			} catch (Exception e) {
+			} catch (Exception exception) {
 				logSevere("Failed to load region " + regionFiles[regionNo]);
-				e.printStackTrace();
+				exception.printStackTrace();
 			}
 		}
 		//
@@ -346,9 +346,9 @@ public class EvilBook extends JavaPlugin {
 			FileInputStream inputStream = new FileInputStream("plugins/EvilBook/Warps.db");
 			warpFile.load(inputStream);
 			inputStream.close();
-		} catch (Exception e) {
+		} catch (Exception exception) {
 			logSevere("Failed to load warp file");
-			e.printStackTrace();
+			exception.printStackTrace();
 		}
 		int removedCorruptWarps = 0;
 		for (Object key : warpFile.keySet().toArray()) {
@@ -373,7 +373,7 @@ public class EvilBook extends JavaPlugin {
 							Float.valueOf(warpFile.getProperty((String) key).split(":")[4]),
 							Float.valueOf(warpFile.getProperty((String) key).split(":")[5])));
 				}
-			} catch (Exception e) {
+			} catch (Exception exception) {
 				warpFile.remove(key);
 				removedCorruptWarps++;
 			}
@@ -384,9 +384,9 @@ public class EvilBook extends JavaPlugin {
 				warpFile.store(outputStream, null);
 				outputStream.close();
 				logInfo("Removed " + removedCorruptWarps + " corrupt warps");
-			} catch (Exception e) {
+			} catch (Exception exception) {
 				logSevere("Failed to remove " + removedCorruptWarps + " corrupt warps");
-				e.printStackTrace();
+				exception.printStackTrace();
 			}
 		}
 		//
@@ -414,9 +414,9 @@ public class EvilBook extends JavaPlugin {
 					outputStream.close();
 					logInfo("Repaired player profile rank: " + playerFiles[playerNo]);
 				}
-			} catch (Exception e) {
+			} catch (Exception exception) {
 				logSevere("Failed to load player " + playerFiles[playerNo]);
-				e.printStackTrace();
+				exception.printStackTrace();
 			}
 		}
 		//
@@ -437,9 +437,9 @@ public class EvilBook extends JavaPlugin {
 				text[3] = propTimeSign.getProperty("Text4");
 				dynamicSignList.add(new DynamicSign(new Location(getServer().getWorld(location.split(",")[0]), Double.valueOf(location.split(",")[1]), Double.valueOf(location.split(",")[2]), Double.valueOf(location.split(",")[3])), text));
 			}
-		} catch (Exception e1) {
+		} catch (Exception exception) {
 			logSevere("Failed to load time sign database");
-			e1.printStackTrace();
+			exception.printStackTrace();
 		}
 		//
 		// Load Fish Name List
@@ -678,9 +678,9 @@ public class EvilBook extends JavaPlugin {
 					FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/Players/" + playerFiles[playerNo]);
 					playerProp.store(outputStream, null);
 					outputStream.close();
-				} catch (Exception e) {
+				} catch (Exception exception) {
 					logSevere("Failed to load player " + playerFiles[playerNo]);
-					e.printStackTrace();
+					exception.printStackTrace();
 				}
 			}
 		}
@@ -1226,9 +1226,9 @@ public class EvilBook extends JavaPlugin {
 					outputStream.close();
 					getProfile(sender).customRankColor = prefix.substring(1, 2);
 					getProfile(sender).customRankPrefix = "§0[" + prefix.replaceAll("&", "§") + "§0]";
-				} catch (Exception e) {
+				} catch (Exception exception) {
 					logSevere("Failed to set rank in player profile 'plugins/EvilBook/Players/" + sender.getName() + ".properties'");
-					e.printStackTrace();
+					exception.printStackTrace();
 				}
 			} else {
 				sender.sendMessage("§5Incorrect command usage");
@@ -1505,9 +1505,9 @@ public class EvilBook extends JavaPlugin {
 								FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/Regions/" + args[1] + ".properties");
 								regionProp.store(outputStream, null);
 								outputStream.close();
-							} catch (Exception e) {
+							} catch (Exception exception) {
 								logSevere("Failed to create region " + args[1] + ".properties");
-								e.printStackTrace();
+								exception.printStackTrace();
 							}
 							sender.sendMessage("§7Region " + args[1] + " created");
 						}
@@ -1535,9 +1535,9 @@ public class EvilBook extends JavaPlugin {
 								FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/Regions/" + args[1] + ".properties");
 								regionProp.store(outputStream, null);
 								outputStream.close();
-							} catch (Exception e) {
+							} catch (Exception exception) {
 								logSevere("Failed to protect region " + args[1] + ".properties");
-								e.printStackTrace();
+								exception.printStackTrace();
 							}
 							sender.sendMessage("§7Region " + args[1] + " protected");
 						} else {
@@ -1564,9 +1564,9 @@ public class EvilBook extends JavaPlugin {
 									FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/Regions/" + args[1] + ".properties");
 									regionProp.store(outputStream, null);
 									outputStream.close();
-								} catch (Exception e) {
+								} catch (Exception exception) {
 									logSevere("Failed to create region " + args[1] + ".properties");
-									e.printStackTrace();
+									exception.printStackTrace();
 								}
 								sender.sendMessage("§7Region " + args[1] + " created and protected");
 							}
@@ -1623,9 +1623,9 @@ public class EvilBook extends JavaPlugin {
 								FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/Regions/" + args[1] + ".properties");
 								regionProp.store(outputStream, null);
 								outputStream.close();
-							} catch (Exception e) {
+							} catch (Exception exception) {
 								logSevere("Failed to set region welcome " + args[1] + ".properties");
-								e.printStackTrace();
+								exception.printStackTrace();
 							}
 							sender.sendMessage("§7Region " + args[1] + " welcome message set");
 						} else {
@@ -1657,9 +1657,9 @@ public class EvilBook extends JavaPlugin {
 								FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/Regions/" + args[1] + ".properties");
 								regionProp.store(outputStream, null);
 								outputStream.close();
-							} catch (Exception e) {
+							} catch (Exception exception) {
 								logSevere("Failed to set region leave " + args[1] + ".properties");
-								e.printStackTrace();
+								exception.printStackTrace();
 							}
 							sender.sendMessage("§7Region " + args[1] + " leave message set");
 						} else {
@@ -1702,9 +1702,9 @@ public class EvilBook extends JavaPlugin {
 								FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/Regions/" + args[1] + ".properties");
 								regionProp.store(outputStream, null);
 								outputStream.close();
-							} catch (Exception e) {
+							} catch (Exception exception) {
 								logSevere("Failed to set region warp " + args[1] + ".properties");
-								e.printStackTrace();
+								exception.printStackTrace();
 							}
 							sender.sendMessage("§7Region " + args[1] + " warp set");
 						} else {
@@ -2127,8 +2127,9 @@ public class EvilBook extends JavaPlugin {
 		                }
 		            }
 		        }
-	        } catch (Exception e) {
-	        	sender.sendMessage("§7Evil Edit action failed");
+	        } catch (Exception exception) {
+	        	logSevere("§7Evil Edit action failed");
+	        	exception.printStackTrace();
 	        }
 			return true;
 		}
@@ -2190,17 +2191,9 @@ public class EvilBook extends JavaPlugin {
 		                }
 		            }
 		        }
-		        
-		        //sender.sendMessage("Resetting score");
-		        //evilEditStatsScoreboard.resetScores(Bukkit.getOfflinePlayer(ChatColor.GREEN + sender.getName()));
-		       // for (Map.Entry<ScoreboardObjective, ScoreboardScore> e : savedScores.entrySet()) {
-		        	//myBoard.board.getPlayerScoreForObjective(playerName, e.getKey()).setScore(e.getValue().getScore());
-		       // }
-		        
-		       // evilEditStatsScoreboard.getObjective("EvilEditStats").getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + sender.getName())).r
-	        } catch (Exception e) {
-	        	sender.sendMessage("§7Evil Edit action failed");
-	        	e.printStackTrace();
+	        } catch (Exception exception) {
+	        	logSevere("§7Evil Edit action failed");
+	        	exception.printStackTrace();
 	        }
 			return true;
 		}
@@ -2258,8 +2251,9 @@ public class EvilBook extends JavaPlugin {
 		                }
 		            }
 		        }
-	        } catch (Exception e) {
-	        	sender.sendMessage("§7Evil Edit action failed");
+	        } catch (Exception exception) {
+	        	logSevere("§7Evil Edit action failed");
+	        	exception.printStackTrace();
 	        }
 			return true;
 		}
@@ -2300,8 +2294,9 @@ public class EvilBook extends JavaPlugin {
 		                }
 		            }
 		        }
-	        } catch (Exception e) {
-	        	sender.sendMessage("§7Evil Edit action failed");
+	        } catch (Exception exception) {
+	        	logSevere("§7Evil Edit action failed");
+	        	exception.printStackTrace();
 	        }
 			return true;
 		}
@@ -2345,8 +2340,9 @@ public class EvilBook extends JavaPlugin {
 		        	getProfile(sender).EvilEditUndo.add(new EvilEditBlock(((Player)sender).getWorld().getBlockTypeIdAt(loc), ((Player)sender).getWorld().getBlockAt(loc).getData(), loc, sender.getName()));
                 	EvilEdit.add(new EvilEditBlock(getProfile(sender).EvilEditCopy.get(i).getTypeID(), getProfile(sender).EvilEditCopy.get(i).getData(), loc, sender.getName()));
 		        }
-	        } catch (Exception e) {
-	        	sender.sendMessage("§7Evil Edit action failed");
+	        } catch (Exception exception) {
+	        	logSevere("§7Evil Edit action failed");
+	        	exception.printStackTrace();
 	        }
 			return true;
 		}
@@ -2406,8 +2402,9 @@ public class EvilBook extends JavaPlugin {
 		            	}
 		            }
 		        }
-	        } catch (Exception e) {
-	        	sender.sendMessage("§7Evil Edit action failed");
+	        } catch (Exception exception) {
+	        	logSevere("§7Evil Edit action failed");
+	        	exception.printStackTrace();
 	        }
 			return true;
 		}
@@ -2471,8 +2468,9 @@ public class EvilBook extends JavaPlugin {
 		                }
 		            }
 		        }
-	        } catch (Exception e) {
-	        	sender.sendMessage("§7Evil Edit action failed");
+	        } catch (Exception exception) {
+	        	logSevere("§7Evil Edit action failed");
+	        	exception.printStackTrace();
 	        }
 			return true;
 		}
@@ -2536,8 +2534,9 @@ public class EvilBook extends JavaPlugin {
 		                }
 		            }
 		        }
-	        } catch (Exception e) {
-	        	sender.sendMessage("§7Evil Edit action failed");
+	        } catch (Exception exception) {
+	        	logSevere("§7Evil Edit action failed");
+	        	exception.printStackTrace();
 	        }
 			return true;
 		}
@@ -2583,8 +2582,9 @@ public class EvilBook extends JavaPlugin {
 		                }
 		            }
 		        }
-	        } catch (Exception e) {
-	        	sender.sendMessage("§7Evil Edit action failed");
+	        } catch (Exception exception) {
+	        	logSevere("§7Evil Edit action failed");
+	        	exception.printStackTrace();
 	        }
 			return true;
 		}
@@ -2653,8 +2653,9 @@ public class EvilBook extends JavaPlugin {
 		                }
 		            }
 		        }
-	        } catch (Exception e) {
-	        	sender.sendMessage("§7Evil Edit action failed");
+	        } catch (Exception exception) {
+	        	logSevere("§7Evil Edit action failed");
+	        	exception.printStackTrace();
 	        }
 			return true;
 		}
@@ -2931,10 +2932,10 @@ public class EvilBook extends JavaPlugin {
 								} else {
 									sender.sendMessage("§7A warp named §d" + args[0] + " §7already exists");
 								}
-							} catch (Exception e) {
+							} catch (Exception exception) {
 								sender.sendMessage("§7Warp creation failed");
 								alertOwner(sender.getName() + " encountered an error whilst trying to set a warp");
-								e.printStackTrace();
+								exception.printStackTrace();
 							}
 						}
 					} else {
@@ -2981,7 +2982,7 @@ public class EvilBook extends JavaPlugin {
 							if (getEnchantment(args[0].toUpperCase()) == Enchantment.SILK_TOUCH) sender.sendMessage("§7Item enchanted with silk touch");
 							if (getEnchantment(args[0].toUpperCase()) == Enchantment.THORNS) sender.sendMessage("§7Item enchanted with thorns " + toRomanNumerals(args[1]));
 							if (getEnchantment(args[0].toUpperCase()) == Enchantment.WATER_WORKER) sender.sendMessage("§7Item enchanted with aqua affinity");
-						} catch (Exception e) {
+						} catch (Exception exception) {
 							if (getEnchantment(args[0].toUpperCase()) == null) {
 								sender.sendMessage("§7This enchantment doesn't exist");
 							} else if (Integer.valueOf(args[1]) > getEnchantment(args[0].toUpperCase()).getMaxLevel()) {
@@ -3418,26 +3419,26 @@ public class EvilBook extends JavaPlugin {
 				if (args.length == 2) {
 					try {
 						spawnItem.setAmount(Integer.valueOf(args[1]));
-					} catch (Exception e) {
+					} catch (Exception exception) {
 						sender.sendMessage("§7Please enter a valid number of items to spawn");
 						return true;
 					}
 				} else if (args.length == 3) {
 					try {
 						spawnItem.setAmount(Integer.valueOf(args[1]));
-					} catch (Exception e) {
+					} catch (Exception exception) {
 						sender.sendMessage("§7Please enter a valid number of items to spawn");
 						return true;
 					}
 					try {
 						spawnItem.setData(new MaterialData(itemID, Byte.valueOf(args[2])));
-					} catch (Exception e) {
+					} catch (Exception exception) {
 						sender.sendMessage("§7Please enter a valid data number");
 						return true;
 					}
 				}
 				((Player)sender).getInventory().addItem(spawnItem);
-			} catch (Exception e) {
+			} catch (Exception exception) {
 				for (List<String> item : blockList.values()) {
 					for (String subItem : item) {
 						if (args[0].equalsIgnoreCase(subItem)) {
@@ -3447,20 +3448,20 @@ public class EvilBook extends JavaPlugin {
 									if (args.length == 2) {
 										try {
 											spawnItem.setAmount(Integer.valueOf(args[1]));
-										} catch (Exception ex) {
+										} catch (Exception exception2) {
 											sender.sendMessage("§7Please enter a valid number of items to spawn");
 											return true;
 										}
 									} else if (args.length == 3) {
 										try {
 											spawnItem.setAmount(Integer.valueOf(args[1]));
-										} catch (Exception ex) {
+										} catch (Exception exception2) {
 											sender.sendMessage("§7Please enter a valid number of items to spawn");
 											return true;
 										}
 										try {
 											spawnItem.setData(new MaterialData(i, Byte.valueOf(args[2])));
-										} catch (Exception ex) {
+										} catch (Exception exception2) {
 											sender.sendMessage("§7Please enter a valid data number");
 											return true;
 										}
@@ -3601,7 +3602,7 @@ public class EvilBook extends JavaPlugin {
 				if (((PlayerProfile)playerProfiles.values().toArray()[i]).nameAlias.toLowerCase().startsWith(name.toLowerCase())) return getServer().getPlayer(playerProfiles.keySet().toArray()[i].toString());
 			}
 			return null;
-		} catch (Exception e) {
+		} catch (Exception exception) {
 			return null;
 		}
 	}
@@ -3711,7 +3712,7 @@ public class EvilBook extends JavaPlugin {
 	 */
 	public EntityType getEntity(String name) {
 		if (EntityType.fromName(name) != null) return EntityType.fromName(name);
-		try {if (EntityType.fromId(Integer.valueOf(name)) != null) return EntityType.fromId(Integer.valueOf(name));} catch (Exception e) {}
+		try {if (EntityType.fromId(Integer.valueOf(name)) != null) return EntityType.fromId(Integer.valueOf(name));} catch (Exception exception) {}
 		if (name.equalsIgnoreCase("mooshroom")) return EntityType.MUSHROOM_COW;
 		if (name.equalsIgnoreCase("ocelot") || name.equalsIgnoreCase("cat")) return EntityType.OCELOT;
 		if (name.equalsIgnoreCase("zombiepigman")) return EntityType.PIG_ZOMBIE;
@@ -3733,7 +3734,7 @@ public class EvilBook extends JavaPlugin {
 	 */
 	public Enchantment getEnchantment(String name) {
 		if (Enchantment.getByName(name) != null) return Enchantment.getByName(name);
-		try {if (Enchantment.getById(Integer.valueOf(name)) != null) return Enchantment.getById(Integer.valueOf(name));} catch (Exception e) {}
+		try {if (Enchantment.getById(Integer.valueOf(name)) != null) return Enchantment.getById(Integer.valueOf(name));} catch (Exception exception) {}
 		if (name.equalsIgnoreCase("power")) return Enchantment.ARROW_DAMAGE;
 		if (name.equalsIgnoreCase("flame")) return Enchantment.ARROW_FIRE;
 		if (name.equalsIgnoreCase("infinity")) return Enchantment.ARROW_INFINITE;
@@ -4026,7 +4027,7 @@ public class EvilBook extends JavaPlugin {
 	//public String getLogBlockArg1(String line) {
 	//try {
 	//return line.split("¶")[7];
-	//} catch (Exception e) {
+	//} catch (Exception exception) {
 	//return "";
 	//}
 	//}
@@ -4039,7 +4040,7 @@ public class EvilBook extends JavaPlugin {
 	//public String getLogBlockArg2(String line) {
 	//try {
 	//return line.split("¶")[8];
-	//} catch (Exception e) {
+	//} catch (Exception exception) {
 	//return "";
 	//}
 	//}
@@ -4052,7 +4053,7 @@ public class EvilBook extends JavaPlugin {
 	//public String getLogBlockArg3(String line) {
 	//try {
 	//return line.split("¶")[9];
-	//} catch (Exception e) {
+	//} catch (Exception exception) {
 	//return "";
 	//}
 	//}
@@ -4065,7 +4066,7 @@ public class EvilBook extends JavaPlugin {
 	//public String getLogBlockArg4(String line) {
 	//try {
 	//return line.split("¶")[10];
-	//} catch (Exception e) {
+	//} catch (Exception exception) {
 	//return "";
 	//}
 	//}
@@ -4089,7 +4090,7 @@ public class EvilBook extends JavaPlugin {
 	//if (getLogBlockEditID(strLine) == 0) info.add("§e" + getLogBlockEditor(strLine) + " §fbroke block " + blockList.get(getLogBlockTypeID(strLine)).get(0).toLowerCase());
 	//}
 	//br.close();
-	//} catch (Exception e) {}
+	//} catch (Exception exception) {}
 	//return info;
 	//}
 	
@@ -4121,7 +4122,7 @@ public class EvilBook extends JavaPlugin {
 	//	}
 	//	br.close();
 	//	player.sendMessage("§7Rolled back " + badPlayer);
-	//	} catch (Exception e) {
+	//	} catch (Exception exception) {
 	//		player.sendMessage("§7Nothing to rollback");
 	//	}
 	//	}
@@ -4137,7 +4138,7 @@ public class EvilBook extends JavaPlugin {
 			writer.write(text) ;
 			writer.newLine();
 			writer.close() ;
-		} catch (Exception e) {
+		} catch (Exception exception) {
 			logSevere("Failed To Write To File " + file);
 		}
 	}
@@ -4175,8 +4176,8 @@ public class EvilBook extends JavaPlugin {
 			BufferedWriter out = new BufferedWriter(new FileWriter("C:/Program Files (x86)/Apache Software Foundation/Apache2.2/htdocs/playerStats.htm"));
 			out.write("<html><body style='background:transparent'><p style='color:#31AFF5;text-align:center;font-family:Calibri'>" + onlinePlayers + " Players online<p></body></html>");
 			out.close();
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception exception) {
+			exception.printStackTrace();
 		}
 	}
 	
@@ -4198,7 +4199,7 @@ public class EvilBook extends JavaPlugin {
 		try {
 			SerializableInventory inv = new SerializableInventory(((Player) sender).getInventory().getContents(), ((Player) sender).getInventory().getArmorContents());
 			saveObject(inv, "inventory.inv");
-		} catch (Exception e) {
+		} catch (Exception exception) {
 			e.printStackTrace();
 		}
 		*/
@@ -4208,10 +4209,10 @@ public class EvilBook extends JavaPlugin {
 			SerializableInventory inv = (SerializableInventory) loadObject("plugins/EvilBook/Inventories/Creative/" + player.getName() + ".inv");
 			player.getInventory().setContents(inv.getContents());
 			player.getInventory().setArmorContents(inv.getArmorContents());
-		} catch (Exception e) {
-			if (e instanceof FileNotFoundException) return;
+		} catch (Exception exception) {
+			if (exception instanceof FileNotFoundException) return;
 			logSevere("Failed to load player creative inventory: " + player.getName() + ".inv");
-			e.printStackTrace();
+			exception.printStackTrace();
 		}
 	}
 	
@@ -4226,10 +4227,10 @@ public class EvilBook extends JavaPlugin {
 			SerializableInventory inv = (SerializableInventory) loadObject("plugins/EvilBook/Inventories/Survival/" + player.getName() + ".inv");
 			player.getInventory().setContents(inv.getContents());
 			player.getInventory().setArmorContents(inv.getArmorContents());
-		} catch (Exception e) {
-			if (e instanceof FileNotFoundException) return;
+		} catch (Exception exception) {
+			if (exception instanceof FileNotFoundException) return;
 			logSevere("Failed to load player survival inventory: " + player.getName() + ".inv");
-			e.printStackTrace();
+			exception.printStackTrace();
 		}
 	}
 	
@@ -4240,9 +4241,9 @@ public class EvilBook extends JavaPlugin {
 	public void setCreativeInventory(Player player) {
 		try {
 			saveObject(new SerializableInventory(player.getInventory().getContents(), player.getInventory().getArmorContents()), "plugins/EvilBook/Inventories/Creative/" + player.getName() + ".inv");
-		} catch (Exception e) {
+		} catch (Exception exception) {
 			logSevere("Failed to save player creative inventory: " + player.getName() + ".inv");
-			e.printStackTrace();
+			exception.printStackTrace();
 		}
 	}
 	
@@ -4253,9 +4254,9 @@ public class EvilBook extends JavaPlugin {
 	public void setSurvivalInventory(Player player) {
 		try {
 			saveObject(new SerializableInventory(player.getInventory().getContents(), player.getInventory().getArmorContents()), "plugins/EvilBook/Inventories/Survival/" + player.getName() + ".inv");
-		} catch (Exception e) {
+		} catch (Exception exception) {
 			logSevere("Failed to save player survival inventory: " + player.getName() + ".inv");
-			e.printStackTrace();
+			exception.printStackTrace();
 		}
 	}
 	
@@ -4285,7 +4286,7 @@ public class EvilBook extends JavaPlugin {
 				prop.load(inputStream);
 				inputStream.close();
 				return prop.getProperty(property);
-			} catch (Exception e) {
+			} catch (Exception exception) {
 				return null;
 			}
 		} else {
@@ -4309,9 +4310,9 @@ public class EvilBook extends JavaPlugin {
 			FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/Players/" + player + ".properties");
 			prop.store(outputStream, null);
 			outputStream.close();
-		} catch (Exception e) {
+		} catch (Exception exception) {
 			logSevere("Failed to save " + player + "'s player profile");
-			e.printStackTrace();
+			exception.printStackTrace();
 		}
     }
     
@@ -4330,9 +4331,9 @@ public class EvilBook extends JavaPlugin {
     		FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/ContainerProtection.db");
     		protectionProp.store(outputStream, null);
     		outputStream.close();
-    	} catch (Exception e) {
+    	} catch (Exception exception) {
     		logSevere("Failed to save ContainerProtection.db");
-    		e.printStackTrace();
+    		exception.printStackTrace();
     	}
     }
     
@@ -4350,9 +4351,9 @@ public class EvilBook extends JavaPlugin {
     		FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/ContainerProtection.db");
     		protectionProp.store(outputStream, null);
     		outputStream.close();
-    	} catch (Exception e) {
+    	} catch (Exception exception) {
     		logSevere("Failed to save ContainerProtection.db");
-    		e.printStackTrace();
+    		exception.printStackTrace();
     	}
     }
     
@@ -4370,9 +4371,9 @@ public class EvilBook extends JavaPlugin {
     		inputStream.close();
     		String protection = protectionProp.getProperty(location.getBlockX() + ":" + location.getBlockY() + ":" + location.getBlockZ());
     		return protection == null || protection.equals(player.getName()) ? false : true;
-    	} catch (Exception e) {
+    	} catch (Exception exception) {
     		logSevere("Failed to read ContainerProtection.db");
-    		e.printStackTrace();
+    		exception.printStackTrace();
     		return true;
     	}
     }

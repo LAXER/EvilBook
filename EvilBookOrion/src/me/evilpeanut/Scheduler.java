@@ -61,7 +61,7 @@ public class Scheduler {
 						if (!s.getLine(0).equals(((Sign)block.getState()).getLine(0)) || !s.getLine(1).equals(((Sign)block.getState()).getLine(1)) || !s.getLine(2).equals(((Sign)block.getState()).getLine(2)) || !s.getLine(3).equals(((Sign)block.getState()).getLine(3))) {
 							s.update();
 						}
-					} catch (Exception e) {
+					} catch (Exception exception) {
 						plugin.dynamicSignList.remove(i);
 					}
 				}

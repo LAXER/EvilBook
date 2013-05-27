@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -118,9 +116,9 @@ public class PlayerProfile {
 					newPlayer.setPlayerListName("§" + rank.getColor(this) + (name.length() > 14 ? name.substring(0, 14) : name));
 				}
 				mutedPlayers = prop.getProperty("MutedPlayers");
-			} catch (Exception e) {
-				Logger.getLogger("Minecraft").log(Level.SEVERE, "Failed to load player profile: " + name);
-				e.printStackTrace();
+			} catch (Exception exception) {
+				plugin.logSevere("Failed to load " + name + "'s player profile");
+				exception.printStackTrace();
 			}
 			for (Player p : plugin.getServer().getOnlinePlayers()) {
 				if (p.getName() == name) continue;
@@ -147,9 +145,9 @@ public class PlayerProfile {
 				prop.store(outputStream, null);
 				outputStream.close();
 				newPlayer.getInventory().addItem(plugin.getBook("Welcome to Amentrix", "EvilPeanut", Arrays.asList("Welcome to the Amentrix Server\n\nRules:\n§a[§b1§a] §6Dont Greif\n§a[§b2§a] §6Dont Advertise\n§a[§b3§a] §6Dont Spam\n\n§0Website:\n§7http://amentrix.no-ip.org\n\n§0Enjoy your stay!\n§7 - EvilPeanut")));
-			} catch (Exception e) {
-				Logger.getLogger("Minecraft").log(Level.SEVERE, "Failed to create player profile: " + name);
-				e.printStackTrace();
+			} catch (Exception exception) {
+				plugin.logSevere("Failed to create " + name + "'s player profile");
+				exception.printStackTrace();
 			}
 			for (Player p : plugin.getServer().getOnlinePlayers()) {
 				if (p.getName() == name) continue;
@@ -196,9 +194,9 @@ public class PlayerProfile {
 			FileOutputStream outputStream = new FileOutputStream(new File("plugins/EvilBook/Players/" + name + ".properties"));
 			prop.store(outputStream, null);
 			outputStream.close();
-		} catch (Exception e) {
+		} catch (Exception exception) {
 			plugin.logSevere("Failed to save " + name + "'s player profile");
-			e.printStackTrace();
+			exception.printStackTrace();
 		}
 	}
 	
@@ -340,9 +338,9 @@ public class PlayerProfile {
 				FileOutputStream outputStream = new FileOutputStream(file);
 				prop.store(outputStream, null);
 				outputStream.close();
-			} catch (Exception e) {
-				System.out.println("Failed to edit " + name + "'s player profile");
-				e.printStackTrace();
+			} catch (Exception exception) {
+				plugin.logSevere("Failed to edit " + name + "'s player profile");
+				exception.printStackTrace();
 			}
 		}
 	}
@@ -363,9 +361,9 @@ public class PlayerProfile {
 				FileOutputStream outputStream = new FileOutputStream(file);
 				prop.store(outputStream, null);
 				outputStream.close();
-			} catch (Exception e) {
-				System.out.println("Failed to edit " + name + "'s player profile");
-				e.printStackTrace();
+			} catch (Exception exception) {
+				plugin.logSevere("Failed to edit " + name + "'s player profile");
+				exception.printStackTrace();
 			}
 		}
 	}
@@ -393,8 +391,9 @@ public class PlayerProfile {
 			FileOutputStream outputStream = new FileOutputStream(new File("plugins/EvilBook/Players/" + name + ".properties"));
 			prop.store(outputStream, null);
 			outputStream.close();
-		} catch (Exception e) {
-			System.out.println("Failed to save " + name + "'s player profile");
+		} catch (Exception exception) {
+			plugin.logSevere("Failed to edit " + name + "'s player profile");
+			exception.printStackTrace();
 		}
 	}
 }

@@ -682,9 +682,9 @@ public class EventListener implements Listener {
 					player.sendMessage("§7Welcome to the space lands");
 				}
 			}
-		} catch (Exception e) {
-			player.sendMessage("§7Failed to teleport");
-			event.setCancelled(true);
+		} catch (Exception exception) {
+			plugin.logSevere("Failed to teleport player " + player.getName());
+			exception.printStackTrace();
 		}
 	}
 	
@@ -933,9 +933,9 @@ public class EventListener implements Listener {
 				FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/Dynamic Signs/" + e.getBlock().getLocation().getWorld().getName() + e.getBlock().getLocation().getBlockX() + e.getBlock().getLocation().getBlockY() + e.getBlock().getLocation().getBlockZ() + ".db");
 				prop.store(outputStream, null);
 				outputStream.close();
-			} catch (Exception e1) {
+			} catch (Exception exception) {
 				plugin.logSevere("Failed to save dynamic sign database '" + e.getBlock().getLocation().getWorld().getName() + e.getBlock().getLocation().getBlockX() + e.getBlock().getLocation().getBlockY() + e.getBlock().getLocation().getBlockZ() + ".db'");
-				e1.printStackTrace();
+				exception.printStackTrace();
 			}
 			String time = plugin.getTime(e.getBlock().getWorld());
 			String weather = plugin.getWeather(e.getBlock());
