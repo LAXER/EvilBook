@@ -2,9 +2,7 @@ package me.evilpeanut;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +17,7 @@ import org.bukkit.entity.Player;
  */
 public class PlayerProfile {
 	public Location deathLocation, homeLocation, actionLocationA, actionLocationB, creativeLocation, survivalLocation;
-	public String name, nameColor, nameTitle, nameAlias, lastMessage, mutedPlayers, warps, teleportantName, customRankPrefix = "Custom", customRankColor = "6";
+	public String name, nameColor = "f", nameTitle, nameAlias, lastMessage, mutedPlayers, warps, teleportantName, customRankPrefix = "Custom", customRankColor = "6";
 	public List<EvilEditBlock> EvilEditUndo = new ArrayList<EvilEditBlock>();
 	public List<EvilEditBlock> EvilEditCopy = new ArrayList<EvilEditBlock>();
 	public Boolean isLogging = false;
@@ -57,7 +55,6 @@ public class PlayerProfile {
 				if (prop.getProperty("Money") != null) {
 					money = Integer.valueOf(prop.getProperty("Money"));
 				} else {
-					money = 0;
 					plugin.alertOwner(name + " failed to load money");
 				}
 				if (prop.getProperty("Spells") != null) {
@@ -77,48 +74,45 @@ public class PlayerProfile {
 					String[] location = prop.getProperty("CreativeLocation").split(">");
 					creativeLocation = new Location(plugin.getServer().getWorld(location[3]), Double.valueOf(location[0]), Double.valueOf(location[1]), Double.valueOf(location[2]));
 				}
-				if (prop.getProperty("NameColor") != null) {
-					nameColor = prop.getProperty("NameColor");
-				} else {
-					nameColor = "f";
-					plugin.alertOwner(name + " failed to load name color");
-				}
 				if (prop.getProperty("Warps") != null) warps = prop.getProperty("Warps");
 				if (prop.getProperty("RunAmplifier") != null) runAmplifier = Integer.valueOf(prop.getProperty("RunAmplifier"));
 				if (prop.getProperty("JumpAmplifier") != null) jumpAmplifier = Double.valueOf(prop.getProperty("JumpAmplifier"));
 				if (prop.getProperty("SurvivalXP") != null) survivalXP = Integer.valueOf(prop.getProperty("SurvivalXP"));
-				nameTitle = prop.getProperty("NameTitle");
-				nameAlias = prop.getProperty("NameAlias");
-				if (nameAlias != null && !nameAlias.equals("null")) {
-					if (nameColor.equals("?")) {
-						if (nameTitle == null || nameTitle.equals("")) {
-							newPlayer.setDisplayName(plugin.colorizeString(nameAlias) + "§f");
+				if (rank.getID() >= Rank.Admin.getID()) {
+					nameColor = prop.getProperty("NameColor");
+					nameTitle = prop.getProperty("NameTitle");
+					nameAlias = prop.getProperty("NameAlias");
+					if (nameAlias != null && !nameAlias.equals("null")) {
+						if (nameColor.equals("?")) {
+							if (nameTitle == null || nameTitle.equals("")) {
+								newPlayer.setDisplayName(plugin.colorizeString(nameAlias) + "§f");
+							} else {
+								newPlayer.setDisplayName("§d" + nameTitle + " " + plugin.colorizeString(nameAlias) + "§f");
+							}
 						} else {
-							newPlayer.setDisplayName("§d" + nameTitle + " " + plugin.colorizeString(nameAlias) + "§f");
+							if (nameTitle == null || nameTitle.equals("")) {
+								newPlayer.setDisplayName("§" + nameColor + nameAlias + "§f");
+							} else {
+								newPlayer.setDisplayName("§d" + nameTitle + " §" + nameColor + nameAlias + "§f");
+							}
 						}
+						newPlayer.setPlayerListName("§" + rank.getColor(this) + (nameAlias.length() > 14 ? nameAlias.substring(0, 14) : nameAlias));
 					} else {
-						if (nameTitle == null || nameTitle.equals("")) {
-							newPlayer.setDisplayName("§" + nameColor + nameAlias + "§f");
+						if (nameColor.equals("?")) {
+							if (nameTitle == null || nameTitle.equals("")) {
+								newPlayer.setDisplayName(plugin.colorizeString(name) + "§f");
+							} else {
+								newPlayer.setDisplayName("§d" + nameTitle + " " + plugin.colorizeString(name) + "§f");
+							}
 						} else {
-							newPlayer.setDisplayName("§d" + nameTitle + " §" + nameColor + nameAlias + "§f");
+							if (nameTitle == null || nameTitle.equals("")) {
+								newPlayer.setDisplayName("§" + nameColor + name + "§f");
+							} else {
+								newPlayer.setDisplayName("§d" + nameTitle + " §" + nameColor + name + "§f");
+							}
 						}
+						newPlayer.setPlayerListName("§" + rank.getColor(this) + (name.length() > 14 ? name.substring(0, 14) : name));
 					}
-					newPlayer.setPlayerListName("§" + rank.getColor(this) + (nameAlias.length() > 14 ? nameAlias.substring(0, 14) : nameAlias));
-				} else {
-					if (nameColor.equals("?")) {
-						if (nameTitle == null || nameTitle.equals("")) {
-							newPlayer.setDisplayName(plugin.colorizeString(name) + "§f");
-						} else {
-							newPlayer.setDisplayName("§d" + nameTitle + " " + plugin.colorizeString(name) + "§f");
-						}
-					} else {
-						if (nameTitle == null || nameTitle.equals("")) {
-							newPlayer.setDisplayName("§" + nameColor + name + "§f");
-						} else {
-							newPlayer.setDisplayName("§d" + nameTitle + " §" + nameColor + name + "§f");
-						}
-					}
-					newPlayer.setPlayerListName("§" + rank.getColor(this) + (name.length() > 14 ? name.substring(0, 14) : name));
 				}
 				mutedPlayers = prop.getProperty("MutedPlayers");
 			} catch (Exception e) {
@@ -152,9 +146,7 @@ public class PlayerProfile {
 				prop.store(outputStream, null);
 				outputStream.close();
 				newPlayer.getInventory().addItem(plugin.getBook("Welcome to Amentrix", "EvilPeanut", Arrays.asList("Welcome to the Amentrix Server\n\nRules:\n§a[§b1§a] §6Dont Greif\n§a[§b2§a] §6Dont Advertise\n§a[§b3§a] §6Dont Spam\n\n§0Website:\n§7http://amentrix.no-ip.org\n\n§0Enjoy your stay!\n§7 - EvilPeanut")));
-			} catch (FileNotFoundException e) {
-				Logger.getLogger("Minecraft").log(Level.SEVERE, "Failed to create player profile: " + name);
-			} catch (IOException e) {
+			} catch (Exception e) {
 				Logger.getLogger("Minecraft").log(Level.SEVERE, "Failed to create player profile: " + name);
 			}
 			for (Player p : plugin.getServer().getOnlinePlayers()) {
