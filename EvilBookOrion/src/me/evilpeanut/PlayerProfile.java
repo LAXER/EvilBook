@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
  */
 public class PlayerProfile {
 	public Location deathLocation, homeLocation, actionLocationA, actionLocationB, creativeLocation, survivalLocation;
-	public String name, nameColor, nameTitle, nameAlias = null, lastMessage, mutedPlayers, warps, teleportantName, customRankPrefix = "Custom", customRankColor = "6";
+	public String name, nameColor, nameTitle, nameAlias, lastMessage, mutedPlayers, warps, teleportantName, customRankPrefix = "Custom", customRankColor = "6";
 	public List<EvilEditBlock> EvilEditUndo = new ArrayList<EvilEditBlock>();
 	public List<EvilEditBlock> EvilEditCopy = new ArrayList<EvilEditBlock>();
 	public Boolean isLogging = false;
@@ -82,13 +82,13 @@ public class PlayerProfile {
 					nameAlias = prop.getProperty("NameAlias");
 					if (nameAlias != null) {
 						if (nameColor.equals("?")) {
-							if (nameTitle == null || nameTitle.equals("")) {
+							if (nameTitle == null) {
 								newPlayer.setDisplayName(plugin.colorizeString(nameAlias) + "§f");
 							} else {
 								newPlayer.setDisplayName("§d" + nameTitle + " " + plugin.colorizeString(nameAlias) + "§f");
 							}
 						} else {
-							if (nameTitle == null || nameTitle.equals("")) {
+							if (nameTitle == null) {
 								newPlayer.setDisplayName("§" + nameColor + nameAlias + "§f");
 							} else {
 								newPlayer.setDisplayName("§d" + nameTitle + " §" + nameColor + nameAlias + "§f");
@@ -97,13 +97,13 @@ public class PlayerProfile {
 						newPlayer.setPlayerListName("§" + rank.getColor(this) + (nameAlias.length() > 14 ? nameAlias.substring(0, 14) : nameAlias));
 					} else {
 						if (nameColor.equals("?")) {
-							if (nameTitle == null || nameTitle.equals("")) {
+							if (nameTitle == null) {
 								newPlayer.setDisplayName(plugin.colorizeString(name) + "§f");
 							} else {
 								newPlayer.setDisplayName("§d" + nameTitle + " " + plugin.colorizeString(name) + "§f");
 							}
 						} else {
-							if (nameTitle == null || nameTitle.equals("")) {
+							if (nameTitle == null) {
 								newPlayer.setDisplayName("§" + nameColor + name + "§f");
 							} else {
 								newPlayer.setDisplayName("§d" + nameTitle + " §" + nameColor + name + "§f");
@@ -288,13 +288,13 @@ public class PlayerProfile {
 			removeProperty("NameAlias");
 			nameAlias = null;
 			if (nameColor.equals("?")) {
-				if (nameTitle == null || nameTitle.equals("")) {
+				if (nameTitle == null) {
 					player.setDisplayName(plugin.colorizeString(name) + "§f");
 				} else {
 					player.setDisplayName("§d" + nameTitle + " " + plugin.colorizeString(name) + "§f");
 				}
 			} else {
-				if (nameTitle == null || nameTitle.equals("")) {
+				if (nameTitle == null) {
 					player.setDisplayName("§" + nameColor + name + "§f");
 				} else {
 					player.setDisplayName("§d" + nameTitle + " §" + nameColor + name + "§f");
@@ -305,13 +305,13 @@ public class PlayerProfile {
 			setProperty("NameAlias", alias);
 			nameAlias = alias;
 			if (nameColor.equals("?")) {
-				if (nameTitle == null || nameTitle.equals("")) {
+				if (nameTitle == null) {
 					player.setDisplayName(plugin.colorizeString(nameAlias) + "§f");
 				} else {
 					player.setDisplayName("§d" + nameTitle + " " + plugin.colorizeString(nameAlias) + "§f");
 				}
 			} else {
-				if (nameTitle == null || nameTitle.equals("")) {
+				if (nameTitle == null) {
 					player.setDisplayName("§" + nameColor + nameAlias + "§f");
 				} else {
 					player.setDisplayName("§d" + nameTitle + " §" + nameColor + nameAlias + "§f");

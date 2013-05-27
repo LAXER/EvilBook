@@ -407,6 +407,13 @@ public class EvilBook extends JavaPlugin {
 					outputStream.close();
 					logInfo("Repaired player profile name alias: " + playerFiles[playerNo]);
 				}
+				if (playerProp.getProperty("NameTitle") != null && playerProp.getProperty("NameTitle").equals("")) {
+					playerProp.remove("NameTitle");
+					FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/Players/" + playerFiles[playerNo]);
+					playerProp.store(outputStream, null);
+					outputStream.close();
+					logInfo("Repaired player profile name title: " + playerFiles[playerNo]);
+				}
 				if (playerProp.getProperty("Rank") == null) {
 					playerProp.setProperty("Rank", "Visitor");
 					FileOutputStream outputStream = new FileOutputStream("plugins/EvilBook/Players/" + playerFiles[playerNo]);
