@@ -9,6 +9,9 @@ import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
 
+/**
+ * @author Reece Aaron Lecrivain
+ */
 public class EvilTheEndGenerator extends ChunkGenerator {
 	/**
 	 * Return the x, y and z as position in the chunk byte array
