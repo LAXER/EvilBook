@@ -4310,7 +4310,8 @@ public class EvilBook extends JavaPlugin {
 			prop.store(outputStream, null);
 			outputStream.close();
 		} catch (Exception e) {
-			System.out.println("Failed to save " + player + "'s player profile");
+			logSevere("Failed to save " + player + "'s player profile");
+			e.printStackTrace();
 		}
     }
     

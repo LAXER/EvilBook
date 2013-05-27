@@ -197,7 +197,7 @@ public class PlayerProfile {
 			prop.store(outputStream, null);
 			outputStream.close();
 		} catch (Exception e) {
-			System.out.println("Failed to save " + name + "'s player profile");
+			plugin.logSevere("Failed to save " + name + "'s player profile");
 			e.printStackTrace();
 		}
 	}
