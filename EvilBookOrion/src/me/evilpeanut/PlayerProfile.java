@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
  */
 public class PlayerProfile {
 	public Location deathLocation, homeLocation, actionLocationA, actionLocationB, creativeLocation, survivalLocation;
-	public String name, nameColor = "f", nameTitle, nameAlias = null, lastMessage, mutedPlayers, warps, teleportantName, customRankPrefix = "Custom", customRankColor = "6";
+	public String name, nameColor, nameTitle, nameAlias = null, lastMessage, mutedPlayers, warps, teleportantName, customRankPrefix = "Custom", customRankColor = "6";
 	public List<EvilEditBlock> EvilEditUndo = new ArrayList<EvilEditBlock>();
 	public List<EvilEditBlock> EvilEditCopy = new ArrayList<EvilEditBlock>();
 	public Boolean isLogging = false;
@@ -113,6 +113,9 @@ public class PlayerProfile {
 						}
 						newPlayer.setPlayerListName("§" + rank.getColor(this) + (name.length() > 14 ? name.substring(0, 14) : name));
 					}
+				} else {
+					newPlayer.setDisplayName("§f" + name);
+					newPlayer.setPlayerListName("§" + rank.getColor(this) + (name.length() > 14 ? name.substring(0, 14) : name));
 				}
 				mutedPlayers = prop.getProperty("MutedPlayers");
 			} catch (Exception e) {
