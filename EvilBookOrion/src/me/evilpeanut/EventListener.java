@@ -680,7 +680,7 @@ public class EventListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerWorldChange(PlayerChangedWorldEvent event) {
 		Player player = event.getPlayer();
-		if (plugin.isInSurvival(player)) {
+		if (plugin.isInSurvival(player) && !plugin.isInSurvival(event.getFrom().getName())) {
 			player.setGameMode(GameMode.SURVIVAL);
 			plugin.setCreativeInventory(player);
 			plugin.getSurvivalInventory(player);
@@ -688,7 +688,7 @@ public class EventListener implements Listener {
 			ExperienceManager exp = new ExperienceManager(player);
 			exp.setExp(plugin.getProfile(player).survivalXP);
 			player.sendMessage("§7Welcome to the survival world");
-		} else if (plugin.isInSurvival(event.getFrom().getName())) {
+		} else if (!plugin.isInSurvival(player) && plugin.isInSurvival(event.getFrom().getName())) {
 			plugin.setSurvivalInventory(player);
 			plugin.getCreativeInventory(player);
 			player.setGameMode(GameMode.CREATIVE);
