@@ -8,9 +8,6 @@ commands:
   setrank:
     description: Set the player's custom rank
     usage: /<command>
-  cleandatabase:
-    description: Clean the database
-    usage: /<command>
   setall:
     description: Set the property to a value in all player profiles
     usage: /<command>

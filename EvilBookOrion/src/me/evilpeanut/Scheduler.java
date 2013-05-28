@@ -66,7 +66,7 @@ public class Scheduler {
 					}
 				}
 				if (plugin.EvilEdit.size() == 0) return;
-				for (int i = 0; i < (plugin.EvilEdit.size() < 15 ? plugin.EvilEdit.size() : 15); i++) {
+				for (int i = 0; i < (plugin.EvilEdit.size() < 20 ? plugin.EvilEdit.size() : 20); i++) {
 					EvilEditBlock block = (EvilEditBlock) plugin.EvilEdit.get(0);
 					// TODO: Re-add logging
 					if (block.getTypeID() == 0) {

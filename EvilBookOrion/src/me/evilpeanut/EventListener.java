@@ -646,45 +646,67 @@ public class EventListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
 		Player player = event.getPlayer();
-		if (event.getTo().getBlockX() > 12550820 || event.getTo().getBlockX() < -12550820 || event.getTo().getBlockZ() > 12550820 || event.getTo().getBlockZ() < -12550820) {
-			player.sendMessage("§7The far-lands are blocked");
-			event.setCancelled(true);
-			return;
-		}
-		if (plugin.isInSurvival(event.getTo().getWorld().getName())) {
-			if (plugin.getProfile(player).rank.getID() >= Rank.Architect.getID()) {
-				player.sendMessage("§7Welcome to the survival world");
-			} else {
-				player.sendMessage("§7The survival world requires architect rank");
-				event.setCancelled(true);
-				return;
-			}
-			if (!plugin.isInSurvival(event.getFrom().getWorld().getName())) plugin.getProfile(player).creativeLocation = event.getFrom();
-		} else if (plugin.isInSurvival(event.getFrom().getWorld().getName())) {
-			plugin.getProfile(player).survivalLocation = event.getFrom();
-		}
 		try {
+			if (plugin.isInSurvival(event.getTo().getWorld().getName())) {
+				if (plugin.getProfile(player).rank.getID() < Rank.Architect.getID()) {
+					player.sendMessage("§7The survival world requires architect rank");
+					event.setCancelled(true);
+					return;
+				}
+				if (!plugin.isInSurvival(event.getFrom().getWorld().getName())) plugin.getProfile(player).creativeLocation = event.getFrom();
+			} else if (plugin.isInSurvival(event.getFrom().getWorld().getName())) {
+				plugin.getProfile(player).survivalLocation = event.getFrom();
+			}
 			if (event.getTo().getWorld().getName().equals("FlatLand")) {
 				if (plugin.getProfile(player).rank.getID() < plugin.commandBlacklist.get("/flatland")) {
 					player.sendMessage("§7You have to be a higher rank to access the flat lands");
 					event.setCancelled(true);
-					return;
-				} else {
-					player.sendMessage("§7Welcome to the flat lands");
 				}
-				return;
-			}
-			if (event.getTo().getWorld().getName().equals("SpaceLand")) {
+			} else if (event.getTo().getWorld().getName().equals("SpaceLand")) {
 				if (plugin.getProfile(player).rank.getID() < plugin.commandBlacklist.get("/spaceland")) {
 					player.sendMessage("§7You have to be a higher rank to access the space lands");
 					event.setCancelled(true);
-				} else {
-					player.sendMessage("§7Welcome to the space lands");
 				}
 			}
 		} catch (Exception exception) {
 			plugin.logSevere("Failed to teleport player " + player.getName());
 			exception.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Called when a player changes world
+	 */
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerWorldChange(PlayerChangedWorldEvent event) {
+		Player player = event.getPlayer();
+		if (plugin.isInSurvival(player)) {
+			player.setGameMode(GameMode.SURVIVAL);
+			plugin.setCreativeInventory(player);
+			plugin.getSurvivalInventory(player);
+			player.setScoreboard(plugin.survivalStatsScoreboard);
+			ExperienceManager exp = new ExperienceManager(player);
+			exp.setExp(plugin.getProfile(player).survivalXP);
+			player.sendMessage("§7Welcome to the survival world");
+		} else if (plugin.isInSurvival(event.getFrom().getName())) {
+			plugin.setSurvivalInventory(player);
+			plugin.getCreativeInventory(player);
+			player.setGameMode(GameMode.CREATIVE);
+			player.setScoreboard(plugin.scoreboardManager.getNewScoreboard());
+			ExperienceManager exp = new ExperienceManager(player);
+			plugin.getProfile(player).survivalXP = exp.getCurrentExp();
+			exp.setExp(0);
+			if (player.getWorld().getName().equals("FlatLand")) {
+				player.sendMessage("§7Welcome to the flat lands");
+			} else if (player.getWorld().getName().equals("SpaceLand")) {
+				player.sendMessage("§7Welcome to the space lands");
+			}
+		} else if (plugin.isInAdventure(player)) {
+			ExperienceManager exp = new ExperienceManager(player);
+			player.setGameMode(GameMode.ADVENTURE);
+			player.getInventory().clear();
+			exp.setExp(0);
+			player.sendMessage("§7Welcome to the adventure lands");
 		}
 	}
 	
@@ -696,37 +718,6 @@ public class EventListener implements Listener {
 		if (plugin.getProfile(event.getPlayer()).rank == Rank.ServerOwner) return;
 		if (event.getNewGameMode() != GameMode.SURVIVAL && plugin.isInSurvival(event.getPlayer())) event.setCancelled(true);
 		if (event.getNewGameMode() != GameMode.ADVENTURE && plugin.isInAdventure(event.getPlayer())) event.setCancelled(true);
-	}
-	
-	/**
-	 * Called when a player changes world
-	 */
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onPlayerWorldChange(PlayerChangedWorldEvent event) {
-		if (plugin.isInSurvival(event.getPlayer())) {
-			event.getPlayer().setGameMode(GameMode.SURVIVAL);
-			plugin.setCreativeInventory(event.getPlayer());
-			plugin.getSurvivalInventory(event.getPlayer());
-			event.getPlayer().setScoreboard(plugin.survivalStatsScoreboard);
-			ExperienceManager exp = new ExperienceManager(event.getPlayer());
-			exp.setExp(plugin.getProfile(event.getPlayer()).survivalXP);
-		} else {
-			if (plugin.isInSurvival(event.getFrom().getName())) {
-				plugin.setSurvivalInventory(event.getPlayer());
-				plugin.getCreativeInventory(event.getPlayer());
-				event.getPlayer().setGameMode(GameMode.CREATIVE);
-				event.getPlayer().setScoreboard(plugin.scoreboardManager.getNewScoreboard());
-				ExperienceManager exp = new ExperienceManager(event.getPlayer());
-				plugin.getProfile(event.getPlayer()).survivalXP = exp.getCurrentExp();
-				exp.setExp(0);
-			}
-			if (plugin.isInAdventure(event.getPlayer())) {
-				ExperienceManager exp = new ExperienceManager(event.getPlayer());
-				event.getPlayer().setGameMode(GameMode.ADVENTURE);
-				event.getPlayer().getInventory().clear();
-				exp.setExp(0);
-			}
-		}
 	}
 	
 	/**
@@ -1093,6 +1084,13 @@ public class EventListener implements Listener {
 			//event.setCancelled(true);
 			//return;
 		//}
+		//
+		// Entity spam protection
+		//
+		if (event.getVehicle().getNearbyEntities(64, 64, 64).size() + 1 >= 400) {
+			event.getVehicle().remove();
+			return;
+		}
 		//
 		// Make the boat work on land
 		//
