@@ -417,7 +417,7 @@ public class EventListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		if (plugin.isInSurvival(event.getPlayer())) event.getPlayer().setScoreboard(plugin.survivalStatsScoreboard);
+		//if (plugin.isInSurvival(event.getPlayer())) event.getPlayer().setScoreboard(plugin.survivalStatsScoreboard);
 		plugin.playerProfiles.put(event.getPlayer().getName().toLowerCase(), new PlayerProfile(plugin, event.getPlayer()));
 		event.setJoinMessage(null);
 	}
@@ -684,7 +684,7 @@ public class EventListener implements Listener {
 			player.setGameMode(GameMode.SURVIVAL);
 			plugin.setCreativeInventory(player);
 			plugin.getSurvivalInventory(player);
-			player.setScoreboard(plugin.survivalStatsScoreboard);
+			//player.setScoreboard(plugin.survivalStatsScoreboard);
 			ExperienceManager exp = new ExperienceManager(player);
 			exp.setExp(plugin.getProfile(player).survivalXP);
 			player.sendMessage("§7Welcome to the survival world");
@@ -692,7 +692,7 @@ public class EventListener implements Listener {
 			plugin.setSurvivalInventory(player);
 			plugin.getCreativeInventory(player);
 			player.setGameMode(GameMode.CREATIVE);
-			player.setScoreboard(plugin.scoreboardManager.getNewScoreboard());
+			//player.setScoreboard(plugin.scoreboardManager.getNewScoreboard());
 			ExperienceManager exp = new ExperienceManager(player);
 			plugin.getProfile(player).survivalXP = exp.getCurrentExp();
 			exp.setExp(0);

@@ -17,7 +17,6 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -59,12 +58,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
-import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
 /**
@@ -81,13 +74,13 @@ public class EvilBook extends JavaPlugin {
 	public List<EvilEditBlock> EvilEdit = new ArrayList<EvilEditBlock>();
 	public Map<String, Byte> fishList = new HashMap<String, Byte>();
 	public List<Region> regionList = new ArrayList<Region>();
-	public ScoreboardManager scoreboardManager;
+	//public ScoreboardManager scoreboardManager;
 
 	//
 	// Survival Scoreboard
 	//
-	public Scoreboard survivalStatsScoreboard;
-	public Team survivalTeam;
+	//public Scoreboard survivalStatsScoreboard;
+	//public Team survivalTeam;
 	
 	/**
 	 * Called when the plugin is enabled
@@ -133,6 +126,7 @@ public class EvilBook extends JavaPlugin {
 				logSevere("Failed to load market inventory 'plugins/EvilBook/MarketInventory.db'");
 			}
 		}
+		/*
 		//
 		// Scoreboard
 		//
@@ -152,6 +146,7 @@ public class EvilBook extends JavaPlugin {
 		miningScore.setScore(1);
 		Score fishingScore = objective.getScore(Bukkit.getOfflinePlayer("§aFishing"));
 		fishingScore.setScore(1);
+		*/
 		//
 		// Load the command blacklist
 		//
