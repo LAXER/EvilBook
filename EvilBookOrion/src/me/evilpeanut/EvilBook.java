@@ -68,7 +68,6 @@ public class EvilBook extends JavaPlugin {
 	public Map<Integer, List<String>> blockList = new HashMap<Integer, List<String>>();
 	public Map<Location, String[]> dynamicSignList = new HashMap<Location, String[]>();
 	public List<MarketItemStack> marketInventory = new ArrayList<MarketItemStack>();
-	public Map<Byte, String> hangingEntityList = new HashMap<Byte, String>();
 	public Map<String, Location> warpList = new HashMap<String, Location>();
 	public Map<String, Byte> commandBlacklist = new HashMap<String, Byte>();
 	public List<EvilEditBlock> EvilEdit = new ArrayList<EvilEditBlock>();
@@ -607,11 +606,6 @@ public class EvilBook extends JavaPlugin {
 		blockList.put(156, Arrays.asList("Quartz Stairs", "QuartzStairs", "QuartzStair"));
 		blockList.put(157, Arrays.asList("Activator Rail", "ActivatorRail"));
 		blockList.put(158, Arrays.asList("Dropper"));
-		//
-		// Load Hanging Entity List
-		//
-		hangingEntityList.put((byte)9, "Painting");
-		hangingEntityList.put((byte)18, "Item Frame");
 		//
 		// Scheduler
 		//
