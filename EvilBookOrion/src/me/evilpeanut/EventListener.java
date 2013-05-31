@@ -494,7 +494,7 @@ public class EventListener implements Listener {
 				// Survival Container Protection
 				//
 				if ((block.getTypeId() == 23 || block.getTypeId() == 54 || block.getTypeId() == 58 || block.getTypeId() == 61 || block.getTypeId() == 62 || block.getTypeId() == 117 || block.getTypeId() == 145 || block.getTypeId() == 146 || block.getTypeId() == 158) && plugin.isContainerProtected(event.getClickedBlock().getLocation(), player)) {
-					player.sendMessage(ChatColor.GRAY + "You don't have permission to open the " + plugin.blockList.get((short)block.getTypeId()).get(0).toLowerCase());
+					player.sendMessage(ChatColor.GRAY + "You don't have permission to open the " + plugin.blockList.get(block.getTypeId()).get(0).toLowerCase());
 					event.setCancelled(true);
 					return;
 				}
@@ -807,12 +807,12 @@ public class EventListener implements Listener {
 		//
 		if (plugin.isInSurvival(player) && (block.getTypeId() == 23 || block.getTypeId() == 54 || block.getTypeId() == 58 || block.getTypeId() == 61 || block.getTypeId() == 62 || block.getTypeId() == 117 || block.getTypeId() == 145 || block.getTypeId() == 146 || block.getTypeId() == 158)) {
 			if (plugin.isContainerProtected(block.getLocation(), player)) {
-				player.sendMessage(ChatColor.GRAY + "You don't have permission to break the " + plugin.blockList.get((short)block.getTypeId()).get(0).toLowerCase());
+				player.sendMessage(ChatColor.GRAY + "You don't have permission to break the " + plugin.blockList.get(block.getTypeId()).get(0).toLowerCase());
 				event.setCancelled(true);
 				return;
 			} else {
 				plugin.unprotectContainer(event.getBlock().getLocation());
-				player.sendMessage(ChatColor.GRAY + plugin.blockList.get((short)block.getTypeId()).get(0) + " protection removed");
+				player.sendMessage(ChatColor.GRAY + plugin.blockList.get(block.getTypeId()).get(0) + " protection removed");
 			}
 		}
 		//
@@ -884,7 +884,7 @@ public class EventListener implements Listener {
 		//
 		if (plugin.isInSurvival(player) && (ID == 23 || ID == 54 || ID == 58 || ID == 61 || ID == 62 || ID == 117 || ID == 145 || ID == 146 || ID == 158)) {
 			plugin.protectContainer(event.getBlock().getLocation(), player);
-			player.sendMessage(ChatColor.GRAY + plugin.blockList.get((short)ID).get(0) + " protected");
+			player.sendMessage(ChatColor.GRAY + plugin.blockList.get(ID).get(0) + " protected");
 		}
 	}
 	

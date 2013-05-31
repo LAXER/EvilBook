@@ -2,6 +2,9 @@ name: EvilBook
 main: me.evilpeanut.EvilBook
 version: 2.0
 commands:
+  market:
+    description: Marketplace commands
+    usage: /<command>
   zombies:
     description: Zombies mini-game
     usage: /<command>

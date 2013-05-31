@@ -72,7 +72,8 @@ import org.bukkit.util.Vector;
  */
 public class EvilBook extends JavaPlugin {
 	public Map<String, PlayerProfile> playerProfiles = new HashMap<String, PlayerProfile>();
-	public Map<Short, List<String>> blockList = new HashMap<Short, List<String>>();
+	public List<MarketItemStack> marketInventory = new ArrayList<MarketItemStack>();
+	public Map<Integer, List<String>> blockList = new HashMap<Integer, List<String>>();
 	public Map<Byte, String> hangingEntityList = new HashMap<Byte, String>();
 	public List<DynamicSign> dynamicSignList = new ArrayList<DynamicSign>();
 	public Map<String, Location> warpList = new HashMap<String, Location>();
@@ -81,13 +82,7 @@ public class EvilBook extends JavaPlugin {
 	public Map<String, Byte> fishList = new HashMap<String, Byte>();
 	public List<Region> regionList = new ArrayList<Region>();
 	public ScoreboardManager scoreboardManager;
-	
-	//
-	// MySQL
-	//
-	//MySQL MySQL = new MySQL("localhost", "3306", "EvilBook", "user", "pass");
-	//Connection connection = null;
-	
+
 	//
 	// Survival Scoreboard
 	//
@@ -97,16 +92,13 @@ public class EvilBook extends JavaPlugin {
 	/**
 	 * Called when the plugin is enabled
 	 */
+	@SuppressWarnings("unchecked")
 	public void onEnable() {
 		//
 		// Register The Event Listener
 		//
 		PluginManager pluginManager = getServer().getPluginManager();
 		pluginManager.registerEvents(new EventListener(this), this);
-		//
-		// Open the MySQL connection
-		//
-		//connection = MySQL.open();
 		//
 		// Check the plugin folders and files exist
 		//
@@ -130,6 +122,17 @@ public class EvilBook extends JavaPlugin {
 		if (check.exists() == false) try {check.createNewFile();} catch (Exception exception) {logSevere("Failed to create file 'plugins/EvilBook/Warps.db'");}
 		check = new File("plugins/EvilBook/ContainerProtection.db");
 		if (check.exists() == false) try {check.createNewFile();} catch (Exception exception) {logSevere("Failed to create file 'plugins/EvilBook/ContainerProtection.db'");}
+		//
+		// Market place inventory
+		//
+		check = new File("plugins/EvilBook/MarketInventory.db");
+		if (check.exists()) {
+			try {
+				marketInventory = (List<MarketItemStack>) loadObject("plugins/EvilBook/MarketInventory.db");
+			} catch (Exception exception) {
+				logSevere("Failed to load market inventory 'plugins/EvilBook/MarketInventory.db'");
+			}
+		}
 		//
 		// Scoreboard
 		//
@@ -459,165 +462,165 @@ public class EvilBook extends JavaPlugin {
 		//
 		// Load Block List
 		//
-		blockList.put((short)0, Arrays.asList("Air", "Void", "Nothing", "Space"));
-		blockList.put((short)1, Arrays.asList("Stone", "SmoothStone", "Rock"));
-		blockList.put((short)2, Arrays.asList("Grass", "GrassDirt"));
-		blockList.put((short)3, Arrays.asList("Dirt", "Mud", "Ground"));
-		blockList.put((short)4, Arrays.asList("Cobble Stone", "CobbleStone", "Cobble"));
-		blockList.put((short)5, Arrays.asList("Planks", "Plank", "WoodPlanks", "WoodPlank", "WoodenPlanks", "WoodenPlank"));
-		blockList.put((short)6, Arrays.asList("Sapling", "Tree", "TreeSapling", "TreeSeed"));
-		blockList.put((short)7, Arrays.asList("BedRock", "BedStone", "Adminium"));
-		blockList.put((short)8, Arrays.asList("Water"));
-		blockList.put((short)9, Arrays.asList("Stationary Water", "StationaryWater", "StaticWater", "StillWater"));
-		blockList.put((short)10, Arrays.asList("Lava"));
-		blockList.put((short)11, Arrays.asList("Stationary Lava", "StationaryLava", "StaticLava", "StillLava"));
-		blockList.put((short)12, Arrays.asList("Sand"));
-		blockList.put((short)13, Arrays.asList("Gravel"));
-		blockList.put((short)14, Arrays.asList("Gold", "GoldOre"));
-		blockList.put((short)15, Arrays.asList("Iron", "IronOre"));
-		blockList.put((short)16, Arrays.asList("Coal", "CoalOre"));
-		blockList.put((short)17, Arrays.asList("Wood", "Trunk"));
-		blockList.put((short)18, Arrays.asList("Leave", "Leaves"));
-		blockList.put((short)19, Arrays.asList("Sponge"));
-		blockList.put((short)20, Arrays.asList("Glass", "GlassBlock"));
-		blockList.put((short)21, Arrays.asList("Lapis Ore", "LapisOre", "LapisLazuliOre"));
-		blockList.put((short)22, Arrays.asList("Lapis Block", "LapisBlock", "LapisLazuliBlock"));
-		blockList.put((short)23, Arrays.asList("Dispenser", "ItemDispenser"));
-		blockList.put((short)24, Arrays.asList("Sandstone"));
-		blockList.put((short)25, Arrays.asList("Note Block", "NoteBlock", "Note"));
-		blockList.put((short)26, Arrays.asList("Bed"));
-		blockList.put((short)27, Arrays.asList("Powered Rail", "PoweredRail", "PowerRail"));
-		blockList.put((short)28, Arrays.asList("Detector Rail", "DetectorRail", "PressureRail", "PressurePlateRail"));
-		blockList.put((short)29, Arrays.asList("Sticky Piston", "StickyPiston"));
-		blockList.put((short)30, Arrays.asList("Cobweb", "Cobwebs", "Web"));
-		blockList.put((short)31, Arrays.asList("Tall Grass", "TallGrass"));
-		blockList.put((short)32, Arrays.asList("Dead Bush", "DeadBush", "DeadSapling"));
-		blockList.put((short)33, Arrays.asList("Piston"));
-		blockList.put((short)34, Arrays.asList("Piston Extension", "PistonExtension"));
-		blockList.put((short)35, Arrays.asList("Wool"));
-		blockList.put((short)36, Arrays.asList("Block Moved By Piston", "BlockMovedByPiston"));
-		blockList.put((short)37, Arrays.asList("Dandelion"));
-		blockList.put((short)38, Arrays.asList("Rose"));
-		blockList.put((short)39, Arrays.asList("Brown Mushroom", "BrownMushroom", "Mushroom"));
-		blockList.put((short)40, Arrays.asList("Red Mushroom", "RedMushroom"));
-		blockList.put((short)41, Arrays.asList("Gold Block", "GoldBlock", "BlockOfGold"));
-		blockList.put((short)42, Arrays.asList("Iron Block", "IronBlock", "BlockOfIron"));
-		blockList.put((short)43, Arrays.asList("Double Slab", "DoubleSlab"));
-		blockList.put((short)44, Arrays.asList("Slab"));
-		blockList.put((short)45, Arrays.asList("Brick", "Bricks"));
-		blockList.put((short)46, Arrays.asList("TNT", "Dynamite", "Explosive"));
-		blockList.put((short)47, Arrays.asList("Bookshelf"));
-		blockList.put((short)48, Arrays.asList("Moss Cobble Stone", "MossStone", "MossyStone", "MossCobble", "MossyCobble", "MossCobbleStone", "MossyCobbleStone"));
-		blockList.put((short)49, Arrays.asList("Obsidian"));
-		blockList.put((short)50, Arrays.asList("Torch"));
-		blockList.put((short)51, Arrays.asList("Fire"));
-		blockList.put((short)52, Arrays.asList("Spawner", "MonsterSpawner", "MOBSpawner"));
-		blockList.put((short)53, Arrays.asList("Oak Wood Stairs", "OakWoodStairs", "OakWoodStair", "WoodStairs", "WoodStair", "WoodenStairs", "WoodenStair"));
-		blockList.put((short)54, Arrays.asList("Chest"));
-		blockList.put((short)55, Arrays.asList("Redstone Wire", "RedstoneWire", "Wire"));
-		blockList.put((short)56, Arrays.asList("Diamond", "DiamondOre"));
-		blockList.put((short)57, Arrays.asList("Diamond Block", "DiamondBlock", "BlockOfDiamond"));
-		blockList.put((short)58, Arrays.asList("Crafting table", "CraftingTable", "CraftingBench"));
-		blockList.put((short)59, Arrays.asList("Wheat Seed", "WheatSeed", "WheatSeeds"));
-		blockList.put((short)60, Arrays.asList("Farmland", "PlowedLand"));
-		blockList.put((short)61, Arrays.asList("Furnace", "Oven"));
-		blockList.put((short)62, Arrays.asList("Burning Furnace", "BurningFurnace", "BurningOven"));
-		blockList.put((short)63, Arrays.asList("Sign", "SignPost"));
-		blockList.put((short)64, Arrays.asList("Door", "WoodenDoor", "WoodDoor"));
-		blockList.put((short)65, Arrays.asList("Ladder"));
-		blockList.put((short)66, Arrays.asList("Rail", "Track"));
-		blockList.put((short)67, Arrays.asList("Cobble Stone Stairs", "CobbleStoneStairs", "CobbleStoneStair", "CobbleStairs", "CobbleStair"));
-		blockList.put((short)68, Arrays.asList("Wall Sign", "WallSign", "WallSignPost"));
-		blockList.put((short)69, Arrays.asList("Lever", "Switch"));
-		blockList.put((short)70, Arrays.asList("Stone Pressure Plate", "StonePressurePlate", "PressurePlate"));
-		blockList.put((short)71, Arrays.asList("Iron Door", "IronDoor"));
-		blockList.put((short)72, Arrays.asList("Wooden Pressure Plate", "WoodenPressurePlate", "WoodPressurePlate"));
-		blockList.put((short)73, Arrays.asList("Redstone", "RedstoneOre"));
-		blockList.put((short)74, Arrays.asList("Glowing Redstone", "GlowingRedstone", "GlowingRedstoneOre"));
-		blockList.put((short)75, Arrays.asList("Off Redstone Torch", "OffRedstoneTorch"));
-		blockList.put((short)76, Arrays.asList("Redstone Torch", "RedstoneTorch", "OnRedstoneTorch"));
-		blockList.put((short)77, Arrays.asList("Stone Button", "StoneButton"));
-		blockList.put((short)78, Arrays.asList("Snow Patch", "SnowPatch", "FlatSnow"));
-		blockList.put((short)79, Arrays.asList("Ice", "IceBlock"));
-		blockList.put((short)80, Arrays.asList("Snow", "SnowBlock"));
-		blockList.put((short)81, Arrays.asList("Cactus"));
-		blockList.put((short)82, Arrays.asList("Clay", "ClayBlock"));
-		blockList.put((short)83, Arrays.asList("Sugar Cane", "SugarCane", "Sugar", "Reed", "Cane"));
-		blockList.put((short)84, Arrays.asList("Jukebox"));
-		blockList.put((short)85, Arrays.asList("Fence"));
-		blockList.put((short)86, Arrays.asList("Pumpkin"));
-		blockList.put((short)87, Arrays.asList("Netherrack", "NetherStone"));
-		blockList.put((short)88, Arrays.asList("Soul Sand", "SoulSand", "SinkingSand"));
-		blockList.put((short)89, Arrays.asList("Glowstone"));
-		blockList.put((short)90, Arrays.asList("Portal", "NetherPortal"));
-		blockList.put((short)91, Arrays.asList("Jack O' Lantern", "JackOLantern", "Lantern", "PumpkinLantern"));
-		blockList.put((short)92, Arrays.asList("Cake", "CakeBlock"));
-		blockList.put((short)93, Arrays.asList("Redstone Repeater", "RedstoneRepeater", "OffRedstoneRepeater"));
-		blockList.put((short)94, Arrays.asList("On Redstone Repeater", "OnRedstoneRepeater"));
-		blockList.put((short)95, Arrays.asList("Locked Chest", "LockedChest"));
-		blockList.put((short)96, Arrays.asList("Trap Door", "TrapDoor"));
-		blockList.put((short)97, Arrays.asList("Monster Egg", "MonsterEgg", "SilverfishSpawner"));
-		blockList.put((short)98, Arrays.asList("Stone Bricks", "StoneBricks", "StoneBrick"));
-		blockList.put((short)99, Arrays.asList("Huge Brown Mushroom", "HugeBrownMushroom", "HugeMushroom"));
-		blockList.put((short)100, Arrays.asList("Huge Red Mushroom", "HugeRedMushroom"));
-		blockList.put((short)101, Arrays.asList("Iron Bars", "IronBars", "Bars"));
-		blockList.put((short)102, Arrays.asList("Glass Pane", "GlassPane", "ThinGlass"));
-		blockList.put((short)103, Arrays.asList("Melon"));
-		blockList.put((short)104, Arrays.asList("Pumpkin Stem", "PumpkinStem"));
-		blockList.put((short)105, Arrays.asList("Melon Stem", "MelonStem"));
-		blockList.put((short)106, Arrays.asList("Vines", "Vine"));
-		blockList.put((short)107, Arrays.asList("Fence Gate", "FenceGate", "Gate"));
-		blockList.put((short)108, Arrays.asList("Brick Stairs", "BrickStairs", "BrickStair"));
-		blockList.put((short)109, Arrays.asList("Stone Brick Stairs", "StoneBrickStairs", "StoneBrickStair"));
-		blockList.put((short)110, Arrays.asList("Mycelium"));
-		blockList.put((short)111, Arrays.asList("LilyPad"));
-		blockList.put((short)112, Arrays.asList("Nether Bricks", "NetherBricks", "NetherBrick"));
-		blockList.put((short)113, Arrays.asList("Nether Brick Fence", "NetherBrickFence"));
-		blockList.put((short)114, Arrays.asList("Nether Brick Stairs", "NetherBrickStairs", "NetherBrickStair"));
-		blockList.put((short)115, Arrays.asList("Nether Wart", "NetherWart"));
-		blockList.put((short)116, Arrays.asList("Enchanting Table", "EnchantingTable", "EnchantmentTable"));
-		blockList.put((short)117, Arrays.asList("Brewing stand", "BrewingStand"));
-		blockList.put((short)118, Arrays.asList("Cauldron"));
-		blockList.put((short)119, Arrays.asList("End Portal", "EndPortal"));
-		blockList.put((short)120, Arrays.asList("End Portal Frame", "EndPortalFrame"));
-		blockList.put((short)121, Arrays.asList("End Stone", "EndStone"));
-		blockList.put((short)122, Arrays.asList("Dragon Egg", "DragonEgg"));
-		blockList.put((short)123, Arrays.asList("Redstone Lamp", "RedstoneLamp", "OffRedstoneLamp"));
-		blockList.put((short)124, Arrays.asList("On Redstone Lamp", "OnRedstoneLamp"));
-		blockList.put((short)125, Arrays.asList("Wooden Double Slab", "WoodenDoubleSlab"));
-		blockList.put((short)126, Arrays.asList("Wooden Slab", "WoodenSlab"));
-		blockList.put((short)127, Arrays.asList("Cocoa Plant", "CocoaPlant"));
-		blockList.put((short)128, Arrays.asList("Sandstone Stairs", "SandstoneStairs", "SandstoneStair"));
-		blockList.put((short)129, Arrays.asList("Emerald", "EmeraldOre"));
-		blockList.put((short)130, Arrays.asList("Ender Chest", "EnderChest"));
-		blockList.put((short)131, Arrays.asList("Tripwire Hook", "TripwireHook"));
-		blockList.put((short)132, Arrays.asList("Tripwire"));
-		blockList.put((short)133, Arrays.asList("Emerald Block", "EmeraldBlock", "BlockOfEmerald"));
-		blockList.put((short)134, Arrays.asList("Spruce Wood Stairs", "SpruceWoodStairs", "SpruceWoodStair"));
-		blockList.put((short)135, Arrays.asList("Birch Wood Stairs", "BirchWoodStairs", "BirchWoodStair"));
-		blockList.put((short)136, Arrays.asList("Jungle Wood Stairs", "JungleWoodStairs", "JungleWoodStair"));
-		blockList.put((short)137, Arrays.asList("Command Block", "CommandBlock", "CommandBeacon"));
-		blockList.put((short)138, Arrays.asList("Beacon"));
-		blockList.put((short)139, Arrays.asList("Cobble Stone Wall", "CobblestoneWall", "CobbleWall"));
-		blockList.put((short)140, Arrays.asList("Flower Pot", "FlowerPot", "PlantPot", "Pot"));
-		blockList.put((short)141, Arrays.asList("Carrots"));
-		blockList.put((short)142, Arrays.asList("Potatoes", "Potatos"));
-		blockList.put((short)143, Arrays.asList("Wood Button", "WoodButton", "WoodenButton"));
-		blockList.put((short)144, Arrays.asList("Head", "MobHead"));
-		blockList.put((short)145, Arrays.asList("Anvil"));
-		blockList.put((short)146, Arrays.asList("Trapped chest", "TrappedChest", "TrapChest", "ChestTrap", "RedstoneChest"));
-		blockList.put((short)147, Arrays.asList("Light Weighted Pressure Plate", "LightWeightedPressurePlate", "LightPressurePlate"));
-		blockList.put((short)148, Arrays.asList("Heavy Weighted Pressure Plate", "HeavyWeightedPressurePlate", "HeavyPressurePlate"));
-		blockList.put((short)149, Arrays.asList("Inactive Redstone Comparator", "InactiveRedstoneComparator", "RedstoneComparator", "Comparator"));
-		blockList.put((short)150, Arrays.asList("Active Redstone Comparator", "ActiveRedstoneComparator", "ActiveComparator"));
-		blockList.put((short)151, Arrays.asList("Daylight Sensor", "DaylightSensor", "LightSensor", "SolarPanel"));
-		blockList.put((short)152, Arrays.asList("Block Of Redstone", "BlockOfRedstone", "RedstoneBlock"));
-		blockList.put((short)153, Arrays.asList("Nether Quartz Ore", "NetherQuartzOre", "QuartzOre", "NetherOre"));
-		blockList.put((short)154, Arrays.asList("Hopper"));
-		blockList.put((short)155, Arrays.asList("Block of Quartz", "BlockofQuartz", "QuartzBlock"));
-		blockList.put((short)156, Arrays.asList("Quartz Stairs", "QuartzStairs", "QuartzStair"));
-		blockList.put((short)157, Arrays.asList("Activator Rail", "ActivatorRail"));
-		blockList.put((short)158, Arrays.asList("Dropper"));
+		blockList.put(0, Arrays.asList("Air", "Void", "Nothing", "Space"));
+		blockList.put(1, Arrays.asList("Stone", "SmoothStone", "Rock"));
+		blockList.put(2, Arrays.asList("Grass", "GrassDirt"));
+		blockList.put(3, Arrays.asList("Dirt", "Mud", "Ground"));
+		blockList.put(4, Arrays.asList("Cobble Stone", "CobbleStone", "Cobble"));
+		blockList.put(5, Arrays.asList("Planks", "Plank", "WoodPlanks", "WoodPlank", "WoodenPlanks", "WoodenPlank"));
+		blockList.put(6, Arrays.asList("Sapling", "Tree", "TreeSapling", "TreeSeed"));
+		blockList.put(7, Arrays.asList("BedRock", "BedStone", "Adminium"));
+		blockList.put(8, Arrays.asList("Water"));
+		blockList.put(9, Arrays.asList("Stationary Water", "StationaryWater", "StaticWater", "StillWater"));
+		blockList.put(10, Arrays.asList("Lava"));
+		blockList.put(11, Arrays.asList("Stationary Lava", "StationaryLava", "StaticLava", "StillLava"));
+		blockList.put(12, Arrays.asList("Sand"));
+		blockList.put(13, Arrays.asList("Gravel"));
+		blockList.put(14, Arrays.asList("Gold", "GoldOre"));
+		blockList.put(15, Arrays.asList("Iron", "IronOre"));
+		blockList.put(16, Arrays.asList("Coal", "CoalOre"));
+		blockList.put(17, Arrays.asList("Wood", "Trunk"));
+		blockList.put(18, Arrays.asList("Leave", "Leaves"));
+		blockList.put(19, Arrays.asList("Sponge"));
+		blockList.put(20, Arrays.asList("Glass", "GlassBlock"));
+		blockList.put(21, Arrays.asList("Lapis Ore", "LapisOre", "LapisLazuliOre"));
+		blockList.put(22, Arrays.asList("Lapis Block", "LapisBlock", "LapisLazuliBlock"));
+		blockList.put(23, Arrays.asList("Dispenser", "ItemDispenser"));
+		blockList.put(24, Arrays.asList("Sandstone"));
+		blockList.put(25, Arrays.asList("Note Block", "NoteBlock", "Note"));
+		blockList.put(26, Arrays.asList("Bed"));
+		blockList.put(27, Arrays.asList("Powered Rail", "PoweredRail", "PowerRail"));
+		blockList.put(28, Arrays.asList("Detector Rail", "DetectorRail", "PressureRail", "PressurePlateRail"));
+		blockList.put(29, Arrays.asList("Sticky Piston", "StickyPiston"));
+		blockList.put(30, Arrays.asList("Cobweb", "Cobwebs", "Web"));
+		blockList.put(31, Arrays.asList("Tall Grass", "TallGrass"));
+		blockList.put(32, Arrays.asList("Dead Bush", "DeadBush", "DeadSapling"));
+		blockList.put(33, Arrays.asList("Piston"));
+		blockList.put(34, Arrays.asList("Piston Extension", "PistonExtension"));
+		blockList.put(35, Arrays.asList("Wool"));
+		blockList.put(36, Arrays.asList("Block Moved By Piston", "BlockMovedByPiston"));
+		blockList.put(37, Arrays.asList("Dandelion"));
+		blockList.put(38, Arrays.asList("Rose"));
+		blockList.put(39, Arrays.asList("Brown Mushroom", "BrownMushroom", "Mushroom"));
+		blockList.put(40, Arrays.asList("Red Mushroom", "RedMushroom"));
+		blockList.put(41, Arrays.asList("Gold Block", "GoldBlock", "BlockOfGold"));
+		blockList.put(42, Arrays.asList("Iron Block", "IronBlock", "BlockOfIron"));
+		blockList.put(43, Arrays.asList("Double Slab", "DoubleSlab"));
+		blockList.put(44, Arrays.asList("Slab"));
+		blockList.put(45, Arrays.asList("Brick", "Bricks"));
+		blockList.put(46, Arrays.asList("TNT", "Dynamite", "Explosive"));
+		blockList.put(47, Arrays.asList("Bookshelf"));
+		blockList.put(48, Arrays.asList("Moss Cobble Stone", "MossStone", "MossyStone", "MossCobble", "MossyCobble", "MossCobbleStone", "MossyCobbleStone"));
+		blockList.put(49, Arrays.asList("Obsidian"));
+		blockList.put(50, Arrays.asList("Torch"));
+		blockList.put(51, Arrays.asList("Fire"));
+		blockList.put(52, Arrays.asList("Spawner", "MonsterSpawner", "MOBSpawner"));
+		blockList.put(53, Arrays.asList("Oak Wood Stairs", "OakWoodStairs", "OakWoodStair", "WoodStairs", "WoodStair", "WoodenStairs", "WoodenStair"));
+		blockList.put(54, Arrays.asList("Chest"));
+		blockList.put(55, Arrays.asList("Redstone Wire", "RedstoneWire", "Wire"));
+		blockList.put(56, Arrays.asList("Diamond", "DiamondOre"));
+		blockList.put(57, Arrays.asList("Diamond Block", "DiamondBlock", "BlockOfDiamond"));
+		blockList.put(58, Arrays.asList("Crafting table", "CraftingTable", "CraftingBench"));
+		blockList.put(59, Arrays.asList("Wheat Seed", "WheatSeed", "WheatSeeds"));
+		blockList.put(60, Arrays.asList("Farmland", "PlowedLand"));
+		blockList.put(61, Arrays.asList("Furnace", "Oven"));
+		blockList.put(62, Arrays.asList("Burning Furnace", "BurningFurnace", "BurningOven"));
+		blockList.put(63, Arrays.asList("Sign", "SignPost"));
+		blockList.put(64, Arrays.asList("Door", "WoodenDoor", "WoodDoor"));
+		blockList.put(65, Arrays.asList("Ladder"));
+		blockList.put(66, Arrays.asList("Rail", "Track"));
+		blockList.put(67, Arrays.asList("Cobble Stone Stairs", "CobbleStoneStairs", "CobbleStoneStair", "CobbleStairs", "CobbleStair"));
+		blockList.put(68, Arrays.asList("Wall Sign", "WallSign", "WallSignPost"));
+		blockList.put(69, Arrays.asList("Lever", "Switch"));
+		blockList.put(70, Arrays.asList("Stone Pressure Plate", "StonePressurePlate", "PressurePlate"));
+		blockList.put(71, Arrays.asList("Iron Door", "IronDoor"));
+		blockList.put(72, Arrays.asList("Wooden Pressure Plate", "WoodenPressurePlate", "WoodPressurePlate"));
+		blockList.put(73, Arrays.asList("Redstone", "RedstoneOre"));
+		blockList.put(74, Arrays.asList("Glowing Redstone", "GlowingRedstone", "GlowingRedstoneOre"));
+		blockList.put(75, Arrays.asList("Off Redstone Torch", "OffRedstoneTorch"));
+		blockList.put(76, Arrays.asList("Redstone Torch", "RedstoneTorch", "OnRedstoneTorch"));
+		blockList.put(77, Arrays.asList("Stone Button", "StoneButton"));
+		blockList.put(78, Arrays.asList("Snow Patch", "SnowPatch", "FlatSnow"));
+		blockList.put(79, Arrays.asList("Ice", "IceBlock"));
+		blockList.put(80, Arrays.asList("Snow", "SnowBlock"));
+		blockList.put(81, Arrays.asList("Cactus"));
+		blockList.put(82, Arrays.asList("Clay", "ClayBlock"));
+		blockList.put(83, Arrays.asList("Sugar Cane", "SugarCane", "Sugar", "Reed", "Cane"));
+		blockList.put(84, Arrays.asList("Jukebox"));
+		blockList.put(85, Arrays.asList("Fence"));
+		blockList.put(86, Arrays.asList("Pumpkin"));
+		blockList.put(87, Arrays.asList("Netherrack", "NetherStone"));
+		blockList.put(88, Arrays.asList("Soul Sand", "SoulSand", "SinkingSand"));
+		blockList.put(89, Arrays.asList("Glowstone"));
+		blockList.put(90, Arrays.asList("Portal", "NetherPortal"));
+		blockList.put(91, Arrays.asList("Jack O' Lantern", "JackOLantern", "Lantern", "PumpkinLantern"));
+		blockList.put(92, Arrays.asList("Cake", "CakeBlock"));
+		blockList.put(93, Arrays.asList("Redstone Repeater", "RedstoneRepeater", "OffRedstoneRepeater"));
+		blockList.put(94, Arrays.asList("On Redstone Repeater", "OnRedstoneRepeater"));
+		blockList.put(95, Arrays.asList("Locked Chest", "LockedChest"));
+		blockList.put(96, Arrays.asList("Trap Door", "TrapDoor"));
+		blockList.put(97, Arrays.asList("Monster Egg", "MonsterEgg", "SilverfishSpawner"));
+		blockList.put(98, Arrays.asList("Stone Bricks", "StoneBricks", "StoneBrick"));
+		blockList.put(99, Arrays.asList("Huge Brown Mushroom", "HugeBrownMushroom", "HugeMushroom"));
+		blockList.put(100, Arrays.asList("Huge Red Mushroom", "HugeRedMushroom"));
+		blockList.put(101, Arrays.asList("Iron Bars", "IronBars", "Bars"));
+		blockList.put(102, Arrays.asList("Glass Pane", "GlassPane", "ThinGlass"));
+		blockList.put(103, Arrays.asList("Melon"));
+		blockList.put(104, Arrays.asList("Pumpkin Stem", "PumpkinStem"));
+		blockList.put(105, Arrays.asList("Melon Stem", "MelonStem"));
+		blockList.put(106, Arrays.asList("Vines", "Vine"));
+		blockList.put(107, Arrays.asList("Fence Gate", "FenceGate", "Gate"));
+		blockList.put(108, Arrays.asList("Brick Stairs", "BrickStairs", "BrickStair"));
+		blockList.put(109, Arrays.asList("Stone Brick Stairs", "StoneBrickStairs", "StoneBrickStair"));
+		blockList.put(110, Arrays.asList("Mycelium"));
+		blockList.put(111, Arrays.asList("LilyPad"));
+		blockList.put(112, Arrays.asList("Nether Bricks", "NetherBricks", "NetherBrick"));
+		blockList.put(113, Arrays.asList("Nether Brick Fence", "NetherBrickFence"));
+		blockList.put(114, Arrays.asList("Nether Brick Stairs", "NetherBrickStairs", "NetherBrickStair"));
+		blockList.put(115, Arrays.asList("Nether Wart", "NetherWart"));
+		blockList.put(116, Arrays.asList("Enchanting Table", "EnchantingTable", "EnchantmentTable"));
+		blockList.put(117, Arrays.asList("Brewing stand", "BrewingStand"));
+		blockList.put(118, Arrays.asList("Cauldron"));
+		blockList.put(119, Arrays.asList("End Portal", "EndPortal"));
+		blockList.put(120, Arrays.asList("End Portal Frame", "EndPortalFrame"));
+		blockList.put(121, Arrays.asList("End Stone", "EndStone"));
+		blockList.put(122, Arrays.asList("Dragon Egg", "DragonEgg"));
+		blockList.put(123, Arrays.asList("Redstone Lamp", "RedstoneLamp", "OffRedstoneLamp"));
+		blockList.put(124, Arrays.asList("On Redstone Lamp", "OnRedstoneLamp"));
+		blockList.put(125, Arrays.asList("Wooden Double Slab", "WoodenDoubleSlab"));
+		blockList.put(126, Arrays.asList("Wooden Slab", "WoodenSlab"));
+		blockList.put(127, Arrays.asList("Cocoa Plant", "CocoaPlant"));
+		blockList.put(128, Arrays.asList("Sandstone Stairs", "SandstoneStairs", "SandstoneStair"));
+		blockList.put(129, Arrays.asList("Emerald", "EmeraldOre"));
+		blockList.put(130, Arrays.asList("Ender Chest", "EnderChest"));
+		blockList.put(131, Arrays.asList("Tripwire Hook", "TripwireHook"));
+		blockList.put(132, Arrays.asList("Tripwire"));
+		blockList.put(133, Arrays.asList("Emerald Block", "EmeraldBlock", "BlockOfEmerald"));
+		blockList.put(134, Arrays.asList("Spruce Wood Stairs", "SpruceWoodStairs", "SpruceWoodStair"));
+		blockList.put(135, Arrays.asList("Birch Wood Stairs", "BirchWoodStairs", "BirchWoodStair"));
+		blockList.put(136, Arrays.asList("Jungle Wood Stairs", "JungleWoodStairs", "JungleWoodStair"));
+		blockList.put(137, Arrays.asList("Command Block", "CommandBlock", "CommandBeacon"));
+		blockList.put(138, Arrays.asList("Beacon"));
+		blockList.put(139, Arrays.asList("Cobble Stone Wall", "CobblestoneWall", "CobbleWall"));
+		blockList.put(140, Arrays.asList("Flower Pot", "FlowerPot", "PlantPot", "Pot"));
+		blockList.put(141, Arrays.asList("Carrots"));
+		blockList.put(142, Arrays.asList("Potatoes", "Potatos"));
+		blockList.put(143, Arrays.asList("Wood Button", "WoodButton", "WoodenButton"));
+		blockList.put(144, Arrays.asList("Head", "MobHead"));
+		blockList.put(145, Arrays.asList("Anvil"));
+		blockList.put(146, Arrays.asList("Trapped chest", "TrappedChest", "TrapChest", "ChestTrap", "RedstoneChest"));
+		blockList.put(147, Arrays.asList("Light Weighted Pressure Plate", "LightWeightedPressurePlate", "LightPressurePlate"));
+		blockList.put(148, Arrays.asList("Heavy Weighted Pressure Plate", "HeavyWeightedPressurePlate", "HeavyPressurePlate"));
+		blockList.put(149, Arrays.asList("Inactive Redstone Comparator", "InactiveRedstoneComparator", "RedstoneComparator", "Comparator"));
+		blockList.put(150, Arrays.asList("Active Redstone Comparator", "ActiveRedstoneComparator", "ActiveComparator"));
+		blockList.put(151, Arrays.asList("Daylight Sensor", "DaylightSensor", "LightSensor", "SolarPanel"));
+		blockList.put(152, Arrays.asList("Block Of Redstone", "BlockOfRedstone", "RedstoneBlock"));
+		blockList.put(153, Arrays.asList("Nether Quartz Ore", "NetherQuartzOre", "QuartzOre", "NetherOre"));
+		blockList.put(154, Arrays.asList("Hopper"));
+		blockList.put(155, Arrays.asList("Block of Quartz", "BlockofQuartz", "QuartzBlock"));
+		blockList.put(156, Arrays.asList("Quartz Stairs", "QuartzStairs", "QuartzStair"));
+		blockList.put(157, Arrays.asList("Activator Rail", "ActivatorRail"));
+		blockList.put(158, Arrays.asList("Dropper"));
 		//
 		// Load Hanging Entity List
 		//
@@ -652,6 +655,7 @@ public class EvilBook extends JavaPlugin {
 		// TODO: Fix kick bug when the stair a player is sitting on is broken
 		// TODO: Switch MySQL to H2
 		// TODO: Make EvilEdit work in survival if the player has the needed blocks
+		// TODO: Add market place
 		//
 		// Set All Command
 		//
@@ -1183,6 +1187,127 @@ public class EvilBook extends JavaPlugin {
 			return true;
 		}
 		//
+		// Marketplace Command
+		//
+		if (command.getName().equalsIgnoreCase("market")) {
+			if (args.length >= 1) {
+				if (args[0].equalsIgnoreCase("sell")) {		
+					if (isInSurvival((Player)sender)) {
+						if (args.length == 2) {
+							//TODO: Allow items to be sold on the market place
+							if (((Player)sender).getItemInHand().getTypeId() > 158) {
+								sender.sendMessage("§7Only blocks can be sold on the market place at the moment");
+							} else if (((Player)sender).getItemInHand().getTypeId() == 3 || ((Player)sender).getItemInHand().getTypeId() == 0) {
+								sender.sendMessage("§7This item can't be sold on the market place");
+							} else if (!isInteger(args[1]) || Integer.valueOf(args[1]) < 1) {
+								sender.sendMessage("§7Please enter a valid price to sell the item at");
+							} else {
+								Map<Integer, Integer> enchantmentList = new HashMap<Integer, Integer>();
+								for (int i = 0; i < ((Player)sender).getItemInHand().getEnchantments().size(); i++) enchantmentList.put(((Enchantment)((Player)sender).getItemInHand().getEnchantments().keySet().toArray()[i]).getId(), (Integer)((Player)sender).getItemInHand().getEnchantments().values().toArray()[i]);
+								marketInventory.add(new MarketItemStack(sender.getName(), Integer.valueOf(args[1]), ((Player)sender).getItemInHand().getAmount(), ((Player)sender).getItemInHand().getTypeId(), ((Player)sender).getItemInHand().getData().getData(), enchantmentList));
+								sender.sendMessage("§a" + ((Player)sender).getItemInHand().getAmount() + " items have been put up for sale on the market for $" + args[1] + " each");
+								((Player)sender).getInventory().removeItem(((Player)sender).getItemInHand());
+								//TODO: Make it so a player can sell x amount of the item
+								//} else if (args.length == 3) {
+								//if (((Player)sender).getInventory().containsAtLeast(((Player)sender).getItemInHand(), Integer.valueOf(args[2]))) {
+								//Map<Integer, Integer> enchantmentList = new HashMap<Integer, Integer>();
+								//for (int i = 0; i < ((Player)sender).getItemInHand().getEnchantments().size(); i++) enchantmentList.put(((Enchantment)((Player)sender).getItemInHand().getEnchantments().keySet().toArray()[i]).getId(), (Integer)((Player)sender).getItemInHand().getEnchantments().values().toArray()[i]);
+								//marketInventory.add(new MarketItemStack(sender.getName(), Integer.valueOf(args[1]), Integer.valueOf(args[2]), ((Player)sender).getItemInHand().getTypeId(), ((Player)sender).getItemInHand().getData().getData(), enchantmentList));
+								//sender.sendMessage("§a" + Integer.valueOf(args[2]) + " items have been put up for sale on the market for $" + args[1] + " each");
+								//((Player)sender).getInventory().removeItem(items,);
+								//} else {
+								//}
+								try {
+									saveObject(marketInventory, "plugins/EvilBook/MarketInventory.db");
+								} catch (Exception exception) {
+									logSevere("Failed to save market inventory");
+									exception.printStackTrace();
+								}
+							}
+						} else {
+							sender.sendMessage("§5Incorrect command usage");
+							sender.sendMessage("§d/market sell [pricePerItem]");
+							//sender.sendMessage("§d/market sell [pricePerItem] [amount]");
+						}
+					} else {
+						sender.sendMessage("§7You can only sell items in a survival world");
+					}
+				} else if (args[0].equalsIgnoreCase("buy")) {
+					if (isInSurvival((Player)sender)) {
+						if (args.length == 2) {
+							if (!isInteger(args[1]) || Integer.valueOf(args[1]) >= marketInventory.size()) {
+								sender.sendMessage("§7Please enter a valid item code to purchase");
+							}
+							if (getProfile(sender).money >= marketInventory.get(Integer.valueOf(args[1])).price) {
+								getProfile(sender).money -= marketInventory.get(Integer.valueOf(args[1])).price;
+								Player seller = getPlayer(marketInventory.get(Integer.valueOf(args[1])).seller);
+								if (seller != null) {
+									getProfile(seller).money += marketInventory.get(Integer.valueOf(args[1])).price;
+									seller.sendMessage(((Player)sender).getDisplayName() + "§a purchased your market item of " + blockList.get(marketInventory.get(Integer.valueOf(args[1])).itemID).get(0) + " for $" + marketInventory.get(Integer.valueOf(args[1])).price);
+								} else {
+									String money = getOfflineProperty(marketInventory.get(Integer.valueOf(args[1])).seller, "Money");
+									money = Integer.toString(Integer.valueOf(money) + marketInventory.get(Integer.valueOf(args[1])).price);
+									setOfflineProperty(marketInventory.get(Integer.valueOf(args[1])).seller, "Money", money);
+								}
+								sender.sendMessage("§aYou have paid " + getServer().getOfflinePlayer(marketInventory.get(Integer.valueOf(args[1])).seller).getName() + " $" + marketInventory.get(Integer.valueOf(args[1])).price);
+								((Player)sender).getInventory().addItem(marketInventory.get(Integer.valueOf(args[1])).toItemStack(1));
+								if (marketInventory.get(Integer.valueOf(args[1])).amount == 1) {
+									marketInventory.remove(marketInventory.get(Integer.valueOf(args[1])));
+								} else {
+									marketInventory.get(Integer.valueOf(args[1])).amount--;
+								}
+								try {
+									saveObject(marketInventory, "plugins/EvilBook/MarketInventory.db");
+								} catch (Exception exception) {
+									logSevere("Failed to save market inventory");
+									exception.printStackTrace();
+								}
+							} else {
+								sender.sendMessage("§5You don't have enough money for this item");
+								sender.sendMessage("§dYou need to earn $" + (marketInventory.get(Integer.valueOf(args[1])).price - getProfile(sender).money));
+							}
+						} else {
+							sender.sendMessage("§5Incorrect command usage");
+							sender.sendMessage("§d/market buy [itemCode]");
+							//sender.sendMessage("§d/market buy [itemCode] [amount]");
+						}
+					} else {
+						sender.sendMessage("§7You can only purchase items in a survival world");
+					}
+				} else if (args[0].equalsIgnoreCase("shop")) {
+					List<String> marketShopPages = new ArrayList<String>();
+					marketShopPages.add("§5Amentrix Marketplace\n\n§dThere are " + marketInventory.size() + " items for sale\n\n§7To purchase an item /market buy [itemCode]\n\n§7Please goto the next page to see the items for sale");
+					for (int page = 0; page < Math.ceil((double)marketInventory.size() / 3); page++) {
+						String pageText = "";
+						for (int item = page * 3; item < (page * 3) + 3; item ++) {
+							if (item >= marketInventory.size()) continue;
+							pageText += "§d$" + marketInventory.get(item).price + " per item \n§5" + marketInventory.get(item).amount + " x " + blockList.get(marketInventory.get(item).itemID).get(0) + "\n§7Item code: " + item + "\n\n";
+						}
+						marketShopPages.add(pageText);
+					}
+					((Player)sender).getInventory().addItem(getBook("Market Catalogue", "Amentrix", marketShopPages));
+				} else if (args[0].equalsIgnoreCase("remove")) {
+					if (getProfile(sender).rank == Rank.ServerOwner) {
+						marketInventory.remove(marketInventory.get(Integer.valueOf(args[1])));
+						sender.sendMessage("§7Removed all items with code " + args[1] + " off the market place");
+					}
+				} else {
+					sender.sendMessage("§5Incorrect command usage");
+					sender.sendMessage("§d/market sell [pricePerItem]");
+					//sender.sendMessage("§d/market sell [pricePerItem] [amount]");
+					sender.sendMessage("§d/market buy [itemCode]");
+					sender.sendMessage("§d/market shop");
+				}
+			} else {
+				sender.sendMessage("§5Incorrect command usage");
+				sender.sendMessage("§d/market sell [pricePerItem]");
+				//sender.sendMessage("§d/market sell [pricePerItem] [amount]");
+				sender.sendMessage("§d/market buy [itemCode]");
+				sender.sendMessage("§d/market shop");
+			}
+			return true;
+		}
+		//
 		// Zombies Command
 		//
 		if (command.getName().equalsIgnoreCase("zombies")) {
@@ -1403,7 +1528,7 @@ public class EvilBook extends JavaPlugin {
 				if (((Player) sender).getInventory().getItemInHand().getTypeId() > blockList.size()) {
 					sender.sendMessage("§7You are now wearing a custom helmet");
 				} else {
-					sender.sendMessage("§7You are now wearing a " + blockList.get((short)((Player) sender).getInventory().getItemInHand().getTypeId()).get(0) + " helmet");
+					sender.sendMessage("§7You are now wearing a " + blockList.get(((Player) sender).getInventory().getItemInHand().getTypeId()).get(0) + " helmet");
 				}
 			}
 			return true;
