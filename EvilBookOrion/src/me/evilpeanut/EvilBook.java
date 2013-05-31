@@ -72,10 +72,10 @@ import org.bukkit.util.Vector;
  */
 public class EvilBook extends JavaPlugin {
 	public Map<String, PlayerProfile> playerProfiles = new HashMap<String, PlayerProfile>();
-	public List<MarketItemStack> marketInventory = new ArrayList<MarketItemStack>();
 	public Map<Integer, List<String>> blockList = new HashMap<Integer, List<String>>();
+	public Map<Location, String[]> dynamicSignList = new HashMap<Location, String[]>();
+	public List<MarketItemStack> marketInventory = new ArrayList<MarketItemStack>();
 	public Map<Byte, String> hangingEntityList = new HashMap<Byte, String>();
-	public List<DynamicSign> dynamicSignList = new ArrayList<DynamicSign>();
 	public Map<String, Location> warpList = new HashMap<String, Location>();
 	public Map<String, Byte> commandBlacklist = new HashMap<String, Byte>();
 	public List<EvilEditBlock> EvilEdit = new ArrayList<EvilEditBlock>();
@@ -421,6 +421,7 @@ public class EvilBook extends JavaPlugin {
 		//
 		// Load time signs
 		//
+		//TODO: Improve this
 		try {
 			Properties propTimeSign = new Properties();
 			String[] timeSignFiles = new File("plugins/EvilBook/Dynamic Signs/").list();
@@ -434,7 +435,7 @@ public class EvilBook extends JavaPlugin {
 				text[1] = propTimeSign.getProperty("Text2");
 				text[2] = propTimeSign.getProperty("Text3");
 				text[3] = propTimeSign.getProperty("Text4");
-				dynamicSignList.add(new DynamicSign(new Location(getServer().getWorld(location.split(",")[0]), Double.valueOf(location.split(",")[1]), Double.valueOf(location.split(",")[2]), Double.valueOf(location.split(",")[3])), text));
+				dynamicSignList.put(new Location(getServer().getWorld(location.split(",")[0]), Double.valueOf(location.split(",")[1]), Double.valueOf(location.split(",")[2]), Double.valueOf(location.split(",")[3])), text);
 			}
 		} catch (Exception exception) {
 			logSevere("Failed to load time sign database");

@@ -1,6 +1,6 @@
 name: EvilBook
 main: me.evilpeanut.EvilBook
-version: 2.0
+version: 2.1
 commands:
   market:
     description: Marketplace commands
@@ -13,9 +13,6 @@ commands:
     usage: /<command>
   setall:
     description: Set the property to a value in all player profiles
-    usage: /<command>
-  evilland:
-    description: Teleport to evilland
     usage: /<command>
   hsphere:
     description: Generate a hollow sphere

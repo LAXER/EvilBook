@@ -913,7 +913,7 @@ public class EventListener implements Listener {
 			text[1] = plugin.replaceAllIgnoreCase(text[1], "[Weather]", "[weather]");
 			text[2] = plugin.replaceAllIgnoreCase(text[2], "[Weather]", "[weather]");
 			text[3] = plugin.replaceAllIgnoreCase(text[3], "[Weather]", "[weather]");
-			plugin.dynamicSignList.add(new DynamicSign(e.getBlock().getLocation(), text));
+			plugin.dynamicSignList.put(e.getBlock().getLocation(), text);
 			try {
 				Properties prop = new Properties();
 				prop.setProperty("Location", e.getBlock().getLocation().getWorld().getName() + "," + e.getBlock().getLocation().getBlockX() + "," + e.getBlock().getLocation().getBlockY() + "," + e.getBlock().getLocation().getBlockZ());

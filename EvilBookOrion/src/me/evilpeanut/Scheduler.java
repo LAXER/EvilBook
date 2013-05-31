@@ -1,5 +1,7 @@
 package me.evilpeanut;
 
+import java.util.Map.Entry;
+
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -48,21 +50,21 @@ public class Scheduler {
 	public void UpdateDynamicSigns() {
 		plugin.getServer().getScheduler().runTaskTimer(plugin, new Runnable() {
 			public void run() {
-				for (int i = 0; i < plugin.dynamicSignList.size(); i++) {
+				for(Entry<Location, String[]> entry : plugin.dynamicSignList.entrySet()) {
 					try {
-						Block block = plugin.dynamicSignList.get(i).getLocation().getWorld().getBlockAt(plugin.dynamicSignList.get(i).getLocation());
+						Block block = entry.getKey().getWorld().getBlockAt(entry.getKey());
 						Sign s = (Sign) block.getState();
-						String time = plugin.getTime(plugin.dynamicSignList.get(i).getLocation().getWorld());
+						String time = plugin.getTime(entry.getKey().getWorld());
 						String weather = plugin.getWeather(block);
-						s.setLine(0, plugin.dynamicSignList.get(i).getLines()[0].replace("[time]", time).replace("[weather]", weather));
-						s.setLine(1, plugin.dynamicSignList.get(i).getLines()[1].replace("[time]", time).replace("[weather]", weather));
-						s.setLine(2, plugin.dynamicSignList.get(i).getLines()[2].replace("[time]", time).replace("[weather]", weather));
-						s.setLine(3, plugin.dynamicSignList.get(i).getLines()[3].replace("[time]", time).replace("[weather]", weather));
+						s.setLine(0, entry.getValue()[0].replace("[time]", time).replace("[weather]", weather));
+						s.setLine(1, entry.getValue()[1].replace("[time]", time).replace("[weather]", weather));
+						s.setLine(2, entry.getValue()[2].replace("[time]", time).replace("[weather]", weather));
+						s.setLine(3, entry.getValue()[3].replace("[time]", time).replace("[weather]", weather));
 						if (!s.getLine(0).equals(((Sign)block.getState()).getLine(0)) || !s.getLine(1).equals(((Sign)block.getState()).getLine(1)) || !s.getLine(2).equals(((Sign)block.getState()).getLine(2)) || !s.getLine(3).equals(((Sign)block.getState()).getLine(3))) {
 							s.update();
 						}
 					} catch (Exception exception) {
-						plugin.dynamicSignList.remove(i);
+						plugin.dynamicSignList.remove(entry.getKey());
 					}
 				}
 				if (plugin.EvilEdit.size() == 0) return;
