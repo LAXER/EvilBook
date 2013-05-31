@@ -415,7 +415,6 @@ public class EvilBook extends JavaPlugin {
 		//
 		// Load time signs
 		//
-		//TODO: Improve this
 		try {
 			Properties propTimeSign = new Properties();
 			String[] timeSignFiles = new File("plugins/EvilBook/Dynamic Signs/").list();
@@ -424,11 +423,7 @@ public class EvilBook extends JavaPlugin {
 				propTimeSign.load(inputStream);
 				inputStream.close();
 				String location = propTimeSign.getProperty("Location");
-				String[] text = new String[4];
-				text[0] = propTimeSign.getProperty("Text1");
-				text[1] = propTimeSign.getProperty("Text2");
-				text[2] = propTimeSign.getProperty("Text3");
-				text[3] = propTimeSign.getProperty("Text4");
+				String[] text = {propTimeSign.getProperty("Text1"), propTimeSign.getProperty("Text2"), propTimeSign.getProperty("Text3"), propTimeSign.getProperty("Text4")};
 				dynamicSignList.put(new Location(getServer().getWorld(location.split(",")[0]), Double.valueOf(location.split(",")[1]), Double.valueOf(location.split(",")[2]), Double.valueOf(location.split(",")[3])), text);
 			}
 		} catch (Exception exception) {
