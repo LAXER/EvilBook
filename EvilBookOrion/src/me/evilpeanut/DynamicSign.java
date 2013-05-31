@@ -15,19 +15,9 @@ public class DynamicSign {
 	Location getLocation(){ return location; }
 	
 	/**
-	 * @param location The location of the sign
-	 */
-	void setLocation(Location location){ this.location = location; }
-	
-	/**
 	 * @return The lines of text on the sign
 	 */
 	String[] getLines() { return lines; }
-	
-	/**
-	 * @param lines The lines of text on the sign
-	 */
-	void setLines(String[] lines){ this.lines = lines; }
 	
 	/**
 	 * Define a new dynamic sign

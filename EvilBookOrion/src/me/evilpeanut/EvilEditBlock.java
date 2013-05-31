@@ -17,19 +17,9 @@ public class EvilEditBlock {
 	String getPlayer(){ return player; }
 
 	/**
-	 * @param player The player preforming the edit
-	 */
-	void setPlayer(String player){ this.player = player; }
-
-	/**
 	 * @return The location of the block
 	 */
 	Location getLocation(){ return location; }
-
-	/**
-	 * @param location The location of the block
-	 */
-	void setLocation(Location location){ this.location = location; }
 
 	/**
 	 * @return The data of the block
@@ -37,19 +27,9 @@ public class EvilEditBlock {
 	Byte getData(){ return data; }
 	
 	/**
-	 * @param location The location of the block
-	 */
-	void setData(Byte data){ this.data = data; }
-	
-	/**
 	 * @return The type ID of the block
 	 */
 	int getTypeID(){ return typeID; }
-	
-	/**
-	 * @param location The location of the block
-	 */
-	void setTypeID(int typeID){ this.typeID = typeID; }
 
 	/**
 	 * Define a new evil edit block with a data value of 0

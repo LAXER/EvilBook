@@ -655,7 +655,7 @@ public class EvilBook extends JavaPlugin {
 		// TODO: Fix kick bug when the stair a player is sitting on is broken
 		// TODO: Switch MySQL to H2
 		// TODO: Make EvilEdit work in survival if the player has the needed blocks
-		// TODO: Add market place
+		// TODO: Fix books not saving in survival properly
 		//
 		// Set All Command
 		//

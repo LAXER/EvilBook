@@ -30,19 +30,9 @@ public enum Rank {
 	Byte getID(){ return ID; }
 	
 	/**
-	 * @param ID The ID of the rank
-	 */
-	void setID(Byte ID){ this.ID = ID; }
-	
-	/**
 	 * @return The name of the rank
 	 */
 	String getName(){ return name; }
-	
-	/**
-	 * @param name The name of the rank
-	 */
-	void setName(String name){ this.name = name; }
 	
 	/**
 	 * @return The prefix of the rank
@@ -54,11 +44,6 @@ public enum Rank {
 			return prefix; 
 		}
 	}
-
-	/**
-	 * @param prefix The prefix of the rank
-	 */
-	void setPrefix(String prefix){ this.prefix = prefix; }
 	
 	/**
 	 * @return The color of the rank
@@ -72,19 +57,9 @@ public enum Rank {
 	}
 	
 	/**
-	 * @param color The color of the rank
-	 */
-	void setColor(String color){ this.color = color; }
-	
-	/**
 	 * @return The evil edit area limit of the rank
 	 */
 	Integer getEvilEditAreaLimit(){ return evilEditAreaLimit; }
-	
-	/**
-	 * @param evilEditAreaLimit The evil edit area limit of the rank
-	 */
-	void setEvilEditAreaLimit(Integer evilEditAreaLimit){ this.evilEditAreaLimit = evilEditAreaLimit; }
 	
 	/**
 	 * Define a new rank
