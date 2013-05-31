@@ -265,12 +265,6 @@ public class EvilBook extends JavaPlugin {
 		//evilEndLand.environment(Environment.THE_END);
 		//getServer().createWorld(evilEndLand);
 		//
-		// EvilLand Generator
-		//
-		WorldCreator evilLand = new WorldCreator("EvilLand");
-		evilLand.generator(new EvilWorldChunkGenerator());
-		getServer().createWorld(evilLand);
-		//
 		// FlatLand Generator
 		//
 		WorldCreator flatLand = new WorldCreator("FlatLand");
@@ -282,10 +276,6 @@ public class EvilBook extends JavaPlugin {
 		WorldCreator spaceLand = new WorldCreator("SpaceLand");
 		spaceLand.generator(new SpaceWorldGenerator(this));
 		getServer().createWorld(spaceLand);
-		//
-		// FreeSurvival Generator
-		//
-		getServer().createWorld(new WorldCreator("FreeSurvivalLand"));
 		//
 		// Survival Generator
 		//
@@ -3595,7 +3585,7 @@ public class EvilBook extends JavaPlugin {
 	 * @return If the entity is in an survival world or not
 	 */
 	public Boolean isInSurvival(Entity entity) {
-		return entity.getWorld().getName() == "FreeSurvivalLand" || entity.getWorld().getName() == "SurvivalLand" || entity.getWorld().getName() == "SurvivalLandNether" ? true : false;
+		return entity.getWorld().getName() == "SurvivalLand" || entity.getWorld().getName() == "SurvivalLandNether" ? true : false;
 	}
 	
 	/**
@@ -3604,7 +3594,7 @@ public class EvilBook extends JavaPlugin {
 	 * @return If the world is a survival world or not
 	 */
 	public Boolean isInSurvival(String worldName) {
-		return worldName.equals("FreeSurvivalLand") || worldName.equals("SurvivalLand") || worldName.equals("SurvivalLandNether") ? true : false;
+		return worldName.equals("SurvivalLand") || worldName.equals("SurvivalLandNether") ? true : false;
 	}
 	
 	/**
