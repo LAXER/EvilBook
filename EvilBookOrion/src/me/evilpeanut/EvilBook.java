@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.ChatColor;
@@ -3503,37 +3504,33 @@ public class EvilBook extends JavaPlugin {
 				}
 				((Player)sender).getInventory().addItem(spawnItem);
 			} catch (Exception exception) {
-				for (List<String> item : blockList.values()) {
-					for (String subItem : item) {
+				for(Entry<Integer, List<String>> entry : blockList.entrySet()) {
+					for (String subItem : entry.getValue()) {
 						if (args[0].equalsIgnoreCase(subItem)) {
-							for (int i = 0; i < blockList.values().toArray().length; i++) {
-								if (blockList.get(i) == item) {
-									ItemStack spawnItem = new ItemStack(i);
-									if (args.length == 2) {
-										try {
-											spawnItem.setAmount(Integer.valueOf(args[1]));
-										} catch (Exception exception2) {
-											sender.sendMessage("§7Please enter a valid number of items to spawn");
-											return true;
-										}
-									} else if (args.length == 3) {
-										try {
-											spawnItem.setAmount(Integer.valueOf(args[1]));
-										} catch (Exception exception2) {
-											sender.sendMessage("§7Please enter a valid number of items to spawn");
-											return true;
-										}
-										try {
-											spawnItem.setData(new MaterialData(i, Byte.valueOf(args[2])));
-										} catch (Exception exception2) {
-											sender.sendMessage("§7Please enter a valid data number");
-											return true;
-										}
-									}
-									((Player)sender).getInventory().addItem(spawnItem);
+							ItemStack spawnItem = new ItemStack(entry.getKey());
+							if (args.length == 2) {
+								try {
+									spawnItem.setAmount(Integer.valueOf(args[1]));
+								} catch (Exception exception2) {
+									sender.sendMessage("§7Please enter a valid number of items to spawn");
+									return true;
+								}
+							} else if (args.length == 3) {
+								try {
+									spawnItem.setAmount(Integer.valueOf(args[1]));
+								} catch (Exception exception2) {
+									sender.sendMessage("§7Please enter a valid number of items to spawn");
+									return true;
+								}
+								try {
+									spawnItem.setData(new MaterialData(entry.getKey(), Byte.valueOf(args[2])));
+								} catch (Exception exception2) {
+									sender.sendMessage("§7Please enter a valid data number");
 									return true;
 								}
 							}
+							((Player)sender).getInventory().addItem(spawnItem);
+							return true;
 						}
 					}
 				}
