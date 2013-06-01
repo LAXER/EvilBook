@@ -2085,18 +2085,18 @@ public class EvilBook extends JavaPlugin {
 			}
 			if (args.length != 2 && args.length != 3 && args.length != 5) {
 				sender.sendMessage("§5Incorrect command usage");
-				sender.sendMessage("§d/hsphere [blockID] [radius]");
-				sender.sendMessage("§d/hsphere [blockID] [blockData] [radius]");
-				sender.sendMessage("§d/hsphere [blockID] [blockData] [radiusX] [radiusY] [radiusZ]");
+				sender.sendMessage("§d/hsphere [blockID / blockName] [radius]");
+				sender.sendMessage("§d/hsphere [blockID / blockName] [blockData] [radius]");
+				sender.sendMessage("§d/hsphere [blockID / blockName] [blockData] [radiusX] [radiusY] [radiusZ]");
 				return true;
 			}	
-			if (args.length == 2 && (!isInteger(args[0]) || !isInteger(args[1]) || Integer.valueOf(args[0]) >= blockList.size())) {
+			if (args.length == 2 && (!isInteger(args[1]) || (isInteger(args[0]) && Integer.valueOf(args[0]) >= blockList.size()))) {
 				sender.sendMessage("§7Please enter a valid radius, block ID and block data value");
 				return true;
-			} else if (args.length == 3 && (!isInteger(args[0]) || !isByte(args[1]) || !isInteger(args[2]) || Integer.valueOf(args[0]) >= blockList.size())) {
+			} else if (args.length == 3 && (!isByte(args[1]) || !isInteger(args[2]) || (isInteger(args[0]) && Integer.valueOf(args[0]) >= blockList.size()))) {
 				sender.sendMessage("§7Please enter a valid radius, block ID and block data value");
 				return true;
-			} else if (args.length == 5 && (!isInteger(args[0]) || !isByte(args[1]) || !isInteger(args[2]) || !isInteger(args[3]) || !isInteger(args[4]) || Integer.valueOf(args[0]) >= blockList.size())) {
+			} else if (args.length == 5 && (!isByte(args[1]) || !isInteger(args[2]) || !isInteger(args[3]) || !isInteger(args[4]) || (isInteger(args[0]) && Integer.valueOf(args[0]) >= blockList.size()))) {
 				sender.sendMessage("§7Please enter a valid radius, block ID and block data value");
 				return true;
 			}
@@ -2108,7 +2108,23 @@ public class EvilBook extends JavaPlugin {
 				return true;
 			}
 	        getProfile(sender).EvilEditUndo = new ArrayList<EvilEditBlock>();
-			int blockID = Integer.valueOf(args[0]);
+	        int blockID;
+			if (isInteger(args[0])) {
+				blockID = Integer.valueOf(args[0]);
+			} else {
+				nameLookup: {
+					for(Entry<Integer, List<String>> entry : blockList.entrySet()) {
+						for (String subItem : entry.getValue()) {
+							if (args[0].equalsIgnoreCase(subItem)) {
+								blockID = entry.getKey();
+								break nameLookup;
+							}
+						}
+					}
+					sender.sendMessage("§7Please enter a valid block name");
+					return true;
+				}
+			}
 			byte blockData = args.length == 2 ? 0 : Byte.valueOf(args[2]);
 			final double invRadiusX = 1 / radiusX;
 			final double invRadiusY = 1 / radiusY;
@@ -2166,11 +2182,12 @@ public class EvilBook extends JavaPlugin {
 		//
 		// Replace Command
 		//
+		//TODO: Add support for block names
 		if (command.getName().equalsIgnoreCase("replace")) {
 			if (args.length != 2 && args.length != 4) {
 				sender.sendMessage("§5Incorrect command usage");
-				sender.sendMessage("§d/replace [blockID] [blockID]");
-				sender.sendMessage("§d/replace [blockID] [blockData] [blockID] [blockData]");
+				sender.sendMessage("§d/replace [blockID / blockName] [blockID / blockName]");
+				sender.sendMessage("§d/replace [blockID / blockName] [blockData] [blockID / blockName] [blockData]");
 				return true;
 			}
 			if ((args.length == 2 && (!isInteger(args[0]) || !isInteger(args[1]))) || (args.length == 4 && (!isInteger(args[0]) || !isByte(args[1]) || !isInteger(args[2]) || !isByte(args[3])))) {
@@ -2232,11 +2249,11 @@ public class EvilBook extends JavaPlugin {
 		if (command.getName().equalsIgnoreCase("fill")) {
 			if (args.length != 1 && args.length != 2) {
 				sender.sendMessage("§5Incorrect command usage");
-				sender.sendMessage("§d/fill [blockID]");
-				sender.sendMessage("§d/fill [blockID] [blockData]");
+				sender.sendMessage("§d/fill [blockID / blockName]");
+				sender.sendMessage("§d/fill [blockID / blockName] [blockData]");
 				return true;
 			}
-			if ((!isInteger(args[0])) || (Integer.valueOf(args[0]) >= blockList.size() || Integer.valueOf(args[0]) < 0)) {
+			if (isInteger(args[0]) && (Integer.valueOf(args[0]) >= blockList.size() || Integer.valueOf(args[0]) < 0)) {
 				sender.sendMessage("§7Please enter a valid block ID");
 				return true;
 			}
@@ -2262,7 +2279,23 @@ public class EvilBook extends JavaPlugin {
 					return true;
 		        }
 		        getProfile(sender).EvilEditUndo = new ArrayList<EvilEditBlock>();
-		        int blockID = Integer.valueOf(args[0]);
+		        int blockID;
+				if (isInteger(args[0])) {
+					blockID = Integer.valueOf(args[0]);
+				} else {
+					nameLookup: {
+						for(Entry<Integer, List<String>> entry : blockList.entrySet()) {
+							for (String subItem : entry.getValue()) {
+								if (args[0].equalsIgnoreCase(subItem)) {
+									blockID = entry.getKey();
+									break nameLookup;
+								}
+							}
+						}
+						sender.sendMessage("§7Please enter a valid block name");
+						return true;
+					}
+				}
 		        for (int x = bottomBlockX; x <= topBlockX; x++)
 		        {
 		            for (int z = bottomBlockZ; z <= topBlockZ; z++)
@@ -2289,12 +2322,13 @@ public class EvilBook extends JavaPlugin {
 		//
 		// Delete Command
 		//
+		//TODO: Add support for block names
 		if (command.getName().equalsIgnoreCase("del") || command.getName().equalsIgnoreCase("delete")) {
 			if (args.length > 2) {
 				sender.sendMessage("§5Incorrect command usage");
 				sender.sendMessage("§d/del");
-				sender.sendMessage("§d/del [blockID]");
-				sender.sendMessage("§d/del [blockID] [blockData]");
+				sender.sendMessage("§d/del [blockID / blockName]");
+				sender.sendMessage("§d/del [blockID / blockName] [blockData]");
 				return true;
 			}
 			if (args.length >= 1 && (!isInteger(args[0]) || (Integer.valueOf(args[0]) >= blockList.size() || Integer.valueOf(args[0]) < 0))) {
@@ -2437,11 +2471,11 @@ public class EvilBook extends JavaPlugin {
 		if (command.getName().equalsIgnoreCase("overlay")) {
 			if (args.length != 1 && args.length != 2) {
 				sender.sendMessage("§5Incorrect command usage");
-				sender.sendMessage("§d/overlay [blockID]");
-				sender.sendMessage("§d/overlay [blockID] <blockData>");
+				sender.sendMessage("§d/overlay [blockID / blockName]");
+				sender.sendMessage("§d/overlay [blockID / blockName] <blockData>");
 				return true;
 			}
-			if (!isInteger(args[0]) || (Integer.valueOf(args[0]) >= blockList.size() || Integer.valueOf(args[0]) < 0)) {
+			if (isInteger(args[0]) && (Integer.valueOf(args[0]) >= blockList.size() || Integer.valueOf(args[0]) < 0)) {
 				sender.sendMessage("§7Please enter a valid block ID");
 				return true;
 			}
@@ -2467,7 +2501,23 @@ public class EvilBook extends JavaPlugin {
 					return true;
 		        }
 		        getProfile(sender).EvilEditUndo = new ArrayList<EvilEditBlock>();
-		        int blockID = Integer.valueOf(args[0]);
+		        int blockID;
+				if (isInteger(args[0])) {
+					blockID = Integer.valueOf(args[0]);
+				} else {
+					nameLookup: {
+						for(Entry<Integer, List<String>> entry : blockList.entrySet()) {
+							for (String subItem : entry.getValue()) {
+								if (args[0].equalsIgnoreCase(subItem)) {
+									blockID = entry.getKey();
+									break nameLookup;
+								}
+							}
+						}
+						sender.sendMessage("§7Please enter a valid block name");
+						return true;
+					}
+				}
 		        for (int x = bottomBlockX; x <= topBlockX; x++)
 		        {
 		            for (int z = bottomBlockZ; z <= topBlockZ; z++)
@@ -2495,11 +2545,11 @@ public class EvilBook extends JavaPlugin {
 		if (command.getName().equalsIgnoreCase("walls")) {
 			if (args.length != 1 && args.length != 2) {
 				sender.sendMessage("§5Incorrect command usage");
-				sender.sendMessage("§d/walls [blockID]");
-				sender.sendMessage("§d/walls [blockID] <blockData>");
+				sender.sendMessage("§d/walls [blockID / blockName]");
+				sender.sendMessage("§d/walls [blockID / blockName] <blockData>");
 				return true;
 			}
-			if (!isInteger(args[0]) || (Integer.valueOf(args[0]) >= blockList.size() || Integer.valueOf(args[0]) < 0)) {
+			if (isInteger(args[0]) && (Integer.valueOf(args[0]) >= blockList.size() || Integer.valueOf(args[0]) < 0)) {
 				sender.sendMessage("§7Please enter a valid block ID");
 				return true;
 			}
@@ -2525,7 +2575,23 @@ public class EvilBook extends JavaPlugin {
 					return true;
 		        }
 		        getProfile(sender).EvilEditUndo = new ArrayList<EvilEditBlock>();
-		        int blockID = Integer.valueOf(args[0]);
+		        int blockID;
+				if (isInteger(args[0])) {
+					blockID = Integer.valueOf(args[0]);
+				} else {
+					nameLookup: {
+						for(Entry<Integer, List<String>> entry : blockList.entrySet()) {
+							for (String subItem : entry.getValue()) {
+								if (args[0].equalsIgnoreCase(subItem)) {
+									blockID = entry.getKey();
+									break nameLookup;
+								}
+							}
+						}
+						sender.sendMessage("§7Please enter a valid block name");
+						return true;
+					}
+				}
 		        for (int x = bottomBlockX; x <= topBlockX; x++)
 		        {
 		            for (int z = bottomBlockZ; z <= topBlockZ; z++)
@@ -2557,11 +2623,11 @@ public class EvilBook extends JavaPlugin {
 		if (command.getName().equalsIgnoreCase("outline")) {
 			if (args.length != 1 && args.length != 2) {
 				sender.sendMessage("§5Incorrect command usage");
-				sender.sendMessage("§d/outline [blockID]");
-				sender.sendMessage("§d/outline [blockID] <blockData>");
+				sender.sendMessage("§d/outline [blockID / blockName]");
+				sender.sendMessage("§d/outline [blockID / blockName] <blockData>");
 				return true;
 			}
-			if (!isInteger(args[0]) || (Integer.valueOf(args[0]) >= blockList.size() || Integer.valueOf(args[0]) < 0)) {
+			if (isInteger(args[0]) && (Integer.valueOf(args[0]) >= blockList.size() || Integer.valueOf(args[0]) < 0)) {
 				sender.sendMessage("§7Please enter a valid block ID");
 				return true;
 			}
@@ -2587,7 +2653,23 @@ public class EvilBook extends JavaPlugin {
 					return true;
 		        }
 		        getProfile(sender).EvilEditUndo = new ArrayList<EvilEditBlock>();
-		        int blockID = Integer.valueOf(args[0]);
+		        int blockID;
+				if (isInteger(args[0])) {
+					blockID = Integer.valueOf(args[0]);
+				} else {
+					nameLookup: {
+						for(Entry<Integer, List<String>> entry : blockList.entrySet()) {
+							for (String subItem : entry.getValue()) {
+								if (args[0].equalsIgnoreCase(subItem)) {
+									blockID = entry.getKey();
+									break nameLookup;
+								}
+							}
+						}
+						sender.sendMessage("§7Please enter a valid block name");
+						return true;
+					}
+				}
 		        for (int x = bottomBlockX; x <= topBlockX; x++)
 		        {
 		            for (int z = bottomBlockZ; z <= topBlockZ; z++)
