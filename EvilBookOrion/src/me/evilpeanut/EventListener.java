@@ -648,7 +648,7 @@ public class EventListener implements Listener {
 		Player player = event.getPlayer();
 		try {
 			if (plugin.isInSurvival(event.getTo().getWorld().getName())) {
-				if (plugin.getProfile(player).rank.getID() < Rank.Architect.getID()) {
+				if (plugin.getProfile(player) != null && plugin.getProfile(player).rank.getID() < Rank.Architect.getID()) {
 					player.sendMessage("§7The survival world requires architect rank");
 					event.setCancelled(true);
 					return;
@@ -658,12 +658,12 @@ public class EventListener implements Listener {
 				plugin.getProfile(player).survivalLocation = event.getFrom();
 			}
 			if (event.getTo().getWorld().getName().equals("FlatLand")) {
-				if (plugin.getProfile(player).rank.getID() < plugin.commandBlacklist.get("/flatland")) {
+				if (plugin.getProfile(player) != null && plugin.getProfile(player).rank.getID() < plugin.commandBlacklist.get("/flatland")) {
 					player.sendMessage("§7You have to be a higher rank to access the flat lands");
 					event.setCancelled(true);
 				}
 			} else if (event.getTo().getWorld().getName().equals("SpaceLand")) {
-				if (plugin.getProfile(player).rank.getID() < plugin.commandBlacklist.get("/spaceland")) {
+				if (plugin.getProfile(player) != null && plugin.getProfile(player).rank.getID() < plugin.commandBlacklist.get("/spaceland")) {
 					player.sendMessage("§7You have to be a higher rank to access the space lands");
 					event.setCancelled(true);
 				}
