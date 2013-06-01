@@ -423,6 +423,11 @@ public class EvilBook extends JavaPlugin {
 				propTimeSign.load(inputStream);
 				inputStream.close();
 				String location = propTimeSign.getProperty("Location");
+				if (!getServer().getWorlds().contains(getServer().getWorld(location.split(",")[0]))) {
+					logInfo("Dynamic sign removed: World " + location.split(",")[0] + " is not loaded");
+					new File("plugins/EvilBook/Dynamic Signs/" + timeSignFiles[timeSignNo]).delete();
+					continue;
+				}
 				String[] text = {propTimeSign.getProperty("Text1"), propTimeSign.getProperty("Text2"), propTimeSign.getProperty("Text3"), propTimeSign.getProperty("Text4")};
 				dynamicSignList.put(new Location(getServer().getWorld(location.split(",")[0]), Double.valueOf(location.split(",")[1]), Double.valueOf(location.split(",")[2]), Double.valueOf(location.split(",")[3])), text);
 			}
