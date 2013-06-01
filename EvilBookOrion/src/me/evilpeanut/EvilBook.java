@@ -1984,18 +1984,18 @@ public class EvilBook extends JavaPlugin {
 			}
 			if (args.length != 2 && args.length != 3 && args.length != 5) {
 				sender.sendMessage("§5Incorrect command usage");
-				sender.sendMessage("§d/sphere [blockID] [radius]");
-				sender.sendMessage("§d/sphere [blockID] [blockData] [radius]");
-				sender.sendMessage("§d/sphere [blockID] [blockData] [radiusX] [radiusY] [radiusZ]");
+				sender.sendMessage("§d/sphere [blockID / blockName] [radius]");
+				sender.sendMessage("§d/sphere [blockID / blockName] [blockData] [radius]");
+				sender.sendMessage("§d/sphere [blockID / blockName] [blockData] [radiusX] [radiusY] [radiusZ]");
 				return true;
 			}	
-			if (args.length == 2 && (!isInteger(args[0]) || !isInteger(args[1]) || Integer.valueOf(args[0]) >= blockList.size())) {
+			if (args.length == 2 && (!isInteger(args[1]) || (isInteger(args[0]) && Integer.valueOf(args[0]) >= blockList.size()))) {
 				sender.sendMessage("§7Please enter a valid radius, block ID and block data value");
 				return true;
-			} else if (args.length == 3 && (!isInteger(args[0]) || !isByte(args[1]) || !isInteger(args[2]) || Integer.valueOf(args[0]) >= blockList.size())) {
+			} else if (args.length == 3 && (!isByte(args[1]) || !isInteger(args[2]) || (isInteger(args[0]) && Integer.valueOf(args[0]) >= blockList.size()))) {
 				sender.sendMessage("§7Please enter a valid radius, block ID and block data value");
 				return true;
-			} else if (args.length == 5 && (!isInteger(args[0]) || !isByte(args[1]) || !isInteger(args[2]) || !isInteger(args[3]) || !isInteger(args[4]) || Integer.valueOf(args[0]) >= blockList.size())) {
+			} else if (args.length == 5 && (!isByte(args[1]) || !isInteger(args[2]) || !isInteger(args[3]) || !isInteger(args[4]) || (isInteger(args[0]) && Integer.valueOf(args[0]) >= blockList.size()))) {
 				sender.sendMessage("§7Please enter a valid radius, block ID and block data value");
 				return true;
 			}
@@ -2005,10 +2005,25 @@ public class EvilBook extends JavaPlugin {
 			if ((radiusX > 25 || radiusY > 25 || radiusZ > 25) && getProfile(sender).rank != Rank.ServerOwner) {
 				sender.sendMessage("§7The maximum radius limit is 25");
 				return true;
-			}		
-	        alertOwner(sender.getName() + " created a sphere of " + args[0]);   
+			}		 
 	        getProfile(sender).EvilEditUndo = new ArrayList<EvilEditBlock>();
-			int blockID = Integer.valueOf(args[0]);
+			int blockID;
+			if (isInteger(args[0])) {
+				blockID = Integer.valueOf(args[0]);
+			} else {
+				nameLookup: {
+					for(Entry<Integer, List<String>> entry : blockList.entrySet()) {
+						for (String subItem : entry.getValue()) {
+							if (args[0].equalsIgnoreCase(subItem)) {
+								blockID = entry.getKey();
+								break nameLookup;
+							}
+						}
+					}
+					sender.sendMessage("§7Please enter a valid block name");
+					return true;
+				}
+			}
 			byte blockData = args.length == 2 ? 0 : Byte.valueOf(args[2]);
 			final double invRadiusX = 1 / radiusX;
 			final double invRadiusY = 1 / radiusY;
@@ -2057,6 +2072,7 @@ public class EvilBook extends JavaPlugin {
 					}
 				}
 			}
+	        alertOwner(sender.getName() + " created a sphere of " + args[0]);
 			return true;
 		}
 		//
@@ -2091,7 +2107,6 @@ public class EvilBook extends JavaPlugin {
 				sender.sendMessage("§7The maximum radius limit is 25");
 				return true;
 			}
-	        alertOwner(sender.getName() + " created a hollow sphere of " + args[0]);
 	        getProfile(sender).EvilEditUndo = new ArrayList<EvilEditBlock>();
 			int blockID = Integer.valueOf(args[0]);
 			byte blockData = args.length == 2 ? 0 : Byte.valueOf(args[2]);
@@ -2145,6 +2160,7 @@ public class EvilBook extends JavaPlugin {
 					}
 				}
 			}
+			alertOwner(sender.getName() + " created a hollow sphere of " + args[0]);
 			return true;
 		}
 		//
@@ -2182,7 +2198,6 @@ public class EvilBook extends JavaPlugin {
 		        	sender.sendMessage("§7Rank-up to lift this limit");
 					return true;
 		        }
-		        alertOwner(sender.getName() + " replaced an area of " + args[0] + " blocks with " + args[1]);
 		        getProfile(sender).EvilEditUndo = new ArrayList<EvilEditBlock>();
 		        int blockIDReplace = Integer.valueOf(args[0]);
 		        int blockID = args.length == 2 ? Integer.valueOf(args[1]) : Integer.valueOf(args[2]);
@@ -2208,6 +2223,7 @@ public class EvilBook extends JavaPlugin {
 	        	logSevere("§7Evil Edit action failed");
 	        	exception.printStackTrace();
 	        }
+	        alertOwner(sender.getName() + " replaced an area of " + args[0] + " blocks with " + args[1]);
 			return true;
 		}
 		//
@@ -2245,7 +2261,6 @@ public class EvilBook extends JavaPlugin {
 		        	sender.sendMessage("§7Rank-up to lift this limit");
 					return true;
 		        }
-		        alertOwner(sender.getName() + " filled an area of blocks with " + args[0]);
 		        getProfile(sender).EvilEditUndo = new ArrayList<EvilEditBlock>();
 		        int blockID = Integer.valueOf(args[0]);
 		        for (int x = bottomBlockX; x <= topBlockX; x++)
@@ -2268,6 +2283,7 @@ public class EvilBook extends JavaPlugin {
 	        	logSevere("§7Evil Edit action failed");
 	        	exception.printStackTrace();
 	        }
+	        alertOwner(sender.getName() + " filled an area of blocks with " + args[0]);
 			return true;
 		}
 		//
@@ -2306,7 +2322,6 @@ public class EvilBook extends JavaPlugin {
 		        	sender.sendMessage("§7Rank-up to lift this limit");
 					return true;
 		        }
-		        alertOwner(sender.getName() + " deleted an area of blocks");
 		        getProfile(sender).EvilEditUndo = new ArrayList<EvilEditBlock>();
 		        for (int x = bottomBlockX; x <= topBlockX; x++)
 		        {
@@ -2324,6 +2339,7 @@ public class EvilBook extends JavaPlugin {
 	        	logSevere("§7Evil Edit action failed");
 	        	exception.printStackTrace();
 	        }
+	        alertOwner(sender.getName() + " deleted an area of blocks");
 			return true;
 		}
 		//
@@ -2351,7 +2367,6 @@ public class EvilBook extends JavaPlugin {
 		        	sender.sendMessage("§7Rank-up to lift this limit");
 					return true;
 		        }
-		        alertOwner(sender.getName() + " copied an area of blocks");
 		        getProfile(sender).EvilEditCopy = new ArrayList<EvilEditBlock>();
 		        for (int x = bottomBlockX; x <= topBlockX; x++)
 		        {
@@ -2367,6 +2382,7 @@ public class EvilBook extends JavaPlugin {
 	        	logSevere("§7Evil Edit action failed");
 	        	exception.printStackTrace();
 	        }
+	        alertOwner(sender.getName() + " copied an area of blocks");
 			return true;
 		}
 		//
@@ -2401,7 +2417,6 @@ public class EvilBook extends JavaPlugin {
 		        	if (block.getLocation().getBlockZ() > topBlockZ) topBlockZ = block.getLocation().getBlockZ();
 		        	if (block.getLocation().getBlockZ() < bottomBlockZ) bottomBlockZ = block.getLocation().getBlockZ();
 		        }
-		        alertOwner(sender.getName() + " pasted an area of blocks");
 		        getProfile(sender).EvilEditUndo = new ArrayList<EvilEditBlock>();
 		        for (int i = 0; i != getProfile(sender).EvilEditCopy.size(); i++) {
 		        	Location loc = new Location(((Player)sender).getLocation().getWorld(), ((Player)sender).getLocation().getBlockX() - getProfile(sender).EvilEditCopy.get(i).getLocation().getBlockX(), ((Player)sender).getLocation().getBlockY() - getProfile(sender).EvilEditCopy.get(i).getLocation().getBlockY(), ((Player)sender).getLocation().getBlockZ() - getProfile(sender).EvilEditCopy.get(i).getLocation().getBlockZ());
@@ -2413,6 +2428,7 @@ public class EvilBook extends JavaPlugin {
 	        	logSevere("§7Evil Edit action failed");
 	        	exception.printStackTrace();
 	        }
+	        alertOwner(sender.getName() + " pasted an area of blocks");
 			return true;
 		}
 		//
@@ -2450,7 +2466,6 @@ public class EvilBook extends JavaPlugin {
 		        	sender.sendMessage("§7Rank-up to lift this limit");
 					return true;
 		        }
-		        alertOwner(sender.getName() + " overlayed an area of blocks with " + args[0]);
 		        getProfile(sender).EvilEditUndo = new ArrayList<EvilEditBlock>();
 		        int blockID = Integer.valueOf(args[0]);
 		        for (int x = bottomBlockX; x <= topBlockX; x++)
@@ -2471,6 +2486,7 @@ public class EvilBook extends JavaPlugin {
 	        	logSevere("§7Evil Edit action failed");
 	        	exception.printStackTrace();
 	        }
+	        alertOwner(sender.getName() + " overlayed an area of blocks with " + args[0]);
 			return true;
 		}
 		//
@@ -2508,7 +2524,6 @@ public class EvilBook extends JavaPlugin {
 		        	sender.sendMessage("§7Rank-up to lift this limit");
 					return true;
 		        }
-		        alertOwner(sender.getName() + " walled an area of blocks with " + args[0]);
 		        getProfile(sender).EvilEditUndo = new ArrayList<EvilEditBlock>();
 		        int blockID = Integer.valueOf(args[0]);
 		        for (int x = bottomBlockX; x <= topBlockX; x++)
@@ -2533,6 +2548,7 @@ public class EvilBook extends JavaPlugin {
 	        	logSevere("§7Evil Edit action failed");
 	        	exception.printStackTrace();
 	        }
+	        alertOwner(sender.getName() + " walled an area of blocks with " + args[0]);
 			return true;
 		}
 		//
@@ -2570,7 +2586,6 @@ public class EvilBook extends JavaPlugin {
 		        	sender.sendMessage("§7Rank-up to lift this limit");
 					return true;
 		        }
-		        alertOwner(sender.getName() + " outlined an area of blocks with " + args[0]);
 		        getProfile(sender).EvilEditUndo = new ArrayList<EvilEditBlock>();
 		        int blockID = Integer.valueOf(args[0]);
 		        for (int x = bottomBlockX; x <= topBlockX; x++)
@@ -2595,6 +2610,7 @@ public class EvilBook extends JavaPlugin {
 	        	logSevere("§7Evil Edit action failed");
 	        	exception.printStackTrace();
 	        }
+	        alertOwner(sender.getName() + " outlined an area of blocks with " + args[0]);
 			return true;
 		}
 		//
@@ -2623,7 +2639,6 @@ public class EvilBook extends JavaPlugin {
 		        	sender.sendMessage("§7Rank-up to lift this limit");
 					return true;
 		        }
-		        alertOwner(sender.getName() + " hollowed an area of blocks");
 		        getProfile(sender).EvilEditUndo = new ArrayList<EvilEditBlock>();
 		        for (int x = bottomBlockX; x <= topBlockX; x++)
 		        {
@@ -2643,6 +2658,7 @@ public class EvilBook extends JavaPlugin {
 	        	logSevere("§7Evil Edit action failed");
 	        	exception.printStackTrace();
 	        }
+	        alertOwner(sender.getName() + " hollowed an area of blocks");
 			return true;
 		}
 		//
@@ -2700,7 +2716,6 @@ public class EvilBook extends JavaPlugin {
 		        	sender.sendMessage("§7Rank-up to lift this limit");
 					return true;
 		        }
-		        alertOwner(sender.getName() + " drained an area of blocks");
 		        getProfile(sender).EvilEditUndo = new ArrayList<EvilEditBlock>();
 		        for (int x = bottomBlockX; x <= topBlockX; x++)
 		        {
@@ -2718,6 +2733,7 @@ public class EvilBook extends JavaPlugin {
 	        	logSevere("§7Evil Edit action failed");
 	        	exception.printStackTrace();
 	        }
+	        alertOwner(sender.getName() + " drained an area of blocks");
 			return true;
 		}
 		//
