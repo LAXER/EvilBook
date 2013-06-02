@@ -638,6 +638,8 @@ public class EvilBook extends JavaPlugin {
 		// TODO: Switch MySQL to H2
 		// TODO: Make EvilEdit work in survival if the player has the needed blocks
 		// TODO: Fix books not saving in survival properly
+		// TODO: Rotate command to rotate an area of blocks / copied blocks for evil edit
+		// TODO: Add descend / ascend to travel to next open space above or below
 		//
 		// Set All Command
 		//
@@ -1135,9 +1137,9 @@ public class EvilBook extends JavaPlugin {
 				sender.sendMessage("§7/kick [player] <reason>");
 			} else {
 				if (getPlayer(args[0]) != null) {
-					String message = "§c";
+					String message = "";
 					for (String msg : args) if (msg != args[0]) message += msg + " ";
-					getPlayer(args[0]).kickPlayer(message.trim());
+					getPlayer(args[0]).kickPlayer(((Player)sender).getDisplayName() + "§c: " + message.trim());
 					alertOwner(sender.getName() + " kicked " + args[0] + " with the message '" + message.trim() + "§7'");
 				} else {
 					sender.sendMessage("§7You can't kick an offline player");
