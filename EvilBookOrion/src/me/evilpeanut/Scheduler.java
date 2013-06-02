@@ -29,7 +29,7 @@ public class Scheduler {
 			public void run() {
 				Server server = plugin.getServer();
 				for (Player p : server.getOnlinePlayers()) {
-					if (p.isOp()) {
+					if (plugin.getProfile(p).rank.getID() >= Rank.Admin.getID()) {
 						p.sendMessage("§dYou can always §l/donate §dagain for a higher rank");
 						plugin.playerProfiles.get(p.getName().toLowerCase()).money += 20;
 						plugin.playerProfiles.get(p.getName().toLowerCase()).setProperty("Money", Integer.toString(plugin.playerProfiles.get(p.getName().toLowerCase()).money));

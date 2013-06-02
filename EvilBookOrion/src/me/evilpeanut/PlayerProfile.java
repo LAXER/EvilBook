@@ -156,7 +156,7 @@ public class PlayerProfile {
 			}
 		}
 		newPlayer.sendMessage("§2Welcome to the Amentrix server");
-		if (newPlayer.isOp() == false) {
+		if (rank.getID() < Rank.Admin.getID()) {
 			newPlayer.sendMessage("§3Type §6/admin §3to discover how to become an admin or OP");
 			newPlayer.sendMessage("§3Type §6/survival §3to enter the survival world");
 		} else {

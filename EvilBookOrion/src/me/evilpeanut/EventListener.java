@@ -784,7 +784,7 @@ public class EventListener implements Listener {
 		//
 		// Action location selection
 		//
-		if (player.isOp()) {
+		if (plugin.getProfile(player).rank.getID() >= Rank.Admin.getID()) {
 			if (plugin.isInSurvival(player.getWorld().getName()) == false || plugin.getProfile(player).rank == Rank.ServerOwner) {
 				if (player.getItemInHand().getTypeId() == 284) {
 					plugin.getProfile(player).actionLocationA = block.getLocation();

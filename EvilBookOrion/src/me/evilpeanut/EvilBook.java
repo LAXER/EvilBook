@@ -230,6 +230,7 @@ public class EvilBook extends JavaPlugin {
 				prop.setProperty("/teleporthere", Byte.toString(Rank.Admin.getID()));
 				prop.setProperty("/region", Byte.toString(Rank.Admin.getID()));
 				prop.setProperty("/log", Byte.toString(Rank.Admin.getID()));
+				prop.setProperty("/buy", Byte.toString(Rank.Admin.getID()));
 				prop.setProperty("/kick", Byte.toString(Rank.Moderator.getID()));
 				prop.setProperty("/sky", Byte.toString(Rank.Moderator.getID()));
 				prop.setProperty("/skyland", Byte.toString(Rank.Moderator.getID()));
@@ -3489,7 +3490,7 @@ public class EvilBook extends JavaPlugin {
 		//
 		if (command.getName().equalsIgnoreCase("buy")) {
 			if (args.length == 1) {
-				if (args[0].endsWith("name") && isOp(sender)) {
+				if (args[0].endsWith("name")) {
 					if (getProfile(sender).money >= 500) {
 						getProfile(sender).money -= 500;
 					} else {
@@ -3515,7 +3516,7 @@ public class EvilBook extends JavaPlugin {
 					if (args[0].equalsIgnoreCase("rainbowname")) getProfile(sender).setNameColor("?", ((Player) sender));
 					sender.sendMessage("§7Purchase complete");
 					return true;
-				} else if (args[0].endsWith("title") && isOp(sender)) {
+				} else if (args[0].endsWith("title")) {
 					if (getProfile(sender).money >= 500) {
 						getProfile(sender).money -= 500;
 					} else {
@@ -3535,15 +3536,11 @@ public class EvilBook extends JavaPlugin {
 					if (args[0].equalsIgnoreCase("epictitle")) getProfile(sender).setNameTitle("Epic", ((Player) sender));
 					sender.sendMessage("§7Purchase complete");
 					return true;
-				} else if (isOp(sender) == false) {
-					sender.sendMessage("§dThis is an §5Admin §donly item");
-					sender.sendMessage("§dPlease type §6/admin §dto learn how to become admin");
-					return true;
 				}
 				sender.sendMessage("§7That item doesn't exist");
 				return true;
 			} else {
-				if (args.length == 2 && args[0].equalsIgnoreCase("customtitle") && isOp(sender)) {
+				if (args.length == 2 && args[0].equalsIgnoreCase("customtitle")) {
 					if (getProfile(sender).money >= 2000) {
 						getProfile(sender).money -= 2000;
 					} else {
@@ -3707,15 +3704,6 @@ public class EvilBook extends JavaPlugin {
 	 */
 	public Boolean isByte(String string) {
 		try {Byte.valueOf(string); return true;} catch (Exception exception) {return false;}
-	}
-	
-	/**
-	 * Check if the command sender is an op
-	 * @param sender The sender to execute the op check with
-	 * @return If the sender is an op
-	 */
-	public Boolean isOp(CommandSender sender) {
-		return sender instanceof Player == false || getProfile(sender).rank.getID() >= Rank.Admin.getID() ? true : false;
 	}
 	
 	/**
