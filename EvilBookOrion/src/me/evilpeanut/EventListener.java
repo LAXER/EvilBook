@@ -166,20 +166,19 @@ public class EventListener implements Listener {
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerFish(PlayerFishEvent event) {
-		if (event.getCaught() != null) {
-			Player player = event.getPlayer();
-			int fishID = new Random().nextInt(plugin.fishList.size());
-			String fishName = (String) plugin.fishList.keySet().toArray()[fishID];
-			ItemStack fish = new ItemStack(Material.RAW_FISH, 1);
-			ItemMeta meta = fish.getItemMeta();
-			meta.setDisplayName(fishName);
-			meta.setLore(Arrays.asList("$" + plugin.fishList.get(fishName)));
-			fish.setItemMeta(meta);
-			player.getInventory().addItem(fish);
-			player.updateInventory();
-			player.sendMessage("§7You have caught a " + fishName);
-			event.getCaught().remove();
-		}
+		if (event.getCaught() == null) return;
+		Player player = event.getPlayer();
+		int fishID = new Random().nextInt(plugin.fishList.size());
+		String fishName = (String) plugin.fishList.keySet().toArray()[fishID];
+		ItemStack fish = new ItemStack(Material.RAW_FISH, 1);
+		ItemMeta meta = fish.getItemMeta();
+		meta.setDisplayName(fishName);
+		meta.setLore(Arrays.asList("$" + plugin.fishList.get(fishName)));
+		fish.setItemMeta(meta);
+		player.getInventory().addItem(fish);
+		player.updateInventory();
+		player.sendMessage("§7You have caught a " + fishName);
+		event.getCaught().remove();
 	}
 	
 	/**
@@ -273,117 +272,115 @@ public class EventListener implements Listener {
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		Player player = event.getEntity();
+		if (player.getLastDamageCause() == null) return;
 		plugin.getProfile(player).deathLocation = player.getLocation();
-		if (player.getLastDamageCause() != null)
-		{
-			EntityDamageEvent damageEvent = player.getLastDamageCause();
-			EntityDamageEvent.DamageCause damageCause = damageEvent.getCause();
-			if (damageEvent instanceof EntityDamageByEntityEvent) {
-				EntityDamageByEntityEvent kie = (EntityDamageByEntityEvent)damageEvent;
-				Entity damager = kie.getDamager();
-				if (damageCause == DamageCause.ENTITY_ATTACK) {
-					if (damager instanceof Player)
-					{
-						Player attackPlayer = (Player) damager;
-						event.setDeathMessage(player.getDisplayName() + " was murdered by " + attackPlayer.getDisplayName() + " wielding their " + (attackPlayer.getItemInHand().getType() == Material.AIR ? "fists" : attackPlayer.getItemInHand().getType() == Material.WOOD_SWORD ? "wooden sword" : attackPlayer.getItemInHand().getType() == Material.STONE_SWORD ? "stone sword" : attackPlayer.getItemInHand().getType() == Material.IRON_SWORD ? "iron sword" : attackPlayer.getItemInHand().getType() == Material.GOLD_SWORD ? "gold sword" : attackPlayer.getItemInHand().getType() == Material.DIAMOND_SWORD ? "diamond sword" : attackPlayer.getItemInHand().getTypeId() < 256 ? "block" : attackPlayer.getItemInHand().getTypeId() >= 256 ? "item" : "unknown object"));
-						return;
-					} else if (damager instanceof Zombie) {
-						event.setDeathMessage(player.getDisplayName() + " had their brains eaten by a Zombie");
-					} else if (damager instanceof Spider) {
-						event.setDeathMessage(player.getDisplayName() + " had their flesh devoured by a Spider");
-					} else if (damager instanceof CaveSpider) {
-						event.setDeathMessage(player.getDisplayName() + " had their flesh devoured by a Cave-Spider");
-					} else if (damager instanceof Enderman) {
-						event.setDeathMessage(player.getDisplayName() + " had their soul consumed by an Enderman");
-					} else if (damager instanceof Silverfish) {
-						event.setDeathMessage(player.getDisplayName() + " had their insides ripped out by a Silverfish");
-					} else if (damager instanceof MagmaCube) {
-						event.setDeathMessage(player.getDisplayName() + " had their corpse burnt to ashes by a Magma-Cube");
-					} else if (damager instanceof Slime) {
-						event.setDeathMessage(player.getDisplayName() + " had their corpse dissolved in a Slime");
-					} else if (damager instanceof Wolf) {
-						event.setDeathMessage(player.getDisplayName() + " had their corpse ripped appart by a Wolf");
-					} else if (damager instanceof PigZombie) {
-						event.setDeathMessage(player.getDisplayName() + " had their corpse cut in two by a Pigman-Zombie");
-					} else if (damager instanceof IronGolem) {
-						event.setDeathMessage(player.getDisplayName() + " had their corpse crushed by an Iron-Golem");
-					} else if (damager instanceof Giant) {
-						event.setDeathMessage(player.getDisplayName() + " had their corpse crushed by a Giant");
-					}
-				} else if (damageCause == DamageCause.PROJECTILE) {
-					Projectile pro = (Projectile)damager;
-					if (pro.getShooter() instanceof Player) {
-						Player attackPlayer = (Player) pro.getShooter();
-						if (pro instanceof Arrow) {
-							event.setDeathMessage(player.getDisplayName() + " was killed by " + attackPlayer.getDisplayName() + "'s arrow");
-						} else if (pro instanceof Snowball) {
-							event.setDeathMessage(player.getDisplayName() + " was killed by " + attackPlayer.getDisplayName() + "'s snowball");
-						} else if (pro instanceof Egg) {
-							event.setDeathMessage(player.getDisplayName() + " was killed by " + attackPlayer.getDisplayName() + "'s egg");
-						} else {
-							event.setDeathMessage(player.getDisplayName() + " was killed by " + attackPlayer.getDisplayName() + "'s projectile");
-						}
-						return;
-					}
-					if (pro instanceof Arrow)
-					{
-						if ((pro.getShooter() instanceof Skeleton)) {
-							event.setDeathMessage(player.getDisplayName() + " had their bones smashed by a Skeleton's arrow");
-						} else {
-							event.setDeathMessage(player.getDisplayName() + " had their bones smashed by an arrow trap");
-						}
+		EntityDamageEvent damageEvent = player.getLastDamageCause();
+		EntityDamageEvent.DamageCause damageCause = damageEvent.getCause();
+		if (damageEvent instanceof EntityDamageByEntityEvent) {
+			EntityDamageByEntityEvent kie = (EntityDamageByEntityEvent)damageEvent;
+			Entity damager = kie.getDamager();
+			if (damageCause == DamageCause.ENTITY_ATTACK) {
+				if (damager instanceof Player)
+				{
+					Player attackPlayer = (Player) damager;
+					event.setDeathMessage(player.getDisplayName() + " was murdered by " + attackPlayer.getDisplayName() + " wielding their " + (attackPlayer.getItemInHand().getType() == Material.AIR ? "fists" : attackPlayer.getItemInHand().getType() == Material.WOOD_SWORD ? "wooden sword" : attackPlayer.getItemInHand().getType() == Material.STONE_SWORD ? "stone sword" : attackPlayer.getItemInHand().getType() == Material.IRON_SWORD ? "iron sword" : attackPlayer.getItemInHand().getType() == Material.GOLD_SWORD ? "gold sword" : attackPlayer.getItemInHand().getType() == Material.DIAMOND_SWORD ? "diamond sword" : attackPlayer.getItemInHand().getTypeId() < 256 ? "block" : attackPlayer.getItemInHand().getTypeId() >= 256 ? "item" : "unknown object"));
+					return;
+				} else if (damager instanceof Zombie) {
+					event.setDeathMessage(player.getDisplayName() + " had their brains eaten by a Zombie");
+				} else if (damager instanceof Spider) {
+					event.setDeathMessage(player.getDisplayName() + " had their flesh devoured by a Spider");
+				} else if (damager instanceof CaveSpider) {
+					event.setDeathMessage(player.getDisplayName() + " had their flesh devoured by a Cave-Spider");
+				} else if (damager instanceof Enderman) {
+					event.setDeathMessage(player.getDisplayName() + " had their soul consumed by an Enderman");
+				} else if (damager instanceof Silverfish) {
+					event.setDeathMessage(player.getDisplayName() + " had their insides ripped out by a Silverfish");
+				} else if (damager instanceof MagmaCube) {
+					event.setDeathMessage(player.getDisplayName() + " had their corpse burnt to ashes by a Magma-Cube");
+				} else if (damager instanceof Slime) {
+					event.setDeathMessage(player.getDisplayName() + " had their corpse dissolved in a Slime");
+				} else if (damager instanceof Wolf) {
+					event.setDeathMessage(player.getDisplayName() + " had their corpse ripped appart by a Wolf");
+				} else if (damager instanceof PigZombie) {
+					event.setDeathMessage(player.getDisplayName() + " had their corpse cut in two by a Pigman-Zombie");
+				} else if (damager instanceof IronGolem) {
+					event.setDeathMessage(player.getDisplayName() + " had their corpse crushed by an Iron-Golem");
+				} else if (damager instanceof Giant) {
+					event.setDeathMessage(player.getDisplayName() + " had their corpse crushed by a Giant");
+				}
+			} else if (damageCause == DamageCause.PROJECTILE) {
+				Projectile pro = (Projectile)damager;
+				if (pro.getShooter() instanceof Player) {
+					Player attackPlayer = (Player) pro.getShooter();
+					if (pro instanceof Arrow) {
+						event.setDeathMessage(player.getDisplayName() + " was killed by " + attackPlayer.getDisplayName() + "'s arrow");
 					} else if (pro instanceof Snowball) {
-						event.setDeathMessage(player.getDisplayName() + " had their blood frozen by a Snowman's snowball");
-					} else if (pro instanceof Fireball) {
-						if (pro.getShooter() instanceof Ghast) {
-							event.setDeathMessage(player.getDisplayName() + " had their insides boiled by a Ghast's fireball");
-						} else if ((pro.getShooter() instanceof Blaze)) {
-							event.setDeathMessage(player.getDisplayName() + " had their insides boiled by a Blazes's fireball");
-						} else if ((pro.getShooter() instanceof Wither)) {
-							event.setDeathMessage(player.getDisplayName() + " had their insides boiled by a Wither's fireball");
-						} else {
-							event.setDeathMessage(player.getDisplayName() + " had their insides boiled by a fireball");
-						}
+						event.setDeathMessage(player.getDisplayName() + " was killed by " + attackPlayer.getDisplayName() + "'s snowball");
+					} else if (pro instanceof Egg) {
+						event.setDeathMessage(player.getDisplayName() + " was killed by " + attackPlayer.getDisplayName() + "'s egg");
+					} else {
+						event.setDeathMessage(player.getDisplayName() + " was killed by " + attackPlayer.getDisplayName() + "'s projectile");
 					}
-				} else if (damageCause == DamageCause.ENTITY_EXPLOSION) {
-					if (damager instanceof Creeper) {
-						event.setDeathMessage(player.getDisplayName() + " was blown up by a creeper");
-					} else if (damager instanceof TNTPrimed) {
-						event.setDeathMessage(player.getDisplayName() + " was blown up by TNT");
+					return;
+				}
+				if (pro instanceof Arrow)
+				{
+					if ((pro.getShooter() instanceof Skeleton)) {
+						event.setDeathMessage(player.getDisplayName() + " had their bones smashed by a Skeleton's arrow");
+					} else {
+						event.setDeathMessage(player.getDisplayName() + " had their bones smashed by an arrow trap");
+					}
+				} else if (pro instanceof Snowball) {
+					event.setDeathMessage(player.getDisplayName() + " had their blood frozen by a Snowman's snowball");
+				} else if (pro instanceof Fireball) {
+					if (pro.getShooter() instanceof Ghast) {
+						event.setDeathMessage(player.getDisplayName() + " had their insides boiled by a Ghast's fireball");
+					} else if ((pro.getShooter() instanceof Blaze)) {
+						event.setDeathMessage(player.getDisplayName() + " had their insides boiled by a Blazes's fireball");
+					} else if ((pro.getShooter() instanceof Wither)) {
+						event.setDeathMessage(player.getDisplayName() + " had their insides boiled by a Wither's fireball");
+					} else {
+						event.setDeathMessage(player.getDisplayName() + " had their insides boiled by a fireball");
 					}
 				}
-			} else {
-				if (damageCause == DamageCause.DROWNING) {
-					event.setDeathMessage(player.getDisplayName() + " drowned to death");
-				} else if (damageCause == DamageCause.STARVATION) {
-					event.setDeathMessage(player.getDisplayName() + " starved to death");
-				} else if (damageCause == DamageCause.CONTACT) {
-					event.setDeathMessage(player.getDisplayName() + " was playing with a cactus when it pricked back");
-				} else if (damageCause == DamageCause.CUSTOM) {
-					event.setDeathMessage(player.getDisplayName() + " died");
-				} else if (damageCause == DamageCause.FIRE) {
-					event.setDeathMessage(player.getDisplayName() + " had their corpse burnt to ashes by fire");
-				} else if (damageCause == DamageCause.FIRE_TICK) {
-					event.setDeathMessage(player.getDisplayName() + " had their corpse burnt to ashes by fire");
-				} else if (damageCause == DamageCause.LAVA) {
-					event.setDeathMessage(player.getDisplayName() + " had their corpse burnt to ashes by lava");
-				} else if (damageCause == DamageCause.LIGHTNING) {
-					event.setDeathMessage(player.getDisplayName() + " had their corpse burnt to ashes by lightning");
-				} else if (damageCause == DamageCause.POISON) {
-					event.setDeathMessage(player.getDisplayName() + " died from poisoning");
-				} else if (damageCause == DamageCause.SUFFOCATION) {
-					event.setDeathMessage(player.getDisplayName() + " suffocated to death");
-				} else if (damageCause == DamageCause.VOID) {
-					event.setDeathMessage(player.getDisplayName() + " was crushed by the never ending black hole");
-				} else if (damageCause == DamageCause.FALL) {
-					event.setDeathMessage(player.getDisplayName() + " fell to their death");
-				} else if (damageCause == DamageCause.SUICIDE) {
-					event.setDeathMessage(player.getDisplayName() + " committed suicide");
-				} else if (damageCause == DamageCause.MAGIC) {
-					event.setDeathMessage(player.getDisplayName() + " was destroyed at the hands of a sourcerer");
-				} else if (damageCause == DamageCause.WITHER) {
-					event.setDeathMessage(player.getDisplayName() + " was crushed by a wither");
+			} else if (damageCause == DamageCause.ENTITY_EXPLOSION) {
+				if (damager instanceof Creeper) {
+					event.setDeathMessage(player.getDisplayName() + " was blown up by a creeper");
+				} else if (damager instanceof TNTPrimed) {
+					event.setDeathMessage(player.getDisplayName() + " was blown up by TNT");
 				}
+			}
+		} else {
+			if (damageCause == DamageCause.DROWNING) {
+				event.setDeathMessage(player.getDisplayName() + " drowned to death");
+			} else if (damageCause == DamageCause.STARVATION) {
+				event.setDeathMessage(player.getDisplayName() + " starved to death");
+			} else if (damageCause == DamageCause.CONTACT) {
+				event.setDeathMessage(player.getDisplayName() + " was playing with a cactus when it pricked back");
+			} else if (damageCause == DamageCause.CUSTOM) {
+				event.setDeathMessage(player.getDisplayName() + " died");
+			} else if (damageCause == DamageCause.FIRE) {
+				event.setDeathMessage(player.getDisplayName() + " had their corpse burnt to ashes by fire");
+			} else if (damageCause == DamageCause.FIRE_TICK) {
+				event.setDeathMessage(player.getDisplayName() + " had their corpse burnt to ashes by fire");
+			} else if (damageCause == DamageCause.LAVA) {
+				event.setDeathMessage(player.getDisplayName() + " had their corpse burnt to ashes by lava");
+			} else if (damageCause == DamageCause.LIGHTNING) {
+				event.setDeathMessage(player.getDisplayName() + " had their corpse burnt to ashes by lightning");
+			} else if (damageCause == DamageCause.POISON) {
+				event.setDeathMessage(player.getDisplayName() + " died from poisoning");
+			} else if (damageCause == DamageCause.SUFFOCATION) {
+				event.setDeathMessage(player.getDisplayName() + " suffocated to death");
+			} else if (damageCause == DamageCause.VOID) {
+				event.setDeathMessage(player.getDisplayName() + " was crushed by the never ending black hole");
+			} else if (damageCause == DamageCause.FALL) {
+				event.setDeathMessage(player.getDisplayName() + " fell to their death");
+			} else if (damageCause == DamageCause.SUICIDE) {
+				event.setDeathMessage(player.getDisplayName() + " committed suicide");
+			} else if (damageCause == DamageCause.MAGIC) {
+				event.setDeathMessage(player.getDisplayName() + " was destroyed at the hands of a sourcerer");
+			} else if (damageCause == DamageCause.WITHER) {
+				event.setDeathMessage(player.getDisplayName() + " was crushed by a wither");
 			}
 		}
 	}
